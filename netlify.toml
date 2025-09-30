@@ -1,0 +1,12 @@
+[build]
+  # Build command
+  command = "npm run build && npm run export"
+
+  # Publish directory for SSG
+  publish = "out"
+
+# Optional: redirect all 404s to index.html for SPA routing (if needed)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

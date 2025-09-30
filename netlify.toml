@@ -1,11 +1,7 @@
 [build]
-# Use npm ci to install exactly what's in package-lock.json
-command = "npm ci && npm run build && npm run export"
-
-# Output directory for static files
+command = "npm ci && npm run build"
 publish = "out"
 
-# Optional: redirect all paths to index.html (for SPA routing, if needed)
 [[redirects]]
 from = "/*"
 to = "/index.html"

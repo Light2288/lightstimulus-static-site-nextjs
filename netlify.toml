@@ -1,12 +1,12 @@
 [build]
-  # Build command
-  command = "npm run build && npm run export"
+# Use npm ci to install exactly what's in package-lock.json
+command = "npm ci && npm run build && npm run export"
 
-  # Publish directory for SSG
-  publish = "out"
+# Output directory for static files
+publish = "out"
 
-# Optional: redirect all 404s to index.html for SPA routing (if needed)
+# Optional: redirect all paths to index.html (for SPA routing, if needed)
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200

@@ -1,7 +1,7 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
   title: 'Light Stimulus',
-  author: 'Davide',
+  author: 'Davide Aliti',
   headerTitle: 'LightStimulus',
   description: 'Exploring AR, XR, AI, and computer vision through code and experimental projects.',
   language: 'en-US',

@@ -11,6 +11,7 @@ export function ThemeProviders({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
       themes={['light', 'dark']}
+      storageKey="theme"
     >
       {children}
     </ThemeProvider>

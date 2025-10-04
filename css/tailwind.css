@@ -7,12 +7,26 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans:
-    var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', monospace;
 
-  /* Colors */
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
+  /* Light Theme */
+  --color-bg-light: #f8f9fb;
+  --color-text-light: #1c1c1e;
+  --color-text-secondary-light: #5c5c66;
+  --color-accent-primary-light: #4fd1c5;
+  --color-accent-secondary-light: #ffb347;
+  --color-accent-tertiary-light: #7c3aed;
+
+  /* Dark Theme */
+  --color-bg-dark: #0d1b2a;
+  --color-text-dark: #e6edf3;
+  --color-text-secondary-dark: #9fbacd;
+  --color-accent-primary-dark: #4fd1c5;
+  --color-accent-secondary-dark: #ffb347;
+  --color-accent-tertiary-dark: #7c3aed;
+
+  /* Existing Tailwind variables */
   --color-primary-50: oklch(0.971 0.014 343.198);
   --color-primary-100: oklch(0.948 0.028 342.258);
   --color-primary-200: oklch(0.899 0.061 343.231);
@@ -49,14 +63,18 @@
   --z-80: 80;
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* Apply theme variables */
+body {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+  font-family: var(--font-sans);
+}
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+.dark body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
 @layer base {
   *,
   ::after,
@@ -80,6 +98,89 @@
 }
 
 @layer utilities {
+  /* Accent color utilities */
+  .text-accent-primary {
+    color: var(--color-accent-primary-light);
+  }
+  .text-accent-secondary {
+    color: var(--color-accent-secondary-light);
+  }
+  .text-accent-tertiary {
+    color: var(--color-accent-tertiary-light);
+  }
+
+  .bg-accent-primary {
+    background-color: var(--color-accent-primary-light);
+  }
+  .bg-accent-secondary {
+    background-color: var(--color-accent-secondary-light);
+  }
+  .bg-accent-tertiary {
+    background-color: var(--color-accent-tertiary-light);
+  }
+
+  .hover\:text-accent-primary:hover {
+    color: var(--color-accent-primary-light);
+  }
+  .hover\:text-accent-secondary:hover {
+    color: var(--color-accent-secondary-light);
+  }
+  .hover\:text-accent-tertiary:hover {
+    color: var(--color-accent-tertiary-light);
+  }
+
+  .hover\:bg-accent-primary:hover {
+    background-color: var(--color-accent-primary-light);
+  }
+  .hover\:bg-accent-secondary:hover {
+    background-color: var(--color-accent-secondary-light);
+  }
+  .hover\:bg-accent-tertiary:hover {
+    background-color: var(--color-accent-tertiary-light);
+  }
+
+  /* Dark mode mapping */
+  .dark .text-accent-primary {
+    color: var(--color-accent-primary-dark);
+  }
+  .dark .text-accent-secondary {
+    color: var(--color-accent-secondary-dark);
+  }
+  .dark .text-accent-tertiary {
+    color: var(--color-accent-tertiary-dark);
+  }
+
+  .dark .bg-accent-primary {
+    background-color: var(--color-accent-primary-dark);
+  }
+  .dark .bg-accent-secondary {
+    background-color: var(--color-accent-secondary-dark);
+  }
+  .dark .bg-accent-tertiary {
+    background-color: var(--color-accent-tertiary-dark);
+  }
+
+  .dark .hover\:bg-accent-primary:hover {
+    background-color: var(--color-accent-primary-dark);
+  }
+  .dark .hover\:bg-accent-secondary:hover {
+    background-color: var(--color-accent-secondary-dark);
+  }
+  .dark .hover\:bg-accent-tertiary:hover {
+    background-color: var(--color-accent-tertiary-dark);
+  }
+
+  .dark .hover\:text-accent-primary:hover {
+    color: var(--color-accent-primary-dark);
+  }
+  .dark .hover\:text-accent-secondary:hover {
+    color: var(--color-accent-secondary-dark);
+  }
+  .dark .hover\:text-accent-tertiary:hover {
+    color: var(--color-accent-tertiary-dark);
+  }
+
+  /* Prose / typography */
   .prose {
     & a {
       color: var(--color-primary-500);
@@ -121,55 +222,43 @@
 .task-list-item::before {
   @apply hidden;
 }
-
 .task-list-item {
   @apply list-none;
 }
-
 .footnotes {
   @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
 }
-
 .data-footnote-backref {
   @apply no-underline;
 }
-
 .csl-entry {
   @apply my-5;
 }
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* https://stackoverflow.com/questions/61083813/how-to-avoid-internal-autofill-selected-style-to-be-applied */
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
   transition:
     background-color 600000s 0s,
     color 600000s 0s;
 }
-
 .katex-display {
   overflow: auto hidden;
 }
-
 .content-header-link {
   opacity: 0;
   margin-left: -24px;
   padding-right: 4px;
 }
-
 .content-header:hover .content-header-link,
 .content-header-link:hover {
   opacity: 1;
 }
-
 .linkicon {
   display: inline-block;
   vertical-align: middle;

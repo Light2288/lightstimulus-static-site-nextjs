@@ -10,10 +10,9 @@ const siteMetadata = {
   siteRepo: 'https://github.com/Light2288/lightstimulus.dev',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.svg`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
-  email: 'your-email@example.com',
+  email: 'davide.aliti@gmail.com',
   github: 'https://github.com/Light2288',
-  linkedin: 'https://www.linkedin.com/in/davide',
-  x: 'https://twitter.com/lightstimulus',
+  linkedin: 'https://www.linkedin.com/in/davide-aliti',
   locale: 'en-US',
   stickyNav: false,
   themeColors: {

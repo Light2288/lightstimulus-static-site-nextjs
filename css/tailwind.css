@@ -139,48 +139,48 @@ body {
     background-color: var(--color-accent-tertiary-light);
   }
 
-  /* Dark mode variants */
+  /* Dark mode mapping */
   .dark .text-accent-primary {
-    color: var(--color-accent-primary-light);
+    color: var(--color-accent-primary-dark);
   }
   .dark .text-accent-secondary {
-    color: var(--color-accent-secondary-light);
+    color: var(--color-accent-secondary-dark);
   }
   .dark .text-accent-tertiary {
-    color: var(--color-accent-tertiary-light);
+    color: var(--color-accent-tertiary-dark);
   }
 
   .dark .bg-accent-primary {
-    background-color: var(--color-accent-primary-light);
+    background-color: var(--color-accent-primary-dark);
   }
   .dark .bg-accent-secondary {
-    background-color: var(--color-accent-secondary-light);
+    background-color: var(--color-accent-secondary-dark);
   }
   .dark .bg-accent-tertiary {
-    background-color: var(--color-accent-tertiary-light);
+    background-color: var(--color-accent-tertiary-dark);
   }
 
-  /* Dark mode hover */
   .dark .hover\:bg-accent-primary:hover {
-    background-color: var(--color-accent-primary-light);
+    background-color: var(--color-accent-primary-dark);
   }
   .dark .hover\:bg-accent-secondary:hover {
-    background-color: var(--color-accent-secondary-light);
+    background-color: var(--color-accent-secondary-dark);
   }
   .dark .hover\:bg-accent-tertiary:hover {
-    background-color: var(--color-accent-tertiary-light);
+    background-color: var(--color-accent-tertiary-dark);
   }
 
   .dark .hover\:text-accent-primary:hover {
-    color: var(--color-accent-primary-light);
+    color: var(--color-accent-primary-dark);
   }
   .dark .hover\:text-accent-secondary:hover {
-    color: var(--color-accent-secondary-light);
+    color: var(--color-accent-secondary-dark);
   }
   .dark .hover\:text-accent-tertiary:hover {
-    color: var(--color-accent-tertiary-light);
+    color: var(--color-accent-tertiary-dark);
   }
 
+  /* Prose / typography */
   .prose {
     & a {
       color: var(--color-primary-500);
@@ -222,55 +222,43 @@ body {
 .task-list-item::before {
   @apply hidden;
 }
-
 .task-list-item {
   @apply list-none;
 }
-
 .footnotes {
   @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
 }
-
 .data-footnote-backref {
   @apply no-underline;
 }
-
 .csl-entry {
   @apply my-5;
 }
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* Autofill fix */
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
   transition:
     background-color 600000s 0s,
     color 600000s 0s;
 }
-
 .katex-display {
   overflow: auto hidden;
 }
-
 .content-header-link {
   opacity: 0;
   margin-left: -24px;
   padding-right: 4px;
 }
-
 .content-header:hover .content-header-link,
 .content-header-link:hover {
   opacity: 1;
 }
-
 .linkicon {
   display: inline-block;
   vertical-align: middle;

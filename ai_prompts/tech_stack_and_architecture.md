@@ -1,0 +1,258 @@
+# 🧰 Tech Stack & Architecture
+
+## ⚙️ Framework & Language
+
+The site is made with Next.js 15 and Tailwind
+
+## 🎨 Styling System
+
+The styling system is TailwindCSS + custom theme file
+
+## 🔡 Fonts & Icons
+
+- Color palette:
+  - Light Theme
+    - Background: #F8F9FB → very soft,
+      bluish off-white
+    - Text: #1C1C1E → deep neutral for good
+      readability
+    - Secondary text: #5C5C66 (muted gray-blue for
+      metadata, subtitles)
+  - Dark Theme (bluer spectrum)
+    - Background: #0D1B2A → rich deep navy, avoids
+      harsh black
+    - Text: #E6EDF3 → light bluish-white, softer
+      than #FFF, matches background’s hue
+    - Secondary text: #9FBACD → desaturated light
+      blue for metadata/subtitles
+  - Accent Colors
+    - Primary Accent: #4FD1C5 (teal / cyan) → works
+      well on both light & dark, futuristic/tech feel
+    - Secondary Accent: #FFB347 (warm amber/orange) →
+      contrast color, good for highlights or call-to-actions
+    - Optional Tertiary: #7C3AED (electric violet) →
+      sparingly, for hover states or special emphasis
+    - Usage:
+      - Teal = links, key highlights
+      - Amber = buttons, hover accents
+      - Violet = occasional decorative elements (tags, code highlight keywords, etc.)
+- Fonts:
+  - IBM Plex Sans → clean, slightly more “techy”,
+    subtle personality. A good nod to your IBM role
+    without being branded
+  - paired with IBM Plex Mono for code snippets in
+    the blog
+- Icons: Heroicons and Lucide
+
+## 📦 Additional Libraries / Tools
+
+(e.g., Framer Motion, MDX, Contentlayer, etc.)
+
+- ContentLayer: already installed
+- MDX + Generative AI Workflows for content:
+  Content Source: blog posts and projects live as
+  .mdx files in your repo, so that no CMS is used.
+  For now, I will manually generate the mdx files.
+  In the future, I would like
+  to integrate an AI Generation Workflow: You (or an
+  AI workflow/agent) generate Markdown/MDX files
+  automatically. The workflow can include metadata
+  (title, slug, date, tags, summary) in frontmatter.
+  Publishing: Commit the new .mdx file to your
+  GitHub repo (via API or GitHub Actions).
+  Netlify automatically rebuilds and deploys your
+  site with the new content.
+- Framer Motion: not installed yet, but this package
+  (or another package suggested) should be included to
+  manage the animations
+
+## ☁️ Hosting & Deployment
+
+The site is hosted on Netlify with rebuild and deploys
+that starts at every merge on main branch
+
+## 🎁 Package.json file
+
+Here is the package.json file to check if everything
+stated before is correct or not; please provide any other
+useful package you would install:
+{
+"name": "tailwind-nextjs-starter-blog",  
+"version": "2.4.0",  
+"private": true,  
+"dependencies": {  
+"@headlessui/react": "2.2.0",  
+"@heroicons/react": "^2.2.0",  
+"@next/bundle-analyzer": "15.2.4",  
+"@tailwindcss/forms": "^0.5.9",  
+"@tailwindcss/postcss": "^4.0.5",  
+"@tailwindcss/typography": "^0.5.15",  
+"body-scroll-lock": "^4.0.0-beta.0",  
+"clsx": "^2.1.1",  
+"contentlayer2": "0.5.5",  
+"cross-env": "^7.0.3",  
+"esbuild": "0.25.2",  
+"github-slugger": "^2.0.0",  
+"gray-matter": "^4.0.2",  
+"hast-util-from-html-isomorphic": "^2.0.0",  
+"lucide-react": "^0.545.0",  
+"next": "^15.5.4",  
+"next-contentlayer2": "0.5.5",  
+"next-seo": "^6.8.0",  
+"next-themes": "^0.4.6",  
+"pliny": "0.4.1",  
+"postcss": "^8.4.24",  
+"react": "19.0.0",  
+"react-dom": "19.0.0",  
+"reading-time": "1.5.0",  
+"rehype-autolink-headings": "^7.1.0",  
+"rehype-citation": "^2.3.0",  
+"rehype-katex": "^7.0.0",  
+"rehype-katex-notranslate": "^1.1.4",  
+"rehype-preset-minify": "7.0.0",  
+"rehype-prism-plus": "^2.0.0",  
+"rehype-slug": "^6.0.0",  
+"remark": "^15.0.0",  
+"remark-gfm": "^4.0.0",  
+"remark-github-blockquote-alert": "^1.2.1",  
+"remark-math": "^6.0.0",  
+"tailwindcss": "^4.0.5",  
+"unist-util-visit": "^5.0.0"  
+},  
+"devDependencies": {  
+"@eslint/eslintrc": "^3.2.0",  
+"@eslint/js": "^9.16.0",  
+"@svgr/webpack": "^8.0.1",  
+"@types/mdx": "^2.0.12",  
+"@types/react": "^19.0.8",  
+"@typescript-eslint/eslint-plugin": "^8.12.0",  
+"@typescript-eslint/parser": "^8.12.0",  
+"eslint": "^9.14.0",  
+"eslint-config-next": "15.2.4",  
+"eslint-config-prettier": "^9.1.0",  
+"eslint-plugin-prettier": "^5.2.0",  
+"globals": "^15.12.0",  
+"husky": "^9.0.0",  
+"image-size": "^2.0.2",  
+"lint-staged": "^13.0.0",  
+"prettier": "^3.0.0",  
+"prettier-plugin-tailwindcss": "^0.6.11",  
+"typescript": "^5.1.3"  
+}
+
+## 🗂️ Folder / Project Structure
+
+This is the current project structure, excluded the
+generated folders:
+.
+├── LICENSE  
+├── README.md  
+├── app  
+│   ├── Main.tsx  
+│   ├── about  
+│   │   └── page.tsx  
+│   ├── api  
+│   │   └── newsletter  
+│   │   └── route.ts  
+│   ├── blog  
+│   │   ├── [...slug]  
+│   │   │   └── page.tsx  
+│   │   ├── page  
+│   │   │   └── [page]  
+│   │   │   └── page.tsx  
+│   │   └── page.tsx  
+│   ├── layout.tsx  
+│   ├── not-found.tsx  
+│   ├── page.tsx  
+│   ├── projects  
+│   │   └── page.tsx  
+│   ├── robots.ts  
+│   ├── seo.tsx  
+│   ├── sitemap.ts  
+│   ├── tag-data.json  
+│   ├── tags  
+│   │   ├── [tag]  
+│   │   │   ├── page  
+│   │   │   │   └── [page]  
+│   │   │   │   └── page.tsx  
+│   │   │   └── page.tsx  
+│   │   └── page.tsx  
+│   └── theme-providers.tsx  
+├── components  
+│   ├── Card.tsx  
+│   ├── Comments.tsx  
+│   ├── Footer.tsx  
+│   ├── Header.tsx  
+│   ├── Image.tsx  
+│   ├── LayoutWrapper.tsx  
+│   ├── Link.tsx  
+│   ├── MDXComponents.tsx  
+│   ├── MobileNav.tsx  
+│   ├── PageTitle.tsx  
+│   ├── ScrollTopAndComment.tsx  
+│   ├── SearchButton.tsx  
+│   ├── SectionContainer.tsx  
+│   ├── TableWrapper.tsx  
+│   ├── Tag.tsx  
+│   ├── ThemeSwitch.tsx  
+│   └── social-icons  
+│   ├── icons.tsx  
+│   └── index.tsx  
+├── contentlayer.config.ts  
+├── css  
+│   ├── prism.css  
+│   └── tailwind.css  
+├── data  
+│   ├── authors  
+│   │   ├── default.mdx  
+│   │   └── sparrowhawk.mdx  
+│   ├── blog  
+│   │   ├── code-sample.mdx  
+│   │   ├── deriving-ols-estimator.mdx  
+│   │   ├── github-markdown-guide.mdx  
+│   │   ├── guide-to-using-images-in-nextjs.mdx  
+│   │   ├── introducing-tailwind-nextjs-starter-blog.mdx  
+│   │   ├── my-fancy-title.mdx  
+│   │   ├── nested-route  
+│   │   │   └── introducing-multi-part-posts-with-nested-routing.mdx  
+│   │   ├── new-features-in-v1.mdx  
+│   │   ├── pictures-of-canada.mdx  
+│   │   ├── release-of-tailwind-nextjs-starter-blog-v2.0.mdx  
+│   │   └── the-time-machine.mdx  
+│   ├── headerNavLinks.ts  
+│   ├── logo.svg  
+│   ├── projectsData.ts  
+│   ├── references-data.bib  
+│   └── siteMetadata.js  
+├── eslint.config.mjs  
+├── faq  
+│   ├── custom-mdx-component.md  
+│   ├── customize-kbar-search.md  
+│   └── deploy-with-docker.md  
+├── jsconfig.json  
+├── layouts  
+│   ├── AuthorLayout.tsx  
+│   ├── ListLayout.tsx  
+│   ├── ListLayoutWithTags.tsx  
+│   ├── PostBanner.tsx  
+│   ├── PostLayout.tsx  
+│   └── PostSimple.tsxv
+├── netlify.toml  
+├── next-env.d.ts  
+├── next.config.js  
+├── package-lock.json  
+├── package.json  
+├── postcss.config.js  
+├── prettier.config.js  
+├── scripts  
+│   ├── postbuild.mjs  
+│   └── rss.mjs  
+└── tsconfig.json
+
+## 🧭 Version Control & Workflow
+
+For now, commits, pull requests and merges are made manually
+As said, if there is some pull request that is merged into main,
+Netlify will trigger an automation to rebuild and deploy the site agian
+It would be interesting to add other automations (for example
+Github action) but for now don't consider them

@@ -165,3 +165,7 @@ ventesimo secolo, hanno permesso l'individuazione
 dei meccanismi di funzionamento di fenomeni visivi
 come l'inibizione laterale, ovvero la capacità di
 distinguere linee, forme e contorni degli oggetti.
+
+The animated logo and “Light Stimulus” text should be SVG-based
+Framer Motion animation, and the tagline text should
+cycle automatically (like a typing effect / fade between phrases)

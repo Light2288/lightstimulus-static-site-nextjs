@@ -2,20 +2,23 @@
 
 ## 🎞️ Animations
 
-No particular animation library or style is required. For the library,
-I see that Framer is not installed but evaluate if anything should be
-added to provide a better UX for the site. You can also evaluate the style
-of the animations to provide the best UX possible, I don't have any
-particular preference on this topic.
+I would like a combination of subtle microinteractions and full entrance
+animations. Subtle interactions should enhance the user experience
+(hover effects, button feedback, scroll-triggered reveals), while
+entrance animations should make key sections like the hero, feature
+highlights, or calls-to-action more engaging when they appear in
+the viewport. The goal is a polished, dynamic feel without
+overwhelming the user.
 
 ## 🌍 Internationalization
 
-The site should support both English and Italian. The site should change
-language based on system settings of the user. Evaluate if a button in the
-navigation bar should be added to programmatically change the language.
-In this perspective, also consider that the blog articles (see next paragraph)
-should be available in both supported languages, so probably the MDX
-management should take this into consideration.
+The site should support both English and Italian. Detect the
+preferred language automatically on first visit
+But always display a language toggle in the header (e.g., a
+simple dropdown or flag button) to change language programmatically.
+Store the user’s preference in localStorage so it persists.
+For translation storage, use JSON files under /locales for UI/static text,
+and use MDX frontmatter with localized fields for Page content (MDX posts)
 
 ## 📝 Blog or CMS Setup
 

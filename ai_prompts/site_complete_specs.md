@@ -166,6 +166,10 @@ dei meccanismi di funzionamento di fenomeni visivi
 come l'inibizione laterale, ovvero la capacità di
 distinguere linee, forme e contorni degli oggetti.
 
+The animated logo and “Light Stimulus” text should be SVG-based
+Framer Motion animation, and the tagline text should
+cycle automatically (like a typing effect / fade between phrases)
+
 # 🧰 Tech Stack & Architecture
 
 ## ⚙️ Framework & Language
@@ -216,7 +220,7 @@ The styling system is TailwindCSS + custom theme file
 
 - ContentLayer: already installed
 - MDX + Generative AI Workflows for content:
-  Content Source: blog posts and projects live as
+  Content Source: both blog posts and projects live as
   .mdx files in your repo, so that no CMS is used.
   For now, I will manually generate the mdx files.
   In the future, I would like
@@ -441,13 +445,13 @@ in your opinion.
 The site should at least have an home page, a project page,
 a bio/about page, a blog page and a contact page.
 
-| Page     | Purpose / Key Content                                                                                                                                          |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Home     | Short intro, featured projects, few of the most recent blog articles                                                                                           |
-| About    | Bio, experience, photo is not mandatory; tone of the page should be "colloquial", without direct references to IBM (even if my current job can be cited)       |
-| Projects | All portfolio items with filters; Projects page should only showcase personal/experimental projects (computer vision, XR, Snowflake demos, AI workflows, etc.) |
-| Blog     | Articles and notes; blog style should be technical deep dives/tutorials (e.g., Gatsby, XR, AI workflows, SwiftUI tips), and short reflections/essays           |
-| Contact  | just a simple form and social links                                                                                                                            |
+| Page     | Purpose / Key Content                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Home     | Short intro, featured projects, few of the most recent blog articles                                                                                                                                                                                                                                                                                                                                                                       |
+| About    | Bio, experience, photo is not mandatory; tone of the page should be "colloquial", without direct references to IBM (even if my current job can be cited)                                                                                                                                                                                                                                                                                   |
+| Projects | All portfolio items with filters; Projects page should only showcase personal/experimental projects (computer vision, XR, Snowflake demos, AI workflows, etc.); projects are stored in mdx files, one for each project; the projects home should have a grid of projects with tags/filters on the right, and clicking on a project should redirect the user to the specific project detail page                                            |
+| Blog     | Articles and notes; blog style should be technical deep dives/tutorials (e.g., Gatsby, XR, AI workflows, SwiftUI tips), and short reflections/essays; blog posts are stored in mdx files, one for each post; like in the starting project, the blog homepage should display a a list with tag filters sidebar on the left and blog posts preview on the right; clicking on a post preview redirect the user to the specific blog post page |
+| Contact  | just a simple form that actually sends emails (via Netlify Forms / serverless function) and social links                                                                                                                                                                                                                                                                                                                                   |
 
 ## 🧩 Global Components
 
@@ -455,10 +459,14 @@ The global component reused across pages should be
 
 - header: should contain the logo, navigation bar to move across
   pages, a search button and a toggle for dark and light switch
+- search button: Use Pliny Kbar for local search (cmd+k); in the
+  initial header version of the starting project, there is already a
+  visible search button in the header
+- theme toggle is part of the header and must keep the three options system
+  (light / dark / system) and save user preference in local storage
 - footer: minimal footer with three or four icons for social links
   and the copyright info; in the future maybe i will add an input to
   subscribe to the newsletter
-- theme toggle is part of the header
 - a layout wrapper already present in the documents
 - please suggest any other cross component that could be userful
 
@@ -727,20 +735,23 @@ requisite that the site can require.
 
 ## 🎞️ Animations
 
-No particular animation library or style is required. For the library,
-I see that Framer is not installed but evaluate if anything should be
-added to provide a better UX for the site. You can also evaluate the style
-of the animations to provide the best UX possible, I don't have any
-particular preference on this topic.
+I would like a combination of subtle microinteractions and full entrance
+animations. Subtle interactions should enhance the user experience
+(hover effects, button feedback, scroll-triggered reveals), while
+entrance animations should make key sections like the hero, feature
+highlights, or calls-to-action more engaging when they appear in
+the viewport. The goal is a polished, dynamic feel without
+overwhelming the user.
 
 ## 🌍 Internationalization
 
-The site should support both English and Italian. The site should change
-language based on system settings of the user. Evaluate if a button in the
-navigation bar should be added to programmatically change the language.
-In this perspective, also consider that the blog articles (see next paragraph)
-should be available in both supported languages, so probably the MDX
-management should take this into consideration.
+The site should support both English and Italian. Detect the
+preferred language automatically on first visit
+But always display a language toggle in the header (e.g., a
+simple dropdown or flag button) to change language programmatically.
+Store the user’s preference in localStorage so it persists.
+For translation storage, use JSON files under /locales for UI/static text,
+and use MDX frontmatter with localized fields for Page content (MDX posts)
 
 ## 📝 Blog or CMS Setup
 

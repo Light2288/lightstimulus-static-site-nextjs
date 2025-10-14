@@ -46,8 +46,6 @@ The styling system is TailwindCSS + custom theme file
 
 ## 📦 Additional Libraries / Tools
 
-(e.g., Framer Motion, MDX, Contentlayer, etc.)
-
 - ContentLayer: already installed
 - MDX + Generative AI Workflows for content:
   Content Source: blog posts and projects live as
@@ -76,69 +74,72 @@ that starts at every merge on main branch
 Here is the package.json file to check if everything
 stated before is correct or not; please provide any other
 useful package you would install:
+
+```
 {
-"name": "tailwind-nextjs-starter-blog",  
-"version": "2.4.0",  
-"private": true,  
-"dependencies": {  
-"@headlessui/react": "2.2.0",  
-"@heroicons/react": "^2.2.0",  
-"@next/bundle-analyzer": "15.2.4",  
-"@tailwindcss/forms": "^0.5.9",  
-"@tailwindcss/postcss": "^4.0.5",  
-"@tailwindcss/typography": "^0.5.15",  
-"body-scroll-lock": "^4.0.0-beta.0",  
-"clsx": "^2.1.1",  
-"contentlayer2": "0.5.5",  
-"cross-env": "^7.0.3",  
-"esbuild": "0.25.2",  
-"github-slugger": "^2.0.0",  
-"gray-matter": "^4.0.2",  
-"hast-util-from-html-isomorphic": "^2.0.0",  
-"lucide-react": "^0.545.0",  
-"next": "^15.5.4",  
-"next-contentlayer2": "0.5.5",  
-"next-seo": "^6.8.0",  
-"next-themes": "^0.4.6",  
-"pliny": "0.4.1",  
-"postcss": "^8.4.24",  
-"react": "19.0.0",  
-"react-dom": "19.0.0",  
-"reading-time": "1.5.0",  
-"rehype-autolink-headings": "^7.1.0",  
-"rehype-citation": "^2.3.0",  
-"rehype-katex": "^7.0.0",  
-"rehype-katex-notranslate": "^1.1.4",  
-"rehype-preset-minify": "7.0.0",  
-"rehype-prism-plus": "^2.0.0",  
-"rehype-slug": "^6.0.0",  
-"remark": "^15.0.0",  
-"remark-gfm": "^4.0.0",  
-"remark-github-blockquote-alert": "^1.2.1",  
-"remark-math": "^6.0.0",  
-"tailwindcss": "^4.0.5",  
-"unist-util-visit": "^5.0.0"  
-},  
-"devDependencies": {  
-"@eslint/eslintrc": "^3.2.0",  
-"@eslint/js": "^9.16.0",  
-"@svgr/webpack": "^8.0.1",  
-"@types/mdx": "^2.0.12",  
-"@types/react": "^19.0.8",  
-"@typescript-eslint/eslint-plugin": "^8.12.0",  
-"@typescript-eslint/parser": "^8.12.0",  
-"eslint": "^9.14.0",  
-"eslint-config-next": "15.2.4",  
-"eslint-config-prettier": "^9.1.0",  
-"eslint-plugin-prettier": "^5.2.0",  
-"globals": "^15.12.0",  
-"husky": "^9.0.0",  
-"image-size": "^2.0.2",  
-"lint-staged": "^13.0.0",  
-"prettier": "^3.0.0",  
-"prettier-plugin-tailwindcss": "^0.6.11",  
-"typescript": "^5.1.3"  
+"name": "tailwind-nextjs-starter-blog",
+"version": "2.4.0",
+"private": true,
+"dependencies": {
+"@headlessui/react": "2.2.0",
+"@heroicons/react": "^2.2.0",
+"@next/bundle-analyzer": "15.2.4",
+"@tailwindcss/forms": "^0.5.9",
+"@tailwindcss/postcss": "^4.0.5",
+"@tailwindcss/typography": "^0.5.15",
+"body-scroll-lock": "^4.0.0-beta.0",
+"clsx": "^2.1.1",
+"contentlayer2": "0.5.5",
+"cross-env": "^7.0.3",
+"esbuild": "0.25.2",
+"github-slugger": "^2.0.0",
+"gray-matter": "^4.0.2",
+"hast-util-from-html-isomorphic": "^2.0.0",
+"lucide-react": "^0.545.0",
+"next": "^15.5.4",
+"next-contentlayer2": "0.5.5",
+"next-seo": "^6.8.0",
+"next-themes": "^0.4.6",
+"pliny": "0.4.1",
+"postcss": "^8.4.24",
+"react": "19.0.0",
+"react-dom": "19.0.0",
+"reading-time": "1.5.0",
+"rehype-autolink-headings": "^7.1.0",
+"rehype-citation": "^2.3.0",
+"rehype-katex": "^7.0.0",
+"rehype-katex-notranslate": "^1.1.4",
+"rehype-preset-minify": "7.0.0",
+"rehype-prism-plus": "^2.0.0",
+"rehype-slug": "^6.0.0",
+"remark": "^15.0.0",
+"remark-gfm": "^4.0.0",
+"remark-github-blockquote-alert": "^1.2.1",
+"remark-math": "^6.0.0",
+"tailwindcss": "^4.0.5",
+"unist-util-visit": "^5.0.0"
+},
+"devDependencies": {
+"@eslint/eslintrc": "^3.2.0",
+"@eslint/js": "^9.16.0",
+"@svgr/webpack": "^8.0.1",
+"@types/mdx": "^2.0.12",
+"@types/react": "^19.0.8",
+"@typescript-eslint/eslint-plugin": "^8.12.0",
+"@typescript-eslint/parser": "^8.12.0",
+"eslint": "^9.14.0",
+"eslint-config-next": "15.2.4",
+"eslint-config-prettier": "^9.1.0",
+"eslint-plugin-prettier": "^5.2.0",
+"globals": "^15.12.0",
+"husky": "^9.0.0",
+"image-size": "^2.0.2",
+"lint-staged": "^13.0.0",
+"prettier": "^3.0.0",
+"prettier-plugin-tailwindcss": "^0.6.11",
+"typescript": "^5.1.3"
 }
+```
 
 ## 🗂️ Folder / Project Structure
 

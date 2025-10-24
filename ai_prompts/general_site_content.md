@@ -53,11 +53,19 @@ topic very interesting to me (augmented/mixed/extended
 reality), the light is connected to this topic. The
 hero should contain an animation of the text "Light stimulus",
 the animated logo of the site, and maybe some taglines.
-I haven't decided the taglines yet but they can be
-sentences about me, my job and my interest, or some
-catchy sentences that creates a relation between the limulus
-and the light. For this last point, here are some
-analogies between limulus and light I like (in
+Initially I will provide an initial version of the logo that you will
+use for an initial animation, just to see the effect on the page,
+then we will move to the definitive svg and apply the
+definitive animation on that one.
+In the hero section:
+
+- The hero should be compact like like mxb.dev
+- Tagline animation should be typewriter
+- Subtle floating/parallax effect for depth (Think: calm, elegant, “Apple keynote” feel.)
+- Logo reveal follows a “light passes through” or “illumination sweep” concept;
+  the light sweep effect should be a glow beam.
+
+Here are some analogies between limulus and light I like (in
 italian), so that you can get an inspiration for
 a tagline from them:
 
@@ -167,5 +175,9 @@ come l'inibizione laterale, ovvero la capacità di
 distinguere linee, forme e contorni degli oggetti.
 
 The animated logo and “Light Stimulus” text should be SVG-based
-Framer Motion animation, and the tagline text should
-cycle automatically (like a typing effect / fade between phrases)
+Framer Motion animation; the logo and the “Light Stimulus” text
+should be animated as separate reveal for the logo first, then the text.
+Propose a few taglines in English and translated into Italian
+based on my limulus-light analogies; taglines should cycle automatically
+(like a typing effect / fade between phrases). I already have
+a SVG file I will provide you later when creating the page.

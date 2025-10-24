@@ -48,7 +48,7 @@ The styling system is TailwindCSS + custom theme file
 
 - ContentLayer: already installed
 - MDX + Generative AI Workflows for content:
-  Content Source: blog posts and projects live as
+  Content Source: both blog posts and projects live as
   .mdx files in your repo, so that no CMS is used.
   For now, I will manually generate the mdx files.
   In the future, I would like

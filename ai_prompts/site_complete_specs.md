@@ -53,11 +53,19 @@ topic very interesting to me (augmented/mixed/extended
 reality), the light is connected to this topic. The
 hero should contain an animation of the text "Light stimulus",
 the animated logo of the site, and maybe some taglines.
-I haven't decided the taglines yet but they can be
-sentences about me, my job and my interest, or some
-catchy sentences that creates a relation between the limulus
-and the light. For this last point, here are some
-analogies between limulus and light I like (in
+Initially I will provide an initial version of the logo that you will
+use for an initial animation, just to see the effect on the page,
+then we will move to the definitive svg and apply the
+definitive animation on that one.
+In the hero section:
+
+- The hero should be compact like like mxb.dev
+- Tagline animation should be typewriter
+- Subtle floating/parallax effect for depth (Think: calm, elegant, “Apple keynote” feel.)
+- Logo reveal follows a “light passes through” or “illumination sweep” concept.
+  the light sweep effect should be a glow beam.
+
+Here are some analogies between limulus and light I like (in
 italian), so that you can get an inspiration for
 a tagline from them:
 
@@ -167,8 +175,12 @@ come l'inibizione laterale, ovvero la capacità di
 distinguere linee, forme e contorni degli oggetti.
 
 The animated logo and “Light Stimulus” text should be SVG-based
-Framer Motion animation, and the tagline text should
-cycle automatically (like a typing effect / fade between phrases)
+Framer Motion animation; the logo and the “Light Stimulus” text
+should be animated as separate reveal for the logo first, then the text.
+Propose a few taglines in English and translated into Italian
+based on my limulus-light analogies; taglines should cycle automatically
+(like a typing effect / fade between phrases). I already have
+a SVG file I will provide you later when creating the page.
 
 # 🧰 Tech Stack & Architecture
 
@@ -445,26 +457,31 @@ in your opinion.
 The site should at least have an home page, a project page,
 a bio/about page, a blog page and a contact page.
 
-| Page     | Purpose / Key Content                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Home     | Short intro, featured projects, few of the most recent blog articles                                                                                                                                                                                                                                                                                                                                                                       |
-| About    | Bio, experience, photo is not mandatory; tone of the page should be "colloquial", without direct references to IBM (even if my current job can be cited)                                                                                                                                                                                                                                                                                   |
-| Projects | All portfolio items with filters; Projects page should only showcase personal/experimental projects (computer vision, XR, Snowflake demos, AI workflows, etc.); projects are stored in mdx files, one for each project; the projects home should have a grid of projects with tags/filters on the right, and clicking on a project should redirect the user to the specific project detail page                                            |
-| Blog     | Articles and notes; blog style should be technical deep dives/tutorials (e.g., Gatsby, XR, AI workflows, SwiftUI tips), and short reflections/essays; blog posts are stored in mdx files, one for each post; like in the starting project, the blog homepage should display a a list with tag filters sidebar on the left and blog posts preview on the right; clicking on a post preview redirect the user to the specific blog post page |
-| Contact  | just a simple form that actually sends emails (via Netlify Forms / serverless function) and social links                                                                                                                                                                                                                                                                                                                                   |
+| Page     | Purpose / Key Content                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home     | Short intro, featured projects, few of the most recent blog articles. After hero, sections should be Featured Projects → Latest Blog -> Simplified contact form -> Footer, on this order; for the homepage, use a scroll-to-section behaviour for anchors (e.g. Projects, Blog); featured project should show 3 or 4 project cards with preview animation; latest blog should show the preview of latest 4 blog articles                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| About    | Bio, experience, photo is not mandatory; tone of the page should be "colloquial", without direct references to IBM (even if my current job can be cited)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Projects | All portfolio items with filters; Projects page should only showcase personal/experimental projects (computer vision, XR, Snowflake demos, AI workflows, etc.); projects are stored in mdx files, one for each project; the projects home should have a grid of projects with tags/filters (filters be a sidebar on the left on desktop / dropdown on top of the list on mobile), and clicking on a project should redirect the user to the specific project detail page.the project cards in the main home page and project home page should only have an image and a descriptive content; the project detail page will have more info (more images, longer description, GitHub links and live demo only if possible). Project cards should have hover animations (glassmorphism); project cards should open in dedicated route (/projects/[slug]) |
+| Blog     | Articles and notes; blog style should be technical deep dives/tutorials (e.g., Gatsby, XR, AI workflows, SwiftUI tips), and short reflections/essays; blog posts are stored in mdx files, one for each post; like in the starting project, the blog homepage should display a a list with tag filters sidebar on the left and blog posts preview on the right; clicking on a post preview redirect the user to the specific blog post page. Blog cards should have hover animations (glassmorphism)                                                                                                                                                                                                                                                                                                                                                 |
+| Contact  | just a simple form that actually sends emails via Netlify Forms; form should be simple name/email/message; in the same page, social links                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 ## 🧩 Global Components
 
 The global component reused across pages should be
 
 - header: should contain the logo, navigation bar to move across
-  pages, a search button and a toggle for dark and light switch
+  pages, a search button and a toggle for dark and light switch; header is
+  hidden/revealed dynamically; it should appear immediately on page load,
+  and we want it to hide on scroll down / reveal on scroll up, with a smooth
+  transition (tranlsation); at the beginning the header should be transparent
+  over the hero then solid on scroll
 - search button: Use Pliny Kbar for local search (cmd+k); in the
   initial header version of the starting project, there is already a
-  visible search button in the header
+  visible search button in the header. For the scroll behavior for Header,
+  it should smoothly fade in/out.
 - theme toggle is part of the header and must keep the three options system
   (light / dark / system) and save user preference in local storage
-- footer: minimal footer with three or four icons for social links
+- footer: minimal footer with social links icons for email, github, linkedin,
   and the copyright info; in the future maybe i will add an input to
   subscribe to the newsletter
 - a layout wrapper already present in the documents
@@ -521,6 +538,8 @@ Here are the fonts to be used
     without being branded
   - paired with IBM Plex Mono for code snippets in
     the blog
+    Typography scale: Keep Tailwind defaults but define
+  - a slightly larger rhythm for headings/subtitles
 
 ## 📏 Layout & Spacing
 
@@ -538,13 +557,18 @@ The starting project from which I started creating the site already
 have a theme switch button in the navigation bar, where the
 choices are always light, always dark or to follow system settings.
 No specific transition is needed for the passage from light to
-dark theme. The contrasts should follow accessibility rules.
+dark theme.
+No specific transition is needed for the passage from light to
+dark theme, keep instant toggle.
+The contrasts should follow accessibility rules.
 
 ## 💫 Visual Style
 
 I would like a good mix of visual flair and flat/clean/minimal
-design, not too much of both of them. As an iOS developer, some
-glassmorphism would be nice. Looking at the list of site provided
+design, not too much of both of them. As an iOS developer, use some
+glassmorphism: glassmorphism level should be slightly pronounced
+(e.g., translucent header and cards) but not too invasive.
+Looking at the list of site provided
 in the next point, I would say that the best is to have
 a good balance of a minimalist/clean design (like mxb.dev)
 and of something more visual/animated (like rammaheshwari.com),
@@ -552,7 +576,14 @@ slightly tending more to the minimalist/clean design;
 surely I don't want something very elaborate
 like https://tamalsen.dev (that I included more as a reference
 to content disposition/site structure more than as a reference
-for the graphical aspect)
+for the graphical aspect).
+As a (not too much) subtle reference my iOS background, use
+glassmorphism for the header and cards, and for the footer
+(the footer is not a card, but a simple div with a
+transparent background). Glassmorphism should be around
+20–30% blur + 60% opacity for everything (project cards, blog cards, header, footer)
+, but I will evaluate possible changes for specific components
+based on the specific context and page when developing that page.
 
 ## 🖼️ Inspiration References
 
@@ -596,7 +627,9 @@ negative impact on the site structure or content
 No particular performance level is expected, but consider all the possible
 optimization you can make (for example lazy loading, image optimization, etc).
 At the moment the site should use static export, and for this reason the
-image optimization needed to be disabled. Here is the current content of
+image optimization needed to be disabled; if possible use a custom <Image>
+component (wrapper around <img>) for consistent styling + lazy loading.
+Here is the current content of
 the next.config.js file:
 
 ```
@@ -718,9 +751,12 @@ At the moment no particular analytics service is requested, even if
 in the starting project I see that another library from the same author
 of the starting project is included in the dependencies ([Pliny](https://github.com/timlrx/pliny)).
 I will add other info about this package and its Readme file in the "Optional extras" section
-It seems that in the same project something to manage a Newsletter form
-is already included, but evaluate if other integration should be added
-to manage a contact form in the Contact page.
+For now, just keep a placeholder for the analytics.
+The contact form should use Netlify Forms, and the social links
+should be added to the footer. The form should submit directly
+and show a custom success message if the form is submitted successfully.
+In case of error, the validation should be made also on
+the client side (basic name/email/message.
 
 ## 🔒 Privacy or Legal
 
@@ -741,21 +777,44 @@ animations. Subtle interactions should enhance the user experience
 entrance animations should make key sections like the hero, feature
 highlights, or calls-to-action more engaging when they appear in
 the viewport. The goal is a polished, dynamic feel without
-overwhelming the user.
+overwhelming the user. Consistent microinteractions (hover, scroll reveal timings)
+distinct hero animation (unique logo + text sequence)
+Slightly differentiated section reveals
+(same motion language, different direction/intensity)
+Use Motion.dev (in its latest stable release) as the unified animation
+library (for hero + microinteractions)
 
 ## 🌍 Internationalization
 
 The site should support both English and Italian. Detect the
 preferred language automatically on first visit
-But always display a language toggle in the header (e.g., a
-simple dropdown or flag button) to change language programmatically.
+But always display a language toggle in the header as a icon
+based toggle with flags and language description short text
+(e.g.“EN", "IT”) to change language programmatically.
+When switching language, the hero tagline switch language instantly (no animation)
 Store the user’s preference in localStorage so it persists.
+As default, the site should auto redirect on browser locale
+(Italian if locale is Italian, English if locale is English and
+as a fallback option for every other locale that is not Italian);
+the user can then switch manually and the choice must be saved
+in local storage.
 For translation storage, use JSON files under /locales for UI/static text,
-and use MDX frontmatter with localized fields for Page content (MDX posts)
+and use MDX frontmatter with localized fields for Page content (MDX posts).
+English should be primary language as it is fallback for every
+language other than Italian, but probably most of the users will be
+Italian so the content must be perfect in Italian too.
+You should keep a single route and switch language internally,
+so URLs must remain clean (e.g. "/" always, internal language
+switch), and not localized paths (e.g. /it/..., /en/...).
+Translations must be preloaded for both languages at runtime
+(since the site is small and static)
 
 ## 📝 Blog or CMS Setup
 
-For the blog articles, I will use Markdown/MDX (no CMS)
+For the blog articles and projects content, I will use Markdown/MDX (no CMS).
+We will design the MDX frontmatter structure together
+(fields like title, tags, summary, slug, coverImage, date, lang, etc.)
+before implementing list layouts.
 In the process, I will store blog posts and projects as .mdx in the repo
 for lowest complexity and highest control. In the future, the idea is to
 automate some content generation with AI:
@@ -770,7 +829,11 @@ automate some content generation with AI:
 
 As said in the previous section, this approach must manage also the
 internationalization/the fact that all the articles are present in all
-the supported languages
+the supported languages. At the beginning, I will provide a double version of
+the article (in italian and english), but I will try to automate the generation
+of the other languages.
+No comments enabled (e.g., via Giscus or Disqus) for now, keep it read-only
+for now.
 
 ## 🧰 Build / Dev Tools
 
@@ -786,7 +849,8 @@ be made on a feature branch and when the feature branch is merged into
 main branch, the netlify pipeline will trigger and deploy the new site.
 I think netlify can also manage changes previews, but I don't know exactly how
 to use it. For now, I check for the site preview through local building and
-running.
+running. Netlify is already linked to my repo, so it is not necessary to
+include initial setup instructions for it in the project plan
 
 ## ℹ️ Additional info on Pliny library
 

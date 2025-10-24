@@ -8,21 +8,42 @@ animations. Subtle interactions should enhance the user experience
 entrance animations should make key sections like the hero, feature
 highlights, or calls-to-action more engaging when they appear in
 the viewport. The goal is a polished, dynamic feel without
-overwhelming the user.
+overwhelming the user. Consistent microinteractions (hover, scroll reveal timings)
+distinct hero animation (unique logo + text sequence)
+Slightly differentiated section reveals
+(same motion language, different direction/intensity)
+Use Motion.dev (in its latest stable release) as the unified animation
+library (for hero + microinteractions)
 
 ## 🌍 Internationalization
 
 The site should support both English and Italian. Detect the
 preferred language automatically on first visit
-But always display a language toggle in the header (e.g., a
-simple dropdown or flag button) to change language programmatically.
+But always display a language toggle in the header as a icon
+based toggle with flags and language description short text
+(e.g.“EN", "IT”) to change language programmatically.
+When switching language, the hero tagline switch language instantly (no animation)
 Store the user’s preference in localStorage so it persists.
+As default, the site should auto redirect on browser locale
+(Italian if locale is Italian, English if locale is English and
+as a fallback option for every other locale that is not Italian);
+the user can then switch manually and the choice must be saved
+in local storage.
 For translation storage, use JSON files under /locales for UI/static text,
-and use MDX frontmatter with localized fields for Page content (MDX posts)
+and use MDX frontmatter with localized fields for Page content (MDX posts).
+English should be primary language as it is fallback for every
+language other than Italian, but probably most of the users will be
+Italian so the content must be perfect in Italian too.
+You should keep a single route and switch language internally,
+so URLs must remain clean (e.g. "/" always, internal language
+switch), and not localized paths (e.g. /it/..., /en/...).
 
 ## 📝 Blog or CMS Setup
 
-For the blog articles, I will use Markdown/MDX (no CMS)
+For the blog articles and projects content, I will use Markdown/MDX (no CMS).
+We will design the MDX frontmatter structure together
+(fields like title, tags, summary, slug, coverImage, date, lang, etc.)
+before implementing list layouts.
 In the process, I will store blog posts and projects as .mdx in the repo
 for lowest complexity and highest control. In the future, the idea is to
 automate some content generation with AI:
@@ -37,7 +58,11 @@ automate some content generation with AI:
 
 As said in the previous section, this approach must manage also the
 internationalization/the fact that all the articles are present in all
-the supported languages
+the supported languages. At the beginning, I will provide a double version of
+the article (in italian and english), but I will try to automate the generation
+of the other languages.
+No comments enabled (e.g., via Giscus or Disqus) for now, keep it read-only
+for now.
 
 ## 🧰 Build / Dev Tools
 
@@ -53,7 +78,8 @@ be made on a feature branch and when the feature branch is merged into
 main branch, the netlify pipeline will trigger and deploy the new site.
 I think netlify can also manage changes previews but I don't know exactly how
 to use it. For now, I check for the site preview through local building and
-running.
+running. Netlify is already linked to my repo, so it is not necessary to
+include initial setup instructions for it in the project plan.
 
 ## ℹ️ Additional info on Pliny library
 

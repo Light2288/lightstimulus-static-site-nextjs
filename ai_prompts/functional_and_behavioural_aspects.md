@@ -144,9 +144,12 @@ At the moment no particular analytics service is requested, even if
 in the starting project I see that another library from the same author
 of the starting project is included in the dependencies ([Pliny](https://github.com/timlrx/pliny)).
 I will add other info about this package and its Readme file in the "Optional extras" section
-It seems that in the same project something to manage a Newsletter form
-is already included, but evaluate if other integration should be added
-to manage a contact form in the Contact page.
+For now, just keep a placeholder for the analytics.
+The contact form should use Netlify Forms, and the social links
+should be added to the footer. The form should submit directly
+and show a custom success message if the form is submitted successfully.
+In case of error, the validation should be made also on
+the client side (basic name/email/message.
 
 ## 🔒 Privacy or Legal
 

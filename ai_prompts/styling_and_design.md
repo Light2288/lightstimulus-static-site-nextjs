@@ -42,6 +42,9 @@ Here are the fonts to be used
   - paired with IBM Plex Mono for code snippets in
     the blog
 
+Typography scale: Keep Tailwind defaults but define
+a slightly larger rhythm for headings/subtitles
+
 ## 📏 Layout & Spacing
 
 I have no particular indication about container width,
@@ -58,13 +61,16 @@ The starting project from which I started creating the site already
 have a theme switch button in the navigation bar, where the
 choices are always light, always dark or to follow system settings.
 No specific transition is needed for the passage from light to
-dark theme. The contrasts should follow accessibility rules.
+dark theme, keep instant toggle.
+The contrasts should follow accessibility rules.
 
 ## 💫 Visual Style
 
 I would like a good mix of visual flair and flat/clean/minimal
-design, not too much of both of them. As an iOS developer, some
-glassmorphism would be nice. Looking at the list of site provided
+design, not too much of both of them. As an iOS developer, use some
+glassmorphism: glassmorphism level should be slightly pronounced
+(e.g., translucent header and cards) but not too invasive.
+Looking at the list of site provided
 in the next point, I would say that the best is to have
 a good balance of a minimalist/clean design (like mxb.dev)
 and of something more visual/animated (like rammaheshwari.com),
@@ -72,7 +78,14 @@ slightly tending more to the minimalist/clean design;
 surely I don't want something very elaborate
 like https://tamalsen.dev (that I included more as a reference
 to content disposition/site structure more than as a reference
-for the graphical aspect)
+for the graphical aspect).
+As a (not too much) subtle reference my iOS background, use
+glassmorphism for the header and cards, and for the footer
+(the footer is not a card, but a simple div with a
+transparent background). Glassmorphism should be around
+20–30% blur + 60% opacity for everything (project cards, blog cards, header, footer)
+, but I will evaluate possible changes for specific components
+based on the specific context and page when developing that page.
 
 ## 🖼️ Inspiration References
 

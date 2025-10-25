@@ -28,6 +28,9 @@ the classic one of a developer's personal site, to
 promote the image, provide a contact point and show
 the projects the developer worked and is currently
 working on.
+Development priorities: maintainable and extensible architecture (≈70%)
+combined with expressive visual and animation elements (≈30%)
+to reflect technical depth and creative experimentation.
 
 ## 🎯 Target Audience
 

@@ -36,12 +36,36 @@ The styling system is TailwindCSS + custom theme file
       - Teal = links, key highlights
       - Amber = buttons, hover accents
       - Violet = occasional decorative elements (tags, code highlight keywords, etc.)
+
+  - I will centralize the palette in Tailwind’s theme extension (tailwind.config.js).
+    This allows to
+    - Keeps design consistent across components and future refactors.
+    - Use semantic tokens like text-primary, bg-accent, etc. instead of raw hex values.
+    - Makes theme toggling (light/dark) seamless using Tailwind’s theme.extend.colors and data-theme or class-based toggles.
+    - Simplifies future adjustments (if you tweak teal or background shades).
+  - To use utility classes like text-accent-primary instead of hex codes everywhere,
+    I will define small “semantic” groupings, e.g.:
+    ```
+      extend: {
+         colors: {
+            background: { light: '#F8F9FB', dark: '#0D1B2A' },
+            text: { light: '#1C1C1E', dark: '#E6EDF3' },
+            accent: {
+               primary: '#4FD1C5',
+               secondary: '#FFB347',
+               tertiary: '#7C3AED',
+            },
+         },
+      }
+    ```
+
 - Fonts:
   - IBM Plex Sans → clean, slightly more “techy”,
     subtle personality. A good nod to your IBM role
     without being branded
   - paired with IBM Plex Mono for code snippets in
     the blog
+  - Host the fonts locally (import via @next/font/local)
 - Icons: Heroicons and Lucide
 
 ## 📦 Additional Libraries / Tools

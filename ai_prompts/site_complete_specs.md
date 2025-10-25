@@ -28,6 +28,9 @@ the classic one of a developer's personal site, to
 promote the image, provide a contact point and show
 the projects the developer worked and is currently
 working on.
+Development priorities: maintainable and extensible architecture (≈70%)
+combined with expressive visual and animation elements (≈30%)
+to reflect technical depth and creative experimentation.
 
 ## 🎯 Target Audience
 
@@ -220,12 +223,34 @@ The styling system is TailwindCSS + custom theme file
       - Teal = links, key highlights
       - Amber = buttons, hover accents
       - Violet = occasional decorative elements (tags, code highlight keywords, etc.)
+  - I will centralize the palette in Tailwind’s theme extension (tailwind.config.js).
+    This allows to
+    - Keeps design consistent across components and future refactors.
+    - Use semantic tokens like text-primary, bg-accent, etc. instead of raw hex values.
+    - Makes theme toggling (light/dark) seamless using Tailwind’s theme.extend.colors and data-theme or class-based toggles.
+    - Simplifies future adjustments (if you tweak teal or background shades).
+  - To use utility classes like text-accent-primary instead of hex codes everywhere,
+    I will define small “semantic” groupings, e.g.:
+    ```
+      extend: {
+         colors: {
+            background: { light: '#F8F9FB', dark: '#0D1B2A' },
+            text: { light: '#1C1C1E', dark: '#E6EDF3' },
+            accent: {
+               primary: '#4FD1C5',
+               secondary: '#FFB347',
+               tertiary: '#7C3AED',
+            },
+         },
+      }
+    ```
 - Fonts:
   - IBM Plex Sans → clean, slightly more “techy”,
     subtle personality. A good nod to your IBM role
     without being branded
   - paired with IBM Plex Mono for code snippets in
     the blog
+  - Host the fonts locally (import via @next/font/local)
 - Icons: Heroicons and Lucide
 
 ## 📦 Additional Libraries / Tools
@@ -472,9 +497,13 @@ The global component reused across pages should be
 - header: should contain the logo, navigation bar to move across
   pages, a search button and a toggle for dark and light switch; header is
   hidden/revealed dynamically; it should appear immediately on page load,
-  and we want it to hide on scroll down / reveal on scroll up, with a smooth
-  transition (tranlsation); at the beginning the header should be transparent
+  and we want it to hide on scroll down / reveal on scroll up, using
+  smooth fade + translate transitions (like Apple-style);
+  at the beginning the header should be transparent
   over the hero then solid on scroll
+  Header visibility (hide on scroll down / show on scroll up)
+  should be managed with IntersectionObserver rather than scroll listeners
+  to ensure optimal performance and smoother transitions.
 - search button: Use Pliny Kbar for local search (cmd+k); in the
   initial header version of the starting project, there is already a
   visible search button in the header. For the scroll behavior for Header,
@@ -538,8 +567,11 @@ Here are the fonts to be used
     without being branded
   - paired with IBM Plex Mono for code snippets in
     the blog
-    Typography scale: Keep Tailwind defaults but define
-  - a slightly larger rhythm for headings/subtitles
+
+Typography scale: Keep Tailwind defaults but define
+a slightly larger rhythm for headings/subtitles.
+Extend Tailwind’s default font size scale by approximately 1.125× for headings and subtitles.  
+Apply this rhythm globally via `tailwind.config.js` theme extension to maintain consistency.
 
 ## 📏 Layout & Spacing
 
@@ -561,6 +593,9 @@ dark theme.
 No specific transition is needed for the passage from light to
 dark theme, keep instant toggle.
 The contrasts should follow accessibility rules.
+Continue using `next-themes` for theme switching and persistence.  
+Future customizations (e.g. animated transitions or color scheme expansions)  
+can be layered on top of its context rather than replacing it.
 
 ## 💫 Visual Style
 
@@ -584,6 +619,11 @@ transparent background). Glassmorphism should be around
 20–30% blur + 60% opacity for everything (project cards, blog cards, header, footer)
 , but I will evaluate possible changes for specific components
 based on the specific context and page when developing that page.
+For glassmorphism implementation, use backdrop-filter (true blur),
+do not use simulated blur layers.
+Glassmorphism parameters (blur, opacity, background color) should be defined as CSS variables in the global theme.  
+Components should reference these variables through Tailwind utilities or custom classes,  
+so global adjustments can be made without editing multiple components.
 
 ## 🖼️ Inspiration References
 
@@ -615,6 +655,11 @@ traffic (technical blog posts being indexed, discoverable on Google).
 As you can see from the project current structure, there is already a
 seo.tsx file, a sitemap.ts file, a robot.ts file, a siteMetadata.js file,
 and in the package.json the "next-seo" package is included.
+Keep one global siteMetadata.js with all general info
+(title, url, author, social, etc.).
+Localized SEO or text portions (like descriptions or hero subtitles)
+will come from translation JSONs or MDX frontmatter,
+not from separate metadata files.
 
 ## ♿ Accessibility Goals
 
@@ -627,8 +672,10 @@ negative impact on the site structure or content
 No particular performance level is expected, but consider all the possible
 optimization you can make (for example lazy loading, image optimization, etc).
 At the moment the site should use static export, and for this reason the
-image optimization needed to be disabled; if possible use a custom <Image>
-component (wrapper around <img>) for consistent styling + lazy loading.
+image optimization needed to be disabled; use a custom `<Image>` component
+wrapping `<img>` with native `loading="lazy"`, fade-in animation on
+intersection, and optional blur placeholder.  
+This replaces Next.js image optimization in the static export context.
 Here is the current content of
 the next.config.js file:
 
@@ -743,7 +790,12 @@ site pages (for example, is it ok to create two different project cards,
 if this will ever be a component for the site, if one card works better in the
 homepage and the other card works better in the projects page)
 No particular UI Kit or design token will be used, the styling will be
-made with the Tailwind library and Tailwind configurations as said before
+made with the Tailwind library and Tailwind configurations as said before.
+For the component architecture, do not use separate client/server
+components strictly per Next.js best practice (e.g. Header = client, Footer/Layout = server),
+use a simpler all-client structure for uniform animation/state handling.
+All UI components (Header, Footer, Layout, etc.) should remain client components for consistency in state and animation.  
+Use server components only for metadata or static SEO injection inside layout files.
 
 ## 🧠 Analytics & Integrations
 
@@ -751,7 +803,7 @@ At the moment no particular analytics service is requested, even if
 in the starting project I see that another library from the same author
 of the starting project is included in the dependencies ([Pliny](https://github.com/timlrx/pliny)).
 I will add other info about this package and its Readme file in the "Optional extras" section
-For now, just keep a placeholder for the analytics.
+For now, just keep a placeholder for the analytics, don't activate one yet.
 The contact form should use Netlify Forms, and the social links
 should be added to the footer. The form should submit directly
 and show a custom success message if the form is submitted successfully.
@@ -782,7 +834,10 @@ distinct hero animation (unique logo + text sequence)
 Slightly differentiated section reveals
 (same motion language, different direction/intensity)
 Use Motion.dev (in its latest stable release) as the unified animation
-library (for hero + microinteractions)
+library (for hero + microinteractions), not Framer Motion.
+For microinteractions (hover, small fade/scale transitions), use TailwindCSS built-in transition utilities.  
+Use Motion.dev exclusively for structured animations (hero reveal, section entrance, scroll-triggered, or complex sequences).  
+Do not import Motion for basic hover states.
 
 ## 🌍 Internationalization
 
@@ -791,7 +846,9 @@ preferred language automatically on first visit
 But always display a language toggle in the header as a icon
 based toggle with flags and language description short text
 (e.g.“EN", "IT”) to change language programmatically.
-When switching language, the hero tagline switch language instantly (no animation)
+When switching language, the hero tagline switch language instantly (no animation).
+In general, when switching languages, content will switch instantly
+without any sort of fade transition or other transition/animation.
 Store the user’s preference in localStorage so it persists.
 As default, the site should auto redirect on browser locale
 (Italian if locale is Italian, English if locale is English and
@@ -808,6 +865,21 @@ so URLs must remain clean (e.g. "/" always, internal language
 switch), and not localized paths (e.g. /it/..., /en/...).
 Translations must be preloaded for both languages at runtime
 (since the site is small and static)
+I will use a lightweight custom JSON + React context hook system,
+because in this case a simple internal i18n layer
+(like /locales/en.json and /locales/it.json)
+with a LanguageProvider context is more reliable, transparent,
+and easier to extend. I will preload both languages on app init
+and cache the selection in localStorage.
+Keep /locales/en.json and /locales/it.json only for UI/static strings
+(menu, buttons, taglines).
+Keep SEO, meta descriptions, and long text inside:
+
+- siteMetadata.js (shared global metadata)
+- MDX frontmatter (per-page localized fields)
+
+The LanguageProvider should be initialized in `app/layout.tsx` at the root level
+to ensure consistent language context across the entire app (including metadata, menus, and animations).
 
 ## 📝 Blog or CMS Setup
 
@@ -834,12 +906,30 @@ the article (in italian and english), but I will try to automate the generation
 of the other languages.
 No comments enabled (e.g., via Giscus or Disqus) for now, keep it read-only
 for now.
+Use a single MDX file per article/project, with dual-language
+frontmatter fields, e.g.:
+
+```
+title:
+en: "Exploring AR Depth APIs"
+it: "Esplorando le API di profondità AR"
+summary:
+en: "An overview of how depth sensing enhances AR experiences."
+it: "Una panoramica su come la percezione della profondità migliora le esperienze AR."
+date: "2025-05-20"
+tags: ["AR", "computer vision"]
+coverImage: "/images/depth-ar.jpg"
+```
+
+Define two separate Contentlayer document types: `Blog` and `Project`.  
+Each will include dual-language fields (`title`, `summary`, etc.)  
+and a shared field set for date, tags, slug, coverImage, and language.  
+Keeping them distinct simplifies filtering and routing.
 
 ## 🧰 Build / Dev Tools
 
-Linting and prettier are already present as dev dependencies, but give
-suggestions on how to get the best out of them. The same is true for "husky"
-package that is a dev dependency but please give suggestions on how to use it.
+I will configure (with your support) Husky pre-commit hooks
+to run lint + prettier automatically.
 No need to add other tools like storybook.
 
 ## 🚀 Deployment Workflow
@@ -850,7 +940,8 @@ main branch, the netlify pipeline will trigger and deploy the new site.
 I think netlify can also manage changes previews, but I don't know exactly how
 to use it. For now, I check for the site preview through local building and
 running. Netlify is already linked to my repo, so it is not necessary to
-include initial setup instructions for it in the project plan
+include initial setup instructions for it in the project plan. For now, I will
+not use Netlify build previews during development.
 
 ## ℹ️ Additional info on Pliny library
 

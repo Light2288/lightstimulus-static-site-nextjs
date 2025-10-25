@@ -43,7 +43,9 @@ Here are the fonts to be used
     the blog
 
 Typography scale: Keep Tailwind defaults but define
-a slightly larger rhythm for headings/subtitles
+a slightly larger rhythm for headings/subtitles.
+Extend Tailwind’s default font size scale by approximately 1.125× for headings and subtitles.  
+Apply this rhythm globally via `tailwind.config.js` theme extension to maintain consistency.
 
 ## 📏 Layout & Spacing
 
@@ -63,6 +65,9 @@ choices are always light, always dark or to follow system settings.
 No specific transition is needed for the passage from light to
 dark theme, keep instant toggle.
 The contrasts should follow accessibility rules.
+Continue using `next-themes` for theme switching and persistence.  
+Future customizations (e.g. animated transitions or color scheme expansions)  
+can be layered on top of its context rather than replacing it.
 
 ## 💫 Visual Style
 
@@ -86,6 +91,11 @@ transparent background). Glassmorphism should be around
 20–30% blur + 60% opacity for everything (project cards, blog cards, header, footer)
 , but I will evaluate possible changes for specific components
 based on the specific context and page when developing that page.
+For glassmorphism implementation, use backdrop-filter (true blur),
+do not use simulated blur layers.
+Glassmorphism parameters (blur, opacity, background color) should be defined as CSS variables in the global theme.  
+Components should reference these variables through Tailwind utilities or custom classes,  
+so global adjustments can be made without editing multiple components.
 
 ## 🖼️ Inspiration References
 

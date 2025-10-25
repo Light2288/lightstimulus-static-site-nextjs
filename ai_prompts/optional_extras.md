@@ -13,7 +13,10 @@ distinct hero animation (unique logo + text sequence)
 Slightly differentiated section reveals
 (same motion language, different direction/intensity)
 Use Motion.dev (in its latest stable release) as the unified animation
-library (for hero + microinteractions)
+library (for hero + microinteractions), not Framer Motion.
+For microinteractions (hover, small fade/scale transitions), use TailwindCSS built-in transition utilities.  
+Use Motion.dev exclusively for structured animations (hero reveal, section entrance, scroll-triggered, or complex sequences).  
+Do not import Motion for basic hover states.
 
 ## 🌍 Internationalization
 
@@ -22,7 +25,9 @@ preferred language automatically on first visit
 But always display a language toggle in the header as a icon
 based toggle with flags and language description short text
 (e.g.“EN", "IT”) to change language programmatically.
-When switching language, the hero tagline switch language instantly (no animation)
+When switching language, the hero tagline switch language instantly (no animation).
+In general, when switching languages, content will switch instantly
+without any sort of fade transition or other transition/animation.
 Store the user’s preference in localStorage so it persists.
 As default, the site should auto redirect on browser locale
 (Italian if locale is Italian, English if locale is English and
@@ -37,6 +42,21 @@ Italian so the content must be perfect in Italian too.
 You should keep a single route and switch language internally,
 so URLs must remain clean (e.g. "/" always, internal language
 switch), and not localized paths (e.g. /it/..., /en/...).
+I will use a lightweight custom JSON + React context hook system,
+because in this case a simple internal i18n layer
+(like /locales/en.json and /locales/it.json)
+with a LanguageProvider context is more reliable, transparent,
+and easier to extend. I will preload both languages on app init
+and cache the selection in localStorage.
+Keep /locales/en.json and /locales/it.json only for UI/static strings
+(menu, buttons, taglines).
+Keep SEO, meta descriptions, and long text inside:
+
+- siteMetadata.js (shared global metadata)
+- MDX frontmatter (per-page localized fields)
+
+The LanguageProvider should be initialized in `app/layout.tsx` at the root level
+to ensure consistent language context across the entire app (including metadata, menus, and animations).
 
 ## 📝 Blog or CMS Setup
 
@@ -63,12 +83,30 @@ the article (in italian and english), but I will try to automate the generation
 of the other languages.
 No comments enabled (e.g., via Giscus or Disqus) for now, keep it read-only
 for now.
+Use a single MDX file per article/project, with dual-language
+frontmatter fields, e.g.:
+
+```
+title:
+en: "Exploring AR Depth APIs"
+it: "Esplorando le API di profondità AR"
+summary:
+en: "An overview of how depth sensing enhances AR experiences."
+it: "Una panoramica su come la percezione della profondità migliora le esperienze AR."
+date: "2025-05-20"
+tags: ["AR", "computer vision"]
+coverImage: "/images/depth-ar.jpg"
+```
+
+Define two separate Contentlayer document types: `Blog` and `Project`.  
+Each will include dual-language fields (`title`, `summary`, etc.)  
+and a shared field set for date, tags, slug, coverImage, and language.  
+Keeping them distinct simplifies filtering and routing.
 
 ## 🧰 Build / Dev Tools
 
-Linting and prettier are already present as dev dependencies, but give
-suggestions on how to get the best out of them. The same is true for "husky"
-package that is a dev dependency but please give suggestions on how to use it.
+I will configure (with your support) Husky pre-commit hooks
+to run lint + prettier automatically.
 No need to add other tools like storybook.
 
 ## 🚀 Deployment Workflow
@@ -79,7 +117,8 @@ main branch, the netlify pipeline will trigger and deploy the new site.
 I think netlify can also manage changes previews but I don't know exactly how
 to use it. For now, I check for the site preview through local building and
 running. Netlify is already linked to my repo, so it is not necessary to
-include initial setup instructions for it in the project plan.
+include initial setup instructions for it in the project plan. For now, I will
+not use Netlify build previews during development.
 
 ## ℹ️ Additional info on Pliny library
 

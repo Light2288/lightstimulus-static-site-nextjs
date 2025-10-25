@@ -28,10 +28,13 @@ The global component reused across pages should be
 - header: should contain the logo, navigation bar to move across
   pages, a search button and a toggle for dark and light switch; header is
   hidden/revealed dynamically; it should appear immediately on page load,
-  and we want it to hide on scroll down / reveal on scroll up, with a smooth
-  transition (tranlsation); at the beginning the header should be transparent
-  over the hero then solid on scroll.
-  For the scroll behavior for Header, it should smoothly fade in/out.
+  and we want it to hide on scroll down / reveal on scroll up, using
+  smooth fade + translate transitions (like Apple-style);
+  at the beginning the header should be transparent
+  over the hero then solid on scroll
+  Header visibility (hide on scroll down / show on scroll up)
+  should be managed with IntersectionObserver rather than scroll listeners
+  to ensure optimal performance and smoother transitions.
 - search button: Use Pliny Kbar for local search (cmd+k); in the
   initial header version of the starting project, there is already a
   visible search button in the header.

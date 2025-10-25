@@ -10,6 +10,11 @@ traffic (technical blog posts being indexed, discoverable on Google).
 As you can see from the project current structure, there is already a
 seo.tsx file, a sitemap.ts file, a robot.ts file, a siteMetadata.js file,
 and in the package.json the "next-seo" package is included.
+Keep one global siteMetadata.js with all general info
+(title, url, author, social, etc.).
+Localized SEO or text portions (like descriptions or hero subtitles)
+will come from translation JSONs or MDX frontmatter,
+not from separate metadata files.
 
 ## ♿ Accessibility Goals
 
@@ -22,7 +27,11 @@ negative impact on the site structure or content
 No particular performance level is expected, but consider all the possible
 optimization you can make (for example lazy loading, image optimization, etc).
 At the moment the site should use static export, and for this reason the
-image optimization needed to be disabled. Here is the current content of
+image optimization needed to be disabled; use a custom `<Image>` component
+wrapping `<img>` with native `loading="lazy"`, fade-in animation on
+intersection, and optional blur placeholder.  
+This replaces Next.js image optimization in the static export context.
+Here is the current content of
 the next.config.js file:
 
 ```
@@ -136,7 +145,12 @@ site pages (for example, is it ok to create two different project cards,
 if this will ever be a component for the site, if one card works better in the
 homepage and the other card works better in the projects page)
 No particular UI Kit or design token will be used, the styling will be
-made with the Tailwind library and Tailwind configurations as said before
+made with the Tailwind library and Tailwind configurations as said before.
+For the component architecture, do not use separate client/server
+components strictly per Next.js best practice (e.g. Header = client, Footer/Layout = server),
+use a simpler all-client structure for uniform animation/state handling.
+All UI components (Header, Footer, Layout, etc.) should remain client components for consistency in state and animation.  
+Use server components only for metadata or static SEO injection inside layout files.
 
 ## 🧠 Analytics & Integrations
 
@@ -144,7 +158,7 @@ At the moment no particular analytics service is requested, even if
 in the starting project I see that another library from the same author
 of the starting project is included in the dependencies ([Pliny](https://github.com/timlrx/pliny)).
 I will add other info about this package and its Readme file in the "Optional extras" section
-For now, just keep a placeholder for the analytics.
+For now, just keep a placeholder for the analytics, don't activate one yet.
 The contact form should use Netlify Forms, and the social links
 should be added to the footer. The form should submit directly
 and show a custom success message if the form is submitted successfully.

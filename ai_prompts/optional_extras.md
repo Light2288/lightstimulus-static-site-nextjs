@@ -17,12 +17,16 @@ library (for hero + microinteractions), not Framer Motion.
 For microinteractions (hover, small fade/scale transitions), use TailwindCSS built-in transition utilities.  
 Use Motion.dev exclusively for structured animations (hero reveal, section entrance, scroll-triggered, or complex sequences).  
 Do not import Motion for basic hover states.
+Use the latest stable version of `@motion.dev/react` (Motion.dev) as the unified animation library for all structured animations (hero reveal, section entrances, scroll-triggered sequences).
+Framer Motion will not be used.
+Tailwind transitions will continue to handle microinteractions (hover, small opacity/scale effects).
+All animation utilities and motion presets will be defined in a dedicated `/lib/motion` folder for reuse.
 
 ## 🌍 Internationalization
 
 The site should support both English and Italian. Detect the
 preferred language automatically on first visit
-But always display a language toggle in the header as a icon
+but always display a language toggle in the header as a icon
 based toggle with flags and language description short text
 (e.g.“EN", "IT”) to change language programmatically.
 When switching language, the hero tagline switch language instantly (no animation).
@@ -34,6 +38,8 @@ As default, the site should auto redirect on browser locale
 as a fallback option for every other locale that is not Italian);
 the user can then switch manually and the choice must be saved
 in local storage.
+The language switcher will be a compact two-state toggle (EN ↔ IT) with flag icons and short text labels.
+A dropdown is not used since only two languages are supported.
 For translation storage, use JSON files under /locales for UI/static text,
 and use MDX frontmatter with localized fields for Page content (MDX posts).
 English should be primary language as it is fallback for every

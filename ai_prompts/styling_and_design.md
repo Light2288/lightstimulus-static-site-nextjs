@@ -68,6 +68,8 @@ The contrasts should follow accessibility rules.
 Continue using `next-themes` for theme switching and persistence.  
 Future customizations (e.g. animated transitions or color scheme expansions)  
 can be layered on top of its context rather than replacing it.
+User preferences (theme, language, etc.) are stored in localStorage using namespaced keys prefixed with `lightstimulus.`
+(e.g. `lightstimulus.theme`, `lightstimulus.lang`) to avoid conflicts and ensure consistency.
 
 ## 💫 Visual Style
 

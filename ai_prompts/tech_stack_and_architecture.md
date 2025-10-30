@@ -6,7 +6,10 @@ The site is made with Next.js 15 and Tailwind
 
 ## 🎨 Styling System
 
-The styling system is TailwindCSS + custom theme file
+The styling system is TailwindCSS + custom theme file.
+Theme structure: define design tokens in two layers — visual variables (blur, opacity, glass colors) as CSS variables in `theme.css`,
+and functional tokens (colors, font sizes, spacing) in `tailwind.config.js`.
+Tailwind utilities reference these CSS variables where appropriate, ensuring both runtime flexibility and design consistency.
 
 ## 🔡 Fonts & Icons
 
@@ -273,6 +276,12 @@ generated folders:
 │   ├── postbuild.mjs  
 │   └── rss.mjs  
 └── tsconfig.json
+
+To improve maintainability, create two additional component folders:
+
+- `/components/ui`: contains reusable UI primitives (Button, Toggle, CardBase, etc.)
+- `/components/common`: contains higher-level layout components reused across pages (Header, Footer, Layout, SectionWrapper, etc.)
+  This structure separates composable UI elements from layout and logic containers.
 
 ## 🧭 Version Control & Workflow
 

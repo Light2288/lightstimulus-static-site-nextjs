@@ -31,6 +31,7 @@ image optimization needed to be disabled; use a custom `<Image>` component
 wrapping `<img>` with native `loading="lazy"`, fade-in animation on
 intersection, and optional blur placeholder.  
 This replaces Next.js image optimization in the static export context.
+The custom `<Image>` component will implement a simple fade-in on intersection, without blurhash or LQIP placeholders, to keep performance and bundle size optimal for static export.
 Here is the current content of
 the next.config.js file:
 

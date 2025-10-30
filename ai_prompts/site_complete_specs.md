@@ -194,6 +194,9 @@ The site is made with Next.js 15 and Tailwind
 ## 🎨 Styling System
 
 The styling system is TailwindCSS + custom theme file
+Theme structure: define design tokens in two layers — visual variables (blur, opacity, glass colors) as CSS variables in `theme.css`,
+and functional tokens (colors, font sizes, spacing) in `tailwind.config.js`.
+Tailwind utilities reference these CSS variables where appropriate, ensuring both runtime flexibility and design consistency.
 
 ## 🔡 Fonts & Icons
 
@@ -459,6 +462,12 @@ generated folders:
 │   └── rss.mjs  
 └── tsconfig.json
 
+To improve maintainability, create two additional component folders:
+
+- `/components/ui`: contains reusable UI primitives (Button, Toggle, CardBase, etc.)
+- `/components/common`: contains higher-level layout components reused across pages (Header, Footer, Layout, SectionWrapper, etc.)
+  This structure separates composable UI elements from layout and logic containers.
+
 ## 🧭 Version Control & Workflow
 
 For now, commits, pull requests and merges are made manually
@@ -488,7 +497,7 @@ a bio/about page, a blog page and a contact page.
 | About    | Bio, experience, photo is not mandatory; tone of the page should be "colloquial", without direct references to IBM (even if my current job can be cited)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | Projects | All portfolio items with filters; Projects page should only showcase personal/experimental projects (computer vision, XR, Snowflake demos, AI workflows, etc.); projects are stored in mdx files, one for each project; the projects home should have a grid of projects with tags/filters (filters be a sidebar on the left on desktop / dropdown on top of the list on mobile), and clicking on a project should redirect the user to the specific project detail page.the project cards in the main home page and project home page should only have an image and a descriptive content; the project detail page will have more info (more images, longer description, GitHub links and live demo only if possible). Project cards should have hover animations (glassmorphism); project cards should open in dedicated route (/projects/[slug]) |
 | Blog     | Articles and notes; blog style should be technical deep dives/tutorials (e.g., Gatsby, XR, AI workflows, SwiftUI tips), and short reflections/essays; blog posts are stored in mdx files, one for each post; like in the starting project, the blog homepage should display a a list with tag filters sidebar on the left and blog posts preview on the right; clicking on a post preview redirect the user to the specific blog post page. Blog cards should have hover animations (glassmorphism)                                                                                                                                                                                                                                                                                                                                                 |
-| Contact  | just a simple form that actually sends emails via Netlify Forms; form should be simple name/email/message; in the same page, social links                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Contact  | just a simple form that actually sends emails via Netlify Forms; form should be simple name/email/message; in the same page, social links. Form submissions will show inline success or error messages directly within the form area. No modal or page redirect is used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 ## 🧩 Global Components
 
@@ -504,6 +513,8 @@ The global component reused across pages should be
   Header visibility (hide on scroll down / show on scroll up)
   should be managed with IntersectionObserver rather than scroll listeners
   to ensure optimal performance and smoother transitions.
+  The header should also contain a language switcher that will be a compact two-state toggle (EN ↔ IT) with flag icons and short text labels.
+  A dropdown is not used since only two languages are supported.
 - search button: Use Pliny Kbar for local search (cmd+k); in the
   initial header version of the starting project, there is already a
   visible search button in the header. For the scroll behavior for Header,
@@ -596,6 +607,8 @@ The contrasts should follow accessibility rules.
 Continue using `next-themes` for theme switching and persistence.  
 Future customizations (e.g. animated transitions or color scheme expansions)  
 can be layered on top of its context rather than replacing it.
+User preferences (theme, language, etc.) are stored in localStorage using namespaced keys prefixed with `lightstimulus.`
+(e.g. `lightstimulus.theme`, `lightstimulus.lang`) to avoid conflicts and ensure consistency.
 
 ## 💫 Visual Style
 
@@ -674,8 +687,9 @@ optimization you can make (for example lazy loading, image optimization, etc).
 At the moment the site should use static export, and for this reason the
 image optimization needed to be disabled; use a custom `<Image>` component
 wrapping `<img>` with native `loading="lazy"`, fade-in animation on
-intersection, and optional blur placeholder.  
+intersection, and optional blur placeholder.
 This replaces Next.js image optimization in the static export context.
+The custom `<Image>` component will implement a simple fade-in on intersection, without blurhash or LQIP placeholders, to keep performance and bundle size optimal for static export.
 Here is the current content of
 the next.config.js file:
 
@@ -838,12 +852,16 @@ library (for hero + microinteractions), not Framer Motion.
 For microinteractions (hover, small fade/scale transitions), use TailwindCSS built-in transition utilities.  
 Use Motion.dev exclusively for structured animations (hero reveal, section entrance, scroll-triggered, or complex sequences).  
 Do not import Motion for basic hover states.
+Use the latest stable version of `@motion.dev/react` (Motion.dev) as the unified animation library for all structured animations (hero reveal, section entrances, scroll-triggered sequences).
+Framer Motion will not be used.
+Tailwind transitions will continue to handle microinteractions (hover, small opacity/scale effects).
+All animation utilities and motion presets will be defined in a dedicated `/lib/motion` folder for reuse.
 
 ## 🌍 Internationalization
 
 The site should support both English and Italian. Detect the
 preferred language automatically on first visit
-But always display a language toggle in the header as a icon
+but always display a language toggle in the header as a icon
 based toggle with flags and language description short text
 (e.g.“EN", "IT”) to change language programmatically.
 When switching language, the hero tagline switch language instantly (no animation).
@@ -855,6 +873,8 @@ As default, the site should auto redirect on browser locale
 as a fallback option for every other locale that is not Italian);
 the user can then switch manually and the choice must be saved
 in local storage.
+The header should also contain a language switcher that will be a compact two-state toggle (EN ↔ IT) with flag icons and short text labels.
+A dropdown is not used since only two languages are supported.
 For translation storage, use JSON files under /locales for UI/static text,
 and use MDX frontmatter with localized fields for Page content (MDX posts).
 English should be primary language as it is fallback for every

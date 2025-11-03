@@ -6,13 +6,13 @@ const STORAGE_KEY = 'lightstimulus.lang'
 type Lang = 'en' | 'it'
 
 const FlagEN = () => (
-  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
-    <rect width="24" height="24" rx="3" fill="#fff" />
-    <g stroke="#012169" strokeWidth="1">
-      <path d="M0 0h24v24H0z" stroke="none"></path>
-    </g>
-    <path d="M0 0h24v24H0z" fill="#C8102E" opacity="0.0" />
-    {/* simplified icon — it's just a small EN marker; main label shows EN/IT */}
+  <svg viewBox="0 0 24 24" className="h-5 w-5 rounded-sm" xmlns="http://www.w3.org/2000/svg">
+    <rect width="24" height="24" fill="#012169" />
+    <path fill="#FFF" d="M0 0l9 6V0h6v6l9-6h0v6l-9 6 9 6v6h0l-9-6v6h-6v-6l-9 6H0v-6l9-6-9-6z" />
+    <path
+      fill="#C8102E"
+      d="M10 0h4v10h10v4H14v10h-4V14H0v-4h10zM0 2l7 4H5L0 3v-1zm19 4l5-3v1l-4 2h-1zM0 21l5-3h2l-7 4v-1zm24 1v-1l-5-3h2l3 2v2z"
+    />
   </svg>
 )
 
@@ -65,7 +65,7 @@ export default function LanguageToggle() {
     <button
       aria-label="Toggle language"
       onClick={toggle}
-      className="inline-flex items-center gap-x-2 rounded px-2 py-1 text-sm font-medium hover:bg-[color:var(--color-accent-primary-light)]/6 focus:outline focus:outline-2 focus:outline-[color:var(--color-accent-primary-light)] dark:hover:bg-[color:var(--color-accent-primary-dark)]/8"
+      className="inline-flex items-center gap-x-2 rounded px-2 py-1 text-sm font-medium hover:bg-[color:var(--color-accent-primary-light)]/6 focus:outline-2 focus:outline-[color:var(--color-accent-primary-light)] dark:hover:bg-[color:var(--color-accent-primary-dark)]/8"
     >
       <span aria-hidden className="sr-only">
         Language

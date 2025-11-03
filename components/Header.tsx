@@ -29,11 +29,6 @@ const Header = () => {
   const lastScrollYRef = useRef<number>(0)
   const [isHidden, setIsHidden] = useState(false)
   const [isSolid, setIsSolid] = useState(false) // toggles the glass/solid background
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     const headerEl = headerRef.current

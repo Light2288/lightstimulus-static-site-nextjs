@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+
 @plugin "@tailwindcss/forms";
 @plugin '@tailwindcss/typography';
 @source '../node_modules/pliny';
@@ -51,6 +52,12 @@
   --color-gray-900: oklch(0.21 0.034 264.665);
   --color-gray-950: oklch(0.13 0.028 261.692);
 
+  /* Glassmorphism tokens */
+  --glass-blur: 8px;
+  --glass-opacity: 0.6;
+  --glass-bg-solid-light: rgba(255, 255, 255, 0.7);
+  --glass-bg-solid-dark: rgba(13, 27, 42, 0.75);
+
   /* Line heights */
   --line-height-11: 2.75rem;
   --line-height-12: 3rem;
@@ -63,11 +70,23 @@
   --z-80: 80;
 }
 
+:root {
+  --glass-bg-solid: var(--glass-bg-solid-light);
+}
+.dark {
+  --glass-bg-solid: var(--glass-bg-solid-dark);
+}
+
 /* Apply theme variables */
 body {
   background-color: var(--color-bg-light);
   color: var(--color-text-light);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), sans-serif;
+}
+
+code,
+pre {
+  font-family: var(--font-mono), monospace;
 }
 
 .dark body {
@@ -102,9 +121,11 @@ body {
   .text-accent-primary {
     color: var(--color-accent-primary-light);
   }
+
   .text-accent-secondary {
     color: var(--color-accent-secondary-light);
   }
+
   .text-accent-tertiary {
     color: var(--color-accent-tertiary-light);
   }
@@ -112,9 +133,11 @@ body {
   .bg-accent-primary {
     background-color: var(--color-accent-primary-light);
   }
+
   .bg-accent-secondary {
     background-color: var(--color-accent-secondary-light);
   }
+
   .bg-accent-tertiary {
     background-color: var(--color-accent-tertiary-light);
   }
@@ -122,9 +145,11 @@ body {
   .hover\:text-accent-primary:hover {
     color: var(--color-accent-primary-light);
   }
+
   .hover\:text-accent-secondary:hover {
     color: var(--color-accent-secondary-light);
   }
+
   .hover\:text-accent-tertiary:hover {
     color: var(--color-accent-tertiary-light);
   }
@@ -132,9 +157,11 @@ body {
   .hover\:bg-accent-primary:hover {
     background-color: var(--color-accent-primary-light);
   }
+
   .hover\:bg-accent-secondary:hover {
     background-color: var(--color-accent-secondary-light);
   }
+
   .hover\:bg-accent-tertiary:hover {
     background-color: var(--color-accent-tertiary-light);
   }
@@ -143,9 +170,11 @@ body {
   .dark .text-accent-primary {
     color: var(--color-accent-primary-dark);
   }
+
   .dark .text-accent-secondary {
     color: var(--color-accent-secondary-dark);
   }
+
   .dark .text-accent-tertiary {
     color: var(--color-accent-tertiary-dark);
   }
@@ -153,9 +182,11 @@ body {
   .dark .bg-accent-primary {
     background-color: var(--color-accent-primary-dark);
   }
+
   .dark .bg-accent-secondary {
     background-color: var(--color-accent-secondary-dark);
   }
+
   .dark .bg-accent-tertiary {
     background-color: var(--color-accent-tertiary-dark);
   }
@@ -163,9 +194,11 @@ body {
   .dark .hover\:bg-accent-primary:hover {
     background-color: var(--color-accent-primary-dark);
   }
+
   .dark .hover\:bg-accent-secondary:hover {
     background-color: var(--color-accent-secondary-dark);
   }
+
   .dark .hover\:bg-accent-tertiary:hover {
     background-color: var(--color-accent-tertiary-dark);
   }
@@ -173,9 +206,11 @@ body {
   .dark .hover\:text-accent-primary:hover {
     color: var(--color-accent-primary-dark);
   }
+
   .dark .hover\:text-accent-secondary:hover {
     color: var(--color-accent-secondary-dark);
   }
+
   .dark .hover\:text-accent-tertiary:hover {
     color: var(--color-accent-tertiary-dark);
   }
@@ -184,20 +219,25 @@ body {
   .prose {
     & a {
       color: var(--color-primary-500);
+
       &:hover {
         color: var(--color-primary-600);
       }
+
       & code {
         color: var(--color-primary-400);
       }
     }
+
     & :where(h1, h2) {
       font-weight: 700;
       letter-spacing: var(--tracking-tight);
     }
+
     & h3 {
       font-weight: 600;
     }
+
     & :where(code):not(pre code) {
       color: var(--color-indigo-500);
     }
@@ -206,59 +246,97 @@ body {
   .prose-invert {
     & a {
       color: var(--color-primary-500);
+
       &:hover {
         color: var(--color-primary-400);
       }
+
       & code {
         color: var(--color-primary-400);
       }
     }
+
     & :where(h1, h2, h3, h4, h5, h6) {
       color: var(--color-gray-100);
     }
+  }
+
+  /* Glassmorphism helper: uses tokens above */
+  .glass-bg {
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    background-color: color-mix(
+      in srgb,
+      var(--glass-bg-solid) calc(var(--glass-opacity) * 100%),
+      transparent
+    );
+  }
+
+  /* Solid glass color mapping for dark mode (overrides token) */
+  .dark .glass-bg {
+    /* substitute a darker glass solid */
+    --glass-bg-solid: rgba(13, 27, 42, 0.7); /* matches dark background palette */
+  }
+
+  /* Convenience small header-specific utility */
+  .header-solid {
+    background-color: var(--glass-bg-solid);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
   }
 }
 
 .task-list-item::before {
   @apply hidden;
 }
+
 .task-list-item {
   @apply list-none;
 }
+
 .footnotes {
   @apply mt-12 border-t border-gray-200 pt-8 dark:border-gray-700;
 }
+
 .data-footnote-backref {
   @apply no-underline;
 }
+
 .csl-entry {
   @apply my-5;
 }
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
   transition:
     background-color 600000s 0s,
     color 600000s 0s;
 }
+
 .katex-display {
   overflow: auto hidden;
 }
+
 .content-header-link {
   opacity: 0;
   margin-left: -24px;
   padding-right: 4px;
 }
+
 .content-header:hover .content-header-link,
 .content-header-link:hover {
   opacity: 1;
 }
+
 .linkicon {
   display: inline-block;
   vertical-align: middle;

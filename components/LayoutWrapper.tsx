@@ -12,7 +12,7 @@ const LayoutWrapper = ({ children }: Props) => {
     <SectionContainer>
       <div className="flex h-screen flex-col justify-between bg-[var(--color-bg-light)] font-sans text-[var(--color-text-light)] dark:bg-[var(--color-bg-dark)] dark:text-[var(--color-text-dark)]">
         <Header />
-        <main className="mb-auto">{children}</main>
+        <main className="mb-auto pt-16">{children}</main>
         <Footer />
       </div>
     </SectionContainer>

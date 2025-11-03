@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/logo.svg'
@@ -5,46 +8,178 @@ import Link from './Link'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
+import LanguageToggle from './LanguageToggle'
+
+/**
+ * Header
+ *
+ * - client component (animations, intersection observer)
+ * - uses IntersectionObserver to detect hero sentinel (#hero or [data-hero-sentinel])
+ *   and falls back to a scroll-based approach if sentinel not found.
+ * - hides on scroll down, shows on scroll up (smooth translate + opacity).
+ * - becomes "solid" (glass background) after scrolling past hero or a small threshold.
+ *
+ * Accessibility:
+ * - buttons have aria-labels
+ * - keyboard focus styles are preserved via Tailwind's focus-visible outline rules
+ */
 
 const Header = () => {
-  let headerClass = 'flex items-center w-full bg-white dark:bg-gray-950 justify-between py-10'
-  if (siteMetadata.stickyNav) {
-    headerClass += ' sticky top-0 z-50'
-  }
+  const headerRef = useRef<HTMLElement | null>(null)
+  const lastScrollYRef = useRef<number>(0)
+  const [isHidden, setIsHidden] = useState(false)
+  const [isSolid, setIsSolid] = useState(false) // toggles the glass/solid background
+  const [mounted, setMounted] = useState(false)
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    const headerEl = headerRef.current
+    if (!headerEl) return
+
+    let observer: IntersectionObserver | null = null
+    const hero =
+      document.querySelector('#hero') || document.querySelector('[data-hero-sentinel]') || null
+
+    // If a hero sentinel exists, prefer IntersectionObserver to toggle "isSolid".
+    if (hero && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          // If hero is intersecting (visible), header should be transparent (not solid).
+          // When hero is NOT intersecting we set solid = true.
+          entries.forEach((entry) => {
+            setIsSolid(!entry.isIntersecting)
+          })
+        },
+        { root: null, threshold: 0, rootMargin: '-64px 0px 0px 0px' } // small top margin to trigger sooner
+      )
+      observer.observe(hero)
+    } else {
+      // Fallback: no hero sentinel found, use scroll threshold to decide solid/non-solid
+      const onScrollSolidFallback = () => {
+        setIsSolid(window.scrollY > 40)
+      }
+      onScrollSolidFallback()
+      window.addEventListener('scroll', onScrollSolidFallback, { passive: true })
+      return () => {
+        window.removeEventListener('scroll', onScrollSolidFallback)
+      }
+    }
+
+    return () => {
+      if (observer && hero) observer.unobserve(hero)
+    }
+  }, [])
+
+  // Hide on scroll down / show on scroll up using a small requestAnimationFrame loop.
+  // We try to avoid heavy listeners, but a lightweight scroll handler is used only to detect direction.
+  useEffect(() => {
+    let ticking = false
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const current = window.scrollY
+          const last = lastScrollYRef.current
+          const delta = current - last
+
+          // threshold to avoid micro jitter
+          if (Math.abs(delta) > 6) {
+            if (current > last && current > 80) {
+              // scrolling down
+              setIsHidden(true)
+            } else {
+              // scrolling up
+              setIsHidden(false)
+            }
+          }
+
+          lastScrollYRef.current = current
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Compose classes: glass vs transparent vs solid + hide/show transform
+  const baseClass =
+    'fixed left-0 right-0 z-50 transition-transform duration-300 ease-out will-change-transform'
+  const translateClass = isHidden ? '-translate-y-full' : 'translate-y-0'
+  // Solid when isSolid true, otherwise transparent over hero (with subtle glass)
+  const bgClass = isSolid
+    ? 'backdrop-blur-[var(--glass-blur)] bg-[color:var(--glass-bg-solid)] shadow-md'
+    : 'bg-transparent'
+
+  // fallback for text/colors uses the tailwind.css token variables defined globally
   return (
-    <header className={headerClass}>
-      <Link href="/" aria-label={siteMetadata.headerTitle}>
-        <div className="flex items-center justify-between">
-          <div className="mr-3">
-            <Logo />
+    <header
+      ref={headerRef}
+      className={`${baseClass} ${translateClass} ${bgClass}`}
+      aria-label="Main Navigation"
+      style={{ top: 0 }}
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center gap-x-4">
+            <Link href="/" aria-label={siteMetadata.headerTitle}>
+              <div className="flex items-center gap-x-3">
+                <div className="h-8 w-8">
+                  <Logo />
+                </div>
+                {typeof siteMetadata.headerTitle === 'string' ? (
+                  <div className="hidden text-lg font-semibold sm:block">
+                    {siteMetadata.headerTitle}
+                  </div>
+                ) : (
+                  siteMetadata.headerTitle
+                )}
+              </div>
+            </Link>
           </div>
-          {typeof siteMetadata.headerTitle === 'string' ? (
-            <div className="hidden h-6 text-2xl font-semibold sm:block">
-              {siteMetadata.headerTitle}
+
+          <nav className="hidden items-center gap-x-6 sm:flex">
+            <div className="no-scrollbar flex max-w-[36rem] gap-x-2 overflow-x-auto">
+              {headerNavLinks
+                .filter((link) => link.href !== '/')
+                .map((link) => (
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="hover:text-accent-primary dark:hover:text-accent-primary m-1 rounded px-1 py-0.5 text-sm leading-5 font-medium"
+                  >
+                    {link.title}
+                  </Link>
+                ))}
             </div>
-          ) : (
-            siteMetadata.headerTitle
-          )}
+          </nav>
+
+          <div className="flex items-center gap-x-3">
+            {/* Search (Pliny Kbar) */}
+            <div className="flex items-center">
+              <SearchButton />
+            </div>
+
+            {/* Language toggle (EN / IT) */}
+            <div className="flex items-center">
+              <LanguageToggle />
+            </div>
+
+            {/* Theme */}
+            <div className="flex items-center">
+              <ThemeSwitch />
+            </div>
+
+            {/* Mobile nav trigger */}
+            <div className="sm:hidden">
+              <MobileNav />
+            </div>
+          </div>
         </div>
-      </Link>
-      <div className="flex items-center space-x-4 leading-5 sm:-mr-6 sm:space-x-6">
-        <div className="no-scrollbar hidden max-w-40 items-center gap-x-4 overflow-x-auto sm:flex md:max-w-72 lg:max-w-96">
-          {headerNavLinks
-            .filter((link) => link.href !== '/')
-            .map((link) => (
-              <Link
-                key={link.title}
-                href={link.href}
-                className="hover:text-primary-500 dark:hover:text-primary-400 m-1 font-medium text-gray-900 dark:text-gray-100"
-              >
-                {link.title}
-              </Link>
-            ))}
-        </div>
-        <SearchButton />
-        <ThemeSwitch />
-        <MobileNav />
       </div>
     </header>
   )

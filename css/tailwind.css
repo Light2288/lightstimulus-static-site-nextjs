@@ -52,11 +52,11 @@
   --color-gray-900: oklch(0.21 0.034 264.665);
   --color-gray-950: oklch(0.13 0.028 261.692);
 
-  /* Glassmorphism tokens (used by header/cards/footer) */
+  /* Glassmorphism tokens */
   --glass-blur: 8px;
-  --glass-opacity: 0.6; /* default alpha for glass */
-  --glass-bg-solid: rgba(255, 255, 255, 0.7); /* will be adjusted in dark mode via .dark rules */
-  --glass-bg-transparent: rgba(255, 255, 255, 0.02);
+  --glass-opacity: 0.6;
+  --glass-bg-solid-light: rgba(255, 255, 255, 0.7);
+  --glass-bg-solid-dark: rgba(13, 27, 42, 0.75);
 
   /* Line heights */
   --line-height-11: 2.75rem;
@@ -68,6 +68,13 @@
   --z-60: 60;
   --z-70: 70;
   --z-80: 80;
+}
+
+:root {
+  --glass-bg-solid: var(--glass-bg-solid-light);
+}
+.dark {
+  --glass-bg-solid: var(--glass-bg-solid-dark);
 }
 
 /* Apply theme variables */

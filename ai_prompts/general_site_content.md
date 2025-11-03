@@ -178,7 +178,7 @@ come l'inibizione laterale, ovvero la capacità di
 distinguere linee, forme e contorni degli oggetti.
 
 The animated logo and “Light Stimulus” text should be SVG-based
-Framer Motion animation; the logo and the “Light Stimulus” text
+Motion.dev animation; the logo and the “Light Stimulus” text
 should be animated as separate reveal for the logo first, then the text.
 Propose a few taglines in English and translated into Italian
 based on my limulus-light analogies; taglines should cycle automatically

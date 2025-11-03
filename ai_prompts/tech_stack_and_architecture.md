@@ -87,9 +87,9 @@ Tailwind utilities reference these CSS variables where appropriate, ensuring bot
   GitHub repo (via API or GitHub Actions).
   Netlify automatically rebuilds and deploys your
   site with the new content.
-- Framer Motion: not installed yet, but this package
-  (or another package suggested) should be included to
-  manage the animations
+- Motion.dev: not installed yet, but this package should be included to
+  manage the animations. Use @motion.dev/react for structured animations (hero, section reveals).
+  Tailwind transitions for microinteractions. Do not use Framer Motion.
 
 ## ☁️ Hosting & Deployment
 

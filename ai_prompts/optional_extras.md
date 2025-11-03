@@ -109,6 +109,44 @@ Each will include dual-language fields (`title`, `summary`, etc.)
 and a shared field set for date, tags, slug, coverImage, and language.  
 Keeping them distinct simplifies filtering and routing.
 
+## 🔧 Clarifications & Architecture Decisions
+
+### 🎞️ Animation Framework
+
+All structured animations (hero logo reveal, section entrances, scroll-triggered sequences) must use **Motion.dev** (`@motion.dev/react`) — not Framer Motion.  
+Framer Motion is fully removed from the stack.  
+Use TailwindCSS transitions for microinteractions (hover, small fade/scale).  
+The header show/hide behavior remains pure CSS + IntersectionObserver (no Motion).  
+All motion variants and reusable transitions live in `/lib/motion`, organized by purpose (hero, section, micro).
+All animations across the site should follow a shared **motion language** defined in `/lib/motion/config.ts`.  
+This configuration centralizes default **easings**, **durations**, and **directions** (e.g., smooth cubic-bezier curves, fade-up reveals, staggered entrances) used across hero, cards, and sections.  
+Each component imports from this shared configuration to ensure coherent motion behavior site-wide, while still allowing specific overrides for unique sequences (e.g., logo reveal in hero).  
+The global motion style should feel **fluid, futuristic, and elegant**, reflecting the “Light Stimulus” theme.
+
+### 🌓 Theme & Localization Providers
+
+Keep two independent providers:
+
+- `ThemeProvider` → uses `next-themes` for light/dark/system theme handling.
+- `LanguageProvider` → custom React context with `/locales/en.json` and `/locales/it.json`.
+  A small shared utility called **PreferencesService** centralizes persistence for both (`lightstimulus.theme`, `lightstimulus.lang`), exposing simple `getPref()` and `setPref()` helpers.  
+  Both providers are initialized inside `app/layout.tsx` to ensure consistent rendering and SEO metadata alignment.
+  Both `ThemeProvider` and `LanguageProvider` must support **instant runtime toggling** without page reloads.  
+  Theme and language changes should propagate reactively across all client components (Header, Hero, Footer, etc.) through context updates.  
+  Both providers are initialized inside `app/layout.tsx` and persist preferences in `localStorage` via `PreferencesService`.  
+  This approach guarantees smooth live updates and a unified experience when switching between light/dark or EN/IT modes.
+
+### 🗂️ Content Model Structure
+
+Each article or project lives in a **single MDX file** containing dual-language frontmatter fields (e.g., `title.en`, `title.it`, `summary.en`, `summary.it`, etc.).  
+Optional long-form translations can reference an additional `.mdx` fragment via a field like `bodyItPath: './content-it.mdx'`.  
+Routing remains language-neutral (no `/en/` or `/it/` prefix).  
+This structure keeps the repo clean, simplifies automation for AI-generated MDX, and ensures unified indexing for local search.
+All MDX documents should include dual-language fields (`.en`, `.it`) in frontmatter.  
+If a localized field (e.g., `title.it`) is missing or empty, the rendering logic must automatically **fallback to the English version**.  
+This fallback also applies to metadata (SEO, Open Graph, and structured data).  
+The fallback ensures that partially localized content remains visible and consistent across all listings and sections.
+
 ## 🧰 Build / Dev Tools
 
 I will configure (with your support) Husky pre-commit hooks

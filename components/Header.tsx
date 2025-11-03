@@ -34,37 +34,15 @@ const Header = () => {
     const headerEl = headerRef.current
     if (!headerEl) return
 
-    let observer: IntersectionObserver | null = null
-    const hero =
-      document.querySelector('#hero') || document.querySelector('[data-hero-sentinel]') || null
-
-    // If a hero sentinel exists, prefer IntersectionObserver to toggle "isSolid".
-    if (hero && 'IntersectionObserver' in window) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          // If hero is intersecting (visible), header should be transparent (not solid).
-          // When hero is NOT intersecting we set solid = true.
-          entries.forEach((entry) => {
-            setIsSolid(!entry.isIntersecting)
-          })
-        },
-        { root: null, threshold: 0, rootMargin: '-64px 0px 0px 0px' } // small top margin to trigger sooner
-      )
-      observer.observe(hero)
-    } else {
-      // Fallback: no hero sentinel found, use scroll threshold to decide solid/non-solid
-      const onScrollSolidFallback = () => {
-        setIsSolid(window.scrollY > 40)
-      }
-      onScrollSolidFallback()
-      window.addEventListener('scroll', onScrollSolidFallback, { passive: true })
-      return () => {
-        window.removeEventListener('scroll', onScrollSolidFallback)
-      }
+    // Simplified: header solid when scrolled beyond small threshold
+    const onScrollSolid = () => {
+      setIsSolid(window.scrollY > 40)
     }
 
+    onScrollSolid() // initial
+    window.addEventListener('scroll', onScrollSolid, { passive: true })
     return () => {
-      if (observer && hero) observer.unobserve(hero)
+      window.removeEventListener('scroll', onScrollSolid)
     }
   }, [])
 

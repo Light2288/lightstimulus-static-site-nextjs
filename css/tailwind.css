@@ -81,7 +81,12 @@
 body {
   background-color: var(--color-bg-light);
   color: var(--color-text-light);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), sans-serif;
+}
+
+code,
+pre {
+  font-family: var(--font-mono), monospace;
 }
 
 .dark body {

@@ -30,9 +30,35 @@ export default function Footer() {
         </Link>
       </div>
 
-      {/* Optional secondary line for attribution or callout */}
-      <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-500">
-        Built with ❤️ and {siteMetadata.framework || 'Next.js'}
+      <div className="text-primary-500 dark:text-primary-500 animate-heartbeat mt-4 text-center text-xs transition-opacity duration-300 hover:opacity-90">
+        Built with ❤️ using{' '}
+        <a
+          href="https://nextjs.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent-secondary hover:text-accent-tertiary dark:text-accent-secondary dark:hover:text-accent-tertiary font-medium transition-colors duration-200"
+        >
+          Next.js
+        </a>
+        {', '}
+        <a
+          href="https://tailwindcss.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent-secondary hover:text-accent-tertiary dark:text-accent-secondary dark:hover:text-accent-tertiary font-medium transition-colors duration-200"
+        >
+          Tailwind CSS
+        </a>
+        {', and '}
+        <a
+          href="https://www.typescriptlang.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent-secondary hover:text-accent-tertiary dark:text-accent-secondary dark:hover:text-accent-tertiary font-medium transition-colors duration-200"
+        >
+          TypeScript
+        </a>
+        .
       </div>
     </footer>
   )

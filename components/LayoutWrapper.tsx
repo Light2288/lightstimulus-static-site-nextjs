@@ -1,7 +1,7 @@
 import SectionContainer from './SectionContainer'
-import Footer from './Footer'
+import Footer from './common/Footer'
 import { ReactNode } from 'react'
-import Header from './Header'
+import Header from './common/Header'
 
 interface Props {
   children: ReactNode

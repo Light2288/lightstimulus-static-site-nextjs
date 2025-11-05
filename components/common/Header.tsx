@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from 'react'
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/logo.svg'
-import Link from './Link'
-import MobileNav from './MobileNav'
-import ThemeSwitch from './ThemeSwitch'
-import SearchButton from './SearchButton'
-import LanguageToggle from './LanguageToggle'
+import Link from '../Link'
+import MobileNav from '../MobileNav'
+import ThemeSwitch from '../ThemeSwitch'
+import SearchButton from '../SearchButton'
+import LanguageToggle from '../LanguageToggle'
 
 /**
  * Header

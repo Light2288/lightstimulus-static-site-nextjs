@@ -1,4 +1,3 @@
-// app/layout.tsx
 import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
 import 'remark-github-blockquote-alert/alert.css'
@@ -6,16 +5,10 @@ import 'remark-github-blockquote-alert/alert.css'
 import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
-import Header from '@/components/Header'
-import SectionContainer from '@/components/SectionContainer'
-import Footer from '@/components/Footer'
+import Layout from '@/components/common/Layout'
 import siteMetadata from '@/data/siteMetadata'
-import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
 
-/**
- * Fonts — using next/font to self-host and expose CSS variables
- */
 const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   display: 'swap',
@@ -51,17 +44,7 @@ export const metadata: Metadata = {
       'application/rss+xml': `${siteMetadata.siteUrl}/feed.xml`,
     },
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
+  robots: { index: true, follow: true },
   twitter: {
     title: siteMetadata.title,
     card: 'summary_large_image',
@@ -96,26 +79,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         href={`${basePath}/static/favicons/favicon-16x16.png`}
       />
       <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
-      <link
-        rel="mask-icon"
-        href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
-        color="#4FD1C5"
-      />
-      <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F9FB" />
-      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0D1B2A" />
-      <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
-      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
-        <ThemeProviders>
-          <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-          <SectionContainer>
-            <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-              <Header />
-              <main className="mb-auto">{children}</main>
-            </SearchProvider>
-            <Footer />
-          </SectionContainer>
-        </ThemeProviders>
+      <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
+        <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
+        <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+          <Layout>{children}</Layout>
+        </SearchProvider>
       </body>
     </html>
   )

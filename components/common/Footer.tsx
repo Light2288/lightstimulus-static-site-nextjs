@@ -1,6 +1,6 @@
 'use client'
 
-import Link from './Link'
+import Link from '../Link'
 import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
 
@@ -23,7 +23,7 @@ export default function Footer() {
         <span>© {year}</span>
         <span>•</span>
         <Link
-          href="/"
+          href="/public"
           className="text-accent-secondary hover:text-accent-tertiary dark:text-accent-secondary dark:hover:text-accent-tertiary font-medium transition-colors duration-200"
         >
           {siteMetadata.title}

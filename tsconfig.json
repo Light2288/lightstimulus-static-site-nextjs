@@ -17,7 +17,12 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
+      "@/app/*": ["app/*"],
       "@/components/*": ["components/*"],
+      "@/components/common/*": ["components/common/*"],
+      "@/contexts/*": ["contexts/*"],
+      "@/lib/*": ["lib/*"],
+      "@/locales/*": ["locales/*"],
       "@/data/*": ["data/*"],
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],

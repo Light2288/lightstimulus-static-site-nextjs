@@ -39,7 +39,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     PreferencesService.setPref('lang', newLang)
   }
 
-  const t = (key: string) => translations[lang][key] || key
+  const t = (key: string): string => {
+    const parts = key.split('.')
+    let value: string | Record<string, unknown> = translations[lang]
+
+    for (const part of parts) {
+      if (typeof value === 'object' && value !== null && part in value) {
+        value = value[part] as string | Record<string, unknown>
+      } else {
+        return key
+      }
+    }
+
+    return typeof value === 'string' ? value : key
+  }
 
   return (
     <LanguageContext.Provider value={{ lang, t, switchLang }}>{children}</LanguageContext.Provider>

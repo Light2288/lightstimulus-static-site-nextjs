@@ -5,8 +5,10 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const MobileNav = () => {
+  const { t } = useLanguage()
   const [navShow, setNavShow] = useState(false)
   const navRef = useRef(null)
 
@@ -79,7 +81,7 @@ const MobileNav = () => {
                     className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 dark:text-gray-100"
                     onClick={onToggleNav}
                   >
-                    {link.title}
+                    {t(`nav.${link.title.toLowerCase()}`)}
                   </Link>
                 ))}
               </nav>

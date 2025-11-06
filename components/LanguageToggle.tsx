@@ -1,47 +1,34 @@
 'use client'
 
+import { useLanguage } from '@/contexts/LanguageContext'
 import { useEffect, useState } from 'react'
 
-const STORAGE_KEY = 'lightstimulus.lang'
-type Lang = 'en' | 'it'
-
+/**
+ * LanguageToggle
+ *
+ * - Switches between EN ↔ IT
+ * - Relies on LanguageContext (no localStorage access here)
+ * - Displays flag + code (EN/IT)
+ * - Hydration-safe and matches Header styling
+ */
 export default function LanguageToggle() {
-  const [lang, setLang] = useState<Lang>('en')
+  const { lang, switchLang } = useLanguage()
+  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
-    if (stored === 'it' || stored === 'en') {
-      setLang(stored)
-    } else {
-      const navLang = (navigator.language || 'en').startsWith('it') ? 'it' : 'en'
-      setLang(navLang)
-      try {
-        localStorage.setItem(STORAGE_KEY, navLang)
-      } catch {
-        /* ignore */
-      }
-    }
-  }, [])
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null // avoid hydration mismatch on first render
 
-  const toggle = () => {
-    const next: Lang = lang === 'en' ? 'it' : 'en'
-    setLang(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, next)
-    } catch {
-      /* ignore */
-    }
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('lightstimulus:lang', { detail: { lang: next } }))
-    }
+  const toggleLang = () => {
+    const next = lang === 'en' ? 'it' : 'en'
+    switchLang(next)
   }
 
   const flag = lang === 'en' ? '🇬🇧' : '🇮🇹'
 
   return (
     <button
-      aria-label="Toggle language"
-      onClick={toggle}
+      aria-label={`Toggle language (current: ${lang.toUpperCase()})`}
+      onClick={toggleLang}
       className="inline-flex items-center gap-x-2 rounded px-2 py-1 text-sm font-medium hover:bg-[color:var(--color-accent-primary-light)]/10 focus:outline-2 focus:outline-[color:var(--color-accent-primary-light)] dark:hover:bg-[color:var(--color-accent-primary-dark)]/10"
     >
       <span

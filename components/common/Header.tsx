@@ -9,6 +9,7 @@ import MobileNav from '../MobileNav'
 import ThemeSwitch from '../ThemeSwitch'
 import SearchButton from '../SearchButton'
 import LanguageToggle from '../LanguageToggle'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 /**
  * Header
@@ -25,6 +26,7 @@ import LanguageToggle from '../LanguageToggle'
  */
 
 const Header = () => {
+  const { t } = useLanguage()
   const headerRef = useRef<HTMLElement | null>(null)
   const lastScrollYRef = useRef<number>(0)
   const [isHidden, setIsHidden] = useState(false)
@@ -125,7 +127,7 @@ const Header = () => {
                     href={link.href}
                     className="hover:text-accent-primary dark:hover:text-accent-primary m-1 rounded px-1 py-0.5 text-sm leading-5 font-medium"
                   >
-                    {link.title}
+                    {t(`nav.${link.title.toLowerCase()}`)}
                   </Link>
                 ))}
             </div>

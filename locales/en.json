@@ -1,10 +1,16 @@
 {
-  "hero_tagline_1": "Exploring light and code.",
-  "hero_tagline_2": "Augmenting reality, one pixel at a time.",
-  "nav_home": "Home",
-  "nav_projects": "Projects",
-  "nav_blog": "Blog",
-  "nav_about": "About",
-  "nav_contact": "Contact",
-  "contact_form_title": "Get in touch"
+  "hero": {
+    "tagline_1": "Exploring light and code.",
+    "tagline_2": "Augmenting reality, one pixel at a time."
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "contact": {
+    "form_title": "Get in touch"
+  }
 }

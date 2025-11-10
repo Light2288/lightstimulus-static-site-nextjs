@@ -173,108 +173,129 @@ useful package you would install:
 This is the current project structure, excluded the
 generated folders:
 .
-├── LICENSE  
-├── README.md  
-├── app  
-│   ├── Main.tsx  
-│   ├── about  
-│   │   └── page.tsx  
-│   ├── api  
-│   │   └── newsletter  
-│   │   └── route.ts  
-│   ├── blog  
-│   │   ├── [...slug]  
-│   │   │   └── page.tsx  
-│   │   ├── page  
-│   │   │   └── [page]  
-│   │   │   └── page.tsx  
-│   │   └── page.tsx  
-│   ├── layout.tsx  
-│   ├── not-found.tsx  
-│   ├── page.tsx  
-│   ├── projects  
-│   │   └── page.tsx  
-│   ├── robots.ts  
-│   ├── seo.tsx  
-│   ├── sitemap.ts  
-│   ├── tag-data.json  
-│   ├── tags  
-│   │   ├── [tag]  
-│   │   │   ├── page  
-│   │   │   │   └── [page]  
-│   │   │   │   └── page.tsx  
-│   │   │   └── page.tsx  
-│   │   └── page.tsx  
-│   └── theme-providers.tsx  
-├── components  
-│   ├── Card.tsx  
-│   ├── Comments.tsx  
-│   ├── Footer.tsx  
-│   ├── Header.tsx  
-│   ├── Image.tsx  
-│   ├── LayoutWrapper.tsx  
-│   ├── Link.tsx  
-│   ├── MDXComponents.tsx  
-│   ├── MobileNav.tsx  
-│   ├── PageTitle.tsx  
-│   ├── ScrollTopAndComment.tsx  
-│   ├── SearchButton.tsx  
-│   ├── SectionContainer.tsx  
-│   ├── TableWrapper.tsx  
-│   ├── Tag.tsx  
-│   ├── ThemeSwitch.tsx  
-│   └── social-icons  
-│   ├── icons.tsx  
-│   └── index.tsx  
-├── contentlayer.config.ts  
-├── css  
-│   ├── prism.css  
-│   └── tailwind.css  
-├── data  
-│   ├── authors  
-│   │   ├── default.mdx  
-│   │   └── sparrowhawk.mdx  
-│   ├── blog  
-│   │   ├── code-sample.mdx  
-│   │   ├── deriving-ols-estimator.mdx  
-│   │   ├── github-markdown-guide.mdx  
-│   │   ├── guide-to-using-images-in-nextjs.mdx  
-│   │   ├── introducing-tailwind-nextjs-starter-blog.mdx  
-│   │   ├── my-fancy-title.mdx  
-│   │   ├── nested-route  
-│   │   │   └── introducing-multi-part-posts-with-nested-routing.mdx  
-│   │   ├── new-features-in-v1.mdx  
-│   │   ├── pictures-of-canada.mdx  
-│   │   ├── release-of-tailwind-nextjs-starter-blog-v2.0.mdx  
-│   │   └── the-time-machine.mdx  
-│   ├── headerNavLinks.ts  
-│   ├── logo.svg  
-│   ├── projectsData.ts  
-│   ├── references-data.bib  
-│   └── siteMetadata.js  
-├── eslint.config.mjs  
-├── faq  
-│   ├── custom-mdx-component.md  
-│   ├── customize-kbar-search.md  
-│   └── deploy-with-docker.md  
-├── jsconfig.json  
-├── layouts  
-│   ├── AuthorLayout.tsx  
-│   ├── ListLayout.tsx  
-│   ├── ListLayoutWithTags.tsx  
-│   ├── PostBanner.tsx  
-│   ├── PostLayout.tsx  
-│   └── PostSimple.tsxv
-├── netlify.toml  
-├── next-env.d.ts  
-├── next.config.js  
-├── package-lock.json  
-├── package.json  
-├── postcss.config.js  
-├── prettier.config.js  
-├── scripts  
-│   ├── postbuild.mjs  
-│   └── rss.mjs  
+├── LICENSE
+├── README.md
+├── ai_prompts
+│   ├── functional_and_behavioural_aspects.md
+│   ├── general_site_content.md
+│   ├── optional_extras.md
+│   ├── pages_and_structure.md
+│   ├── site_complete_specs.md
+│   ├── styling_and_design.md
+│   └── tech_stack_and_architecture.md
+├── app
+│   ├── Main.tsx
+│   ├── about
+│   │   └── page.tsx
+│   ├── api
+│   │   └── newsletter
+│   │   └── route.ts
+│   ├── blog
+│   │   ├── [...slug]
+│   │   │   └── page.tsx
+│   │   ├── page
+│   │   │   └── [page]
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   ├── not-found.tsx
+│   ├── page.tsx
+│   ├── projects
+│   │   └── page.tsx
+│   ├── robots.ts
+│   ├── seo.tsx
+│   ├── sitemap.ts
+│   ├── tag-data.json
+│   ├── tags
+│   │   ├── [tag]
+│   │   │   ├── page
+│   │   │   │   └── [page]
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   └── theme-providers.tsx
+├── components
+│   ├── Card.tsx
+│   ├── Comments.tsx
+│   ├── Image.tsx
+│   ├── LanguageToggle.tsx
+│   ├── LayoutWrapper.tsx
+│   ├── Link.tsx
+│   ├── MDXComponents.tsx
+│   ├── MobileNav.tsx
+│   ├── PageTitle.tsx
+│   ├── ScrollTopAndComment.tsx
+│   ├── SearchButton.tsx
+│   ├── SectionContainer.tsx
+│   ├── TableWrapper.tsx
+│   ├── Tag.tsx
+│   ├── ThemeSwitch.tsx
+│   ├── common
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   └── Layout.tsx
+│   ├── home
+│   │   └── Hero.tsx
+│   └── social-icons
+│   ├── icons.tsx
+│   └── index.tsx
+├── contentlayer.config.ts
+├── contexts
+│   └── LanguageContext.tsx
+├── css
+│   ├── prism.css
+│   └── tailwind.css
+├── data
+│   ├── authors
+│   │   ├── default.mdx
+│   │   └── sparrowhawk.mdx
+│   ├── blog
+│   │   ├── code-sample.mdx
+│   │   ├── deriving-ols-estimator.mdx
+│   │   ├── github-markdown-guide.mdx
+│   │   ├── guide-to-using-images-in-nextjs.mdx
+│   │   ├── introducing-tailwind-nextjs-starter-blog.mdx
+│   │   ├── my-fancy-title.mdx
+│   │   ├── nested-route
+│   │   │   └── introducing-multi-part-posts-with-nested-routing.mdx
+│   │   ├── new-features-in-v1.mdx
+│   │   ├── pictures-of-canada.mdx
+│   │   ├── release-of-tailwind-nextjs-starter-blog-v2.0.mdx
+│   │   └── the-time-machine.mdx
+│   ├── headerNavLinks.ts
+│   ├── logo.svg
+│   ├── projectsData.ts
+│   ├── references-data.bib
+│   └── siteMetadata.js
+├── eslint.config.mjs
+├── faq
+│   ├── custom-mdx-component.md
+│   ├── customize-kbar-search.md
+│   └── deploy-with-docker.md
+├── jsconfig.json
+├── layouts
+│   ├── AuthorLayout.tsx
+│   ├── ListLayout.tsx
+│   ├── ListLayoutWithTags.tsx
+│   ├── PostBanner.tsx
+│   ├── PostLayout.tsx
+│   └── PostSimple.tsx
+├── lib
+│   └── preferences
+│   └── PreferencesService.ts
+├── locales
+│   ├── en.json
+│   └── it.json
+├── netlify.toml
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── prettier.config.js
+├── scripts
+│   ├── postbuild.mjs
+│   └── rss.mjs
 └── tsconfig.json
 
 To improve maintainability, create two additional component folders:

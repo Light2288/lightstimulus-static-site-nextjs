@@ -6,9 +6,9 @@ import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/logo.svg'
 import Link from '../Link'
 import MobileNav from '../MobileNav'
-import ThemeSwitch from '../ThemeSwitch'
+import ThemeToggle from './ThemeToggle'
 import SearchButton from '../SearchButton'
-import LanguageToggle from '../LanguageToggle'
+import LanguageToggle from './LanguageToggle'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 /**
@@ -146,7 +146,7 @@ const Header = () => {
 
             {/* Theme */}
             <div className="flex items-center">
-              <ThemeSwitch />
+              <ThemeToggle />
             </div>
 
             {/* Mobile nav trigger */}

@@ -23,7 +23,7 @@ export default function Footer() {
         <span>© {year}</span>
         <span>•</span>
         <Link
-          href="/public"
+          href="/"
           className="text-accent-secondary hover:text-accent-tertiary dark:text-accent-secondary dark:hover:text-accent-tertiary font-medium transition-colors duration-200"
         >
           {siteMetadata.title}

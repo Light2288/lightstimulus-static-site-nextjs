@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
 import { motion, AnimatePresence } from 'motion/react'
 import { PreferencesService } from '@/lib/preferences/PreferencesService'
-import { Monitor, Moon, Sun, Laptop2 } from 'lucide-react'
+import { Moon, Sun, Laptop2 } from 'lucide-react'
 
 /**
  * ThemeToggle (final hybrid version)

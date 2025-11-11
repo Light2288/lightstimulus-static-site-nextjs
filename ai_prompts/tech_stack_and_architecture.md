@@ -218,7 +218,6 @@ generated folders:
 │   ├── Card.tsx
 │   ├── Comments.tsx
 │   ├── Image.tsx
-│   ├── LanguageToggle.tsx
 │   ├── LayoutWrapper.tsx
 │   ├── Link.tsx
 │   ├── MDXComponents.tsx
@@ -229,11 +228,12 @@ generated folders:
 │   ├── SectionContainer.tsx
 │   ├── TableWrapper.tsx
 │   ├── Tag.tsx
-│   ├── ThemeSwitch.tsx
 │   ├── common
 │   │   ├── Footer.tsx
 │   │   ├── Header.tsx
-│   │   └── Layout.tsx
+│   │   ├── LanguageToggle.tsx
+│   │   ├── Layout.tsx
+│   │   └── ThemeToggle.tsx
 │   ├── home
 │   │   └── Hero.tsx
 │   └── social-icons

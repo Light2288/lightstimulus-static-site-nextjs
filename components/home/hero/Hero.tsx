@@ -1,12 +1,19 @@
 'use client'
 
 import LogoAnimation from './LogoAnimation'
+import TextAnimation from './TextAnimation'
 
 export default function Hero() {
   return (
-    <section className="/* header spacing */ relative flex min-h-[60vh] flex-col items-center justify-center pt-24 pb-16 md:min-h-[70vh]">
+    <section className="relative flex flex-col items-center justify-center gap-10 pt-16 pb-8 xl:flex-row">
+      {/* Left: Logo */}
       <div className="flex items-center justify-center">
         <LogoAnimation />
+      </div>
+
+      {/* Right: Animated text */}
+      <div className="flex items-center justify-center">
+        <TextAnimation />
       </div>
     </section>
   )

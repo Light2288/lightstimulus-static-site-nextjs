@@ -26,6 +26,7 @@
     "esbuild": "0.25.2",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.2",
+    "gsap": "^3.13.0",
     "hast-util-from-html-isomorphic": "^2.0.0",
     "lucide-react": "^0.545.0",
     "motion": "^12.23.24",

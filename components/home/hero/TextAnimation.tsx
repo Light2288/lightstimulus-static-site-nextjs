@@ -63,7 +63,7 @@ export default function TextAnimation() {
       </div>
 
       {/* Animated layers placed absolutely on top of the sizer */}
-      <div className="absolute inset-0 flex items-start justify-start">
+      <div className="absolute inset-0 flex items-start justify-center">
         {/* ROW 1 — LI → LIGHT */}
         <div className="li-row flex space-x-1">
           <motion.span className="initial-letter opacity-0">L</motion.span>
@@ -75,7 +75,7 @@ export default function TextAnimation() {
         </div>
 
         {/* ROW 2 — MULUS → STIMULUS */}
-        <div className="mulus-row absolute flex space-x-1" style={{ left: '-0.75em', top: 0 }}>
+        <div className="mulus-row absolute flex space-x-1" style={{ right: '-0.65em', top: 0 }}>
           <motion.span className="sti-letter opacity-0">S</motion.span>
           <motion.span className="sti-letter opacity-0">T</motion.span>
           <motion.span className="sti-letter opacity-0">I</motion.span>

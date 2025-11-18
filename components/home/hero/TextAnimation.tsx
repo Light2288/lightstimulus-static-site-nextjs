@@ -52,10 +52,18 @@ export default function TextAnimation() {
 
       // Mobile scaling and horizontal correction
       // if (isMobileRef.current) {
+      if (isMobileRef.current) {
+        animations.push(animate(liRow, { x: '0.8em' }, { duration: 0.5, ease: 'easeOut' }))
+      }
       animations.push(animate(mulusRow, { scale: 0.78 }, { duration: 0.5, ease: 'easeOut' }))
 
-      animations.push(animate(mulusRow, { x: '-0.35em' }, { duration: 0.5, ease: 'easeOut' }))
-      // }
+      animations.push(
+        animate(
+          mulusRow,
+          { x: isMobileRef.current ? '0.42em' : '-0.35em' },
+          { duration: 0.5, ease: 'easeOut' }
+        )
+      )
 
       await Promise.all(animations)
 
@@ -144,7 +152,10 @@ export default function TextAnimation() {
       {/* Animated content */}
       <div className="text-glow-target absolute inset-0 flex items-start justify-center">
         {/* ROW 1 — LIGHT */}
-        <div className="li-row flex space-x-1">
+        <div
+          className="li-row absolute flex space-x-1"
+          style={{ right: isMobile ? '1.6em' : '0.80em', top: 0 }}
+        >
           <motion.span className="initial-letter opacity-0">L</motion.span>
           <motion.span className="initial-letter opacity-0">I</motion.span>
           <motion.span className="ght-letter opacity-0">G</motion.span>
@@ -153,7 +164,10 @@ export default function TextAnimation() {
         </div>
 
         {/* ROW 2 — STIMULUS */}
-        <div className="mulus-row absolute flex space-x-1" style={{ right: '-0.65em', top: 0 }}>
+        <div
+          className="mulus-row absolute flex space-x-1"
+          style={{ right: isMobile ? '0.1em' : '-0.65em', top: 0 }}
+        >
           <motion.span className="sti-letter opacity-0">S</motion.span>
           <motion.span className="sti-letter opacity-0">T</motion.span>
           <motion.span className="sti-letter opacity-0">I</motion.span>

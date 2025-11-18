@@ -189,8 +189,12 @@ export default function LogoAnimation() {
           </filter>
 
           <linearGradient id="dropGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ffb347" stopOpacity="1" />
-            <stop offset="100%" stopColor="#ffd27f" stopOpacity="1" />
+            <stop offset="0%" stopColor="var(--color-accent-secondary)" stopOpacity="1" />
+            <stop
+              offset="100%"
+              stopColor="var(--color-accent-secondary-lightest)"
+              stopOpacity="1"
+            />
           </linearGradient>
         </defs>
 
@@ -198,7 +202,7 @@ export default function LogoAnimation() {
         <path
           id="tail"
           fill="none"
-          stroke="#ffb347"
+          stroke="var(--color-accent-secondary)"
           strokeLinecap="round"
           strokeWidth="25"
           d="M512.5,916.5 L512.5,124.5"
@@ -209,7 +213,7 @@ export default function LogoAnimation() {
         <path
           id="left-shell"
           fill="none"
-          stroke="#ffb347"
+          stroke="var(--color-accent-secondary)"
           strokeWidth="25"
           strokeLinecap="round"
           strokeMiterlimit="10"
@@ -221,7 +225,7 @@ export default function LogoAnimation() {
         <path
           id="right-shell"
           fill="none"
-          stroke="#ffb347"
+          stroke="var(--color-accent-secondary)"
           strokeWidth="25"
           strokeLinecap="round"
           strokeMiterlimit="10"

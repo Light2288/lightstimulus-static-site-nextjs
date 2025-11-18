@@ -14,43 +14,30 @@ export default function TextAnimation() {
       const ght = scope.current.querySelectorAll('.ght-letter')
       const sti = scope.current.querySelectorAll('.sti-letter')
 
-      /* -------------------------------
-         1) Fade-in LIMULUS letters
-         ------------------------------- */
+      /* 1) Fade-in original LIMULUS lettering */
       await animate(
         initialLetters,
         { opacity: [0, 1], y: [8, 0] },
         { duration: 0.5, delay: stagger(0.08), ease: 'easeInOut' }
       )
 
-      /* -------------------------------
-         2) Vertical split (same x)
-         ------------------------------- */
+      /* 2) Vertical split (same x) */
       await Promise.all([
-        animate(liRow, { y: '-1.7rem' }, { duration: 0.5, ease: 'easeOut' }),
-        animate(mulusRow, { y: '1.7rem' }, { duration: 0.5, ease: 'easeOut' }),
+        animate(liRow, { y: '-1.7rem' }, { duration: 0.45, ease: 'easeOut' }),
+        animate(mulusRow, { y: '1.7rem' }, { duration: 0.45, ease: 'easeOut' }),
       ])
 
-      /* -------------------------------
-         3) MULUS horizontal shift
-            (after split only)
-         ------------------------------- */
-      // await animate(
-      //   mulusRow,
-      //   { x: '-0.85em' }, // shift more left = perfect alignment under LIGHT
-      //   { duration: 0.001 }
-      // )
+      /* 3) (optional) Slight left shift AFTER split if needed
+         animate(mulusRow, { x: "-0.75em" }, { duration: 0.001 })
+      */
 
-      /* -------------------------------
-         4) LIGHT + STIMULUS expansions
-         ------------------------------- */
+      /* 4) LIGHT + STIMULUS expansions simultaneously */
       await Promise.all([
         animate(
           ght,
           { opacity: [0, 1], x: [-12, 0] },
           { duration: 0.4, delay: stagger(0.05), ease: 'easeOut' }
         ),
-
         animate(
           sti,
           { opacity: [0, 1], x: [12, 0] },
@@ -65,33 +52,40 @@ export default function TextAnimation() {
   return (
     <div
       ref={scope}
-      className="relative w-fit text-5xl leading-none font-semibold select-none md:text-6xl"
-      style={{ height: '3.5rem' }} // ensure both rows fit during split
+      className="relative inline-block text-5xl leading-none font-semibold select-none md:text-6xl"
+      style={{ height: '3.5rem' }} // ensure both rows have room during split
     >
-      {/* ROW 1 — LI → LIGHT */}
-      <div className="li-row absolute top-0 left-0 flex space-x-1">
-        <motion.span className="initial-letter opacity-0">L</motion.span>
-        <motion.span className="initial-letter opacity-0">I</motion.span>
-
-        {/* hidden GHT */}
-        <motion.span className="ght-letter opacity-0">G</motion.span>
-        <motion.span className="ght-letter opacity-0">H</motion.span>
-        <motion.span className="ght-letter opacity-0">T</motion.span>
+      {/* SIZER: must match typography so wrapper gets correct width */}
+      <div className="pointer-events-none text-5xl leading-none font-semibold whitespace-nowrap opacity-0 md:text-6xl">
+        LIGHT
+        <br />
+        STIMULUS
       </div>
 
-      {/* ROW 2 — MULUS → STIMULUS */}
-      <div className="mulus-row absolute top-0 left-0 flex space-x-1" style={{ left: '-0.75em' }}>
-        {/* hidden STI */}
-        <motion.span className="sti-letter opacity-0">S</motion.span>
-        <motion.span className="sti-letter opacity-0">T</motion.span>
-        <motion.span className="sti-letter opacity-0">I</motion.span>
+      {/* Animated layers placed absolutely on top of the sizer */}
+      <div className="absolute inset-0 flex items-start justify-start">
+        {/* ROW 1 — LI → LIGHT */}
+        <div className="li-row flex space-x-1">
+          <motion.span className="initial-letter opacity-0">L</motion.span>
+          <motion.span className="initial-letter opacity-0">I</motion.span>
 
-        {/* original MULUS letters */}
-        <motion.span className="initial-letter opacity-0">M</motion.span>
-        <motion.span className="initial-letter opacity-0">U</motion.span>
-        <motion.span className="initial-letter opacity-0">L</motion.span>
-        <motion.span className="initial-letter opacity-0">U</motion.span>
-        <motion.span className="initial-letter opacity-0">S</motion.span>
+          <motion.span className="ght-letter opacity-0">G</motion.span>
+          <motion.span className="ght-letter opacity-0">H</motion.span>
+          <motion.span className="ght-letter opacity-0">T</motion.span>
+        </div>
+
+        {/* ROW 2 — MULUS → STIMULUS */}
+        <div className="mulus-row absolute flex space-x-1" style={{ left: '-0.75em', top: 0 }}>
+          <motion.span className="sti-letter opacity-0">S</motion.span>
+          <motion.span className="sti-letter opacity-0">T</motion.span>
+          <motion.span className="sti-letter opacity-0">I</motion.span>
+
+          <motion.span className="initial-letter opacity-0">M</motion.span>
+          <motion.span className="initial-letter opacity-0">U</motion.span>
+          <motion.span className="initial-letter opacity-0">L</motion.span>
+          <motion.span className="initial-letter opacity-0">U</motion.span>
+          <motion.span className="initial-letter opacity-0">S</motion.span>
+        </div>
       </div>
     </div>
   )

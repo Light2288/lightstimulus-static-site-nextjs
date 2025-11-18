@@ -50,32 +50,32 @@ export default function TextAnimation() {
          2) Vertical split (same x)
          ------------------------------- */
       const animations = [
-        animate(liRow, { y: '-1.7rem' }, { duration: 0.45, ease: 'easeOut' }),
-        animate(mulusRow, { y: '1.7rem' }, { duration: 0.45, ease: 'easeOut' }),
+        animate(liRow, { y: '-1.7rem' }, { duration: 0.5, ease: 'easeOut' }),
+        animate(mulusRow, { y: '1.7rem' }, { duration: 0.5, ease: 'easeOut' }),
       ]
 
-      if (isMobileRef.current) {
-        // targetScale: adjust this value to match your desired visual size.
-        // 0.78 is a good starting point; increase/decrease to taste.
-        const targetScale = 0.78
+      // if (isMobileRef.current) {
+      // targetScale: adjust this value to match your desired visual size.
+      // 0.78 is a good starting point; increase/decrease to taste.
+      const targetScale = 0.78
 
-        // Smooth scale while keeping it visually connected with the split:
-        animations.push(
-          animate(
-            mulusRow,
-            { scale: targetScale },
-            { duration: 0.35, ease: 'easeOut' } // motion uses easing names
-          )
+      // Smooth scale while keeping it visually connected with the split:
+      animations.push(
+        animate(
+          mulusRow,
+          { scale: targetScale },
+          { duration: 0.5, ease: 'easeOut' } // motion uses easing names
         )
+      )
 
-        animations.push(
-          animate(
-            mulusRow,
-            { x: '-0.35em' },
-            { duration: 0.35, ease: 'easeOut' } // motion uses easing names
-          )
+      animations.push(
+        animate(
+          mulusRow,
+          { x: '-0.35em' },
+          { duration: 0.5, ease: 'easeOut' } // motion uses easing names
         )
-      }
+      )
+      // }
 
       await Promise.all(animations)
 
@@ -86,16 +86,17 @@ export default function TextAnimation() {
       /* -------------------------------
          3) LIGHT + STIMULUS expansions
          ------------------------------- */
+      await new Promise((res) => setTimeout(res, 120))
       await Promise.all([
         animate(
           ght,
           { opacity: [0, 1], x: [-12, 0] },
-          { duration: 0.4, delay: stagger(0.05), ease: 'easeOut' }
+          { duration: 0.5, delay: stagger(0.05), ease: 'easeOut' }
         ),
         animate(
           sti,
           { opacity: [0, 1], x: [12, 0] },
-          { duration: 0.4, delay: stagger(0.05), ease: 'easeOut' }
+          { duration: 0.5, delay: stagger(0.05), ease: 'easeOut' }
         ),
       ])
     }

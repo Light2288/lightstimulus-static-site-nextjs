@@ -1,10 +1,32 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, stagger, useAnimate } from 'motion/react'
 
 export default function TextAnimation() {
   const [scope, animate] = useAnimate()
+  const isMobileRef = useRef(false)
+
+  const [isMobile, setIsMobile] = useState(false)
+
+  useLayoutEffect(() => {
+    // Tailwind "md" breakpoint = min-width: 768px
+    const mq = window.matchMedia('(max-width: 1239px)')
+
+    const onChange = () => setIsMobile(mq.matches)
+
+    // set initial
+    onChange()
+
+    // listen to changes
+    mq.addEventListener('change', onChange)
+
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    isMobileRef.current = isMobile
+  }, [isMobile])
 
   useEffect(() => {
     async function run() {
@@ -15,23 +37,55 @@ export default function TextAnimation() {
       const sti = scope.current.querySelectorAll('.sti-letter')
 
       /* 1) Fade-in original LIMULUS lettering */
+      /* -------------------------------
+   1) Fade-in LIMULUS letters
+   ------------------------------- */
       await animate(
         initialLetters,
         { opacity: [0, 1], y: [8, 0] },
         { duration: 0.5, delay: stagger(0.08), ease: 'easeInOut' }
       )
 
-      /* 2) Vertical split (same x) */
-      await Promise.all([
+      /* -------------------------------
+         2) Vertical split (same x)
+         ------------------------------- */
+      const animations = [
         animate(liRow, { y: '-1.7rem' }, { duration: 0.45, ease: 'easeOut' }),
         animate(mulusRow, { y: '1.7rem' }, { duration: 0.45, ease: 'easeOut' }),
-      ])
+      ]
 
-      /* 3) (optional) Slight left shift AFTER split if needed
-         animate(mulusRow, { x: "-0.75em" }, { duration: 0.001 })
-      */
+      if (isMobileRef.current) {
+        // targetScale: adjust this value to match your desired visual size.
+        // 0.78 is a good starting point; increase/decrease to taste.
+        const targetScale = 0.78
 
-      /* 4) LIGHT + STIMULUS expansions simultaneously */
+        // Smooth scale while keeping it visually connected with the split:
+        animations.push(
+          animate(
+            mulusRow,
+            { scale: targetScale },
+            { duration: 0.35, ease: 'easeOut' } // motion uses easing names
+          )
+        )
+
+        animations.push(
+          animate(
+            mulusRow,
+            { x: '-0.35em' },
+            { duration: 0.35, ease: 'easeOut' } // motion uses easing names
+          )
+        )
+      }
+
+      await Promise.all(animations)
+
+      /* -------------------------------
+         2b) Resize MULUS (mobile only)
+         ------------------------------- */
+
+      /* -------------------------------
+         3) LIGHT + STIMULUS expansions
+         ------------------------------- */
       await Promise.all([
         animate(
           ght,

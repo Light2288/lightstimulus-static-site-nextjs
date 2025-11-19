@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from 'react'
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
-import Logo from '@/data/logo.svg'
 import Link from '../Link'
 import MobileNav from '../MobileNav'
 import ThemeToggle from './ThemeToggle'
 import SearchButton from '../SearchButton'
 import LanguageToggle from './LanguageToggle'
 import { useLanguage } from '@/contexts/LanguageContext'
+import LogoStatic from '@/components/common/LogoStatic'
 
 /**
  * Header
@@ -102,18 +102,7 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-x-4">
             <Link href="/" aria-label={siteMetadata.headerTitle}>
-              <div className="flex items-center gap-x-3">
-                <div className="h-8 w-8">
-                  <Logo />
-                </div>
-                {typeof siteMetadata.headerTitle === 'string' ? (
-                  <div className="hidden text-lg font-semibold sm:block">
-                    {siteMetadata.headerTitle}
-                  </div>
-                ) : (
-                  siteMetadata.headerTitle
-                )}
-              </div>
+              <LogoStatic />
             </Link>
           </div>
 

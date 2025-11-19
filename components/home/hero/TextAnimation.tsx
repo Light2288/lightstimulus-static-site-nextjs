@@ -100,7 +100,7 @@ export default function TextAnimation() {
 
       animate(
         [...ght, ...sti], // expanding letters
-        { color: 'white' },
+        { color: 'currentColor' },
         { duration: 0.35, ease: 'easeOut' }
       )
 
@@ -139,7 +139,7 @@ export default function TextAnimation() {
   return (
     <div
       ref={scope}
-      className="relative inline-block text-5xl leading-none font-semibold select-none md:text-6xl"
+      className="relative inline-block text-5xl leading-none font-semibold text-[var(--color-text-light)] select-none md:text-6xl dark:text-[var(--color-text-dark)]"
       style={{ height: '3.5rem' }}
     >
       {/* Invisible width stabilizer */}

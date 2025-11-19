@@ -420,7 +420,11 @@ generated folders:
 │   │   ├── Layout.tsx
 │   │   └── ThemeToggle.tsx
 │   ├── home
-│   │   └── Hero.tsx
+│   │   ├── Taglines.tsx
+│   │   └── hero
+│   │   ├── Hero.tsx
+│   │   ├── LogoAnimation.tsx
+│   │   └── TextAnimation.tsx
 │   └── social-icons
 │   ├── icons.tsx
 │   └── index.tsx

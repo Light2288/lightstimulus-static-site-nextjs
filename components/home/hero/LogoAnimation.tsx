@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { DrawSVGPlugin, MotionPathPlugin } from 'gsap/all'
+import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoad'
 
 gsap.registerPlugin(MotionPathPlugin, DrawSVGPlugin)
 
@@ -11,21 +12,45 @@ export default function LogoAnimation() {
 
   useEffect(() => {
     if (!svgRef.current) return
-
     const svg = svgRef.current
 
+    // Elements
     const tail = svg.querySelector('#tail') as SVGPathElement
     const leftShell = svg.querySelector('#left-shell') as SVGPathElement
     const rightShell = svg.querySelector('#right-shell') as SVGPathElement
     const pulseGlowGroup = svg.querySelector('#pulseGlowGroup') as SVGGElement
 
-    // Reveal paths immediately (no flash)
-    gsap.set([tail, leftShell, rightShell], {
-      opacity: 1,
-      filter: 'url(#glow)',
-    })
+    /* =======================================================================
+       CASE 1 — Animation should NOT run
+       We immediately set everything to final, fully visible state
+    ======================================================================= */
+    const shouldAnimate = detectRefreshOrFirstLoad('logo_mount_ts')
 
-    // Utility: create glowing droplet
+    if (!shouldAnimate) {
+      const drops = svg.querySelectorAll('ellipse')
+      drops.forEach((el) => {
+        el.style.opacity = '0'
+        el.style.visibility = 'hidden'
+      })
+
+      gsap.set([tail, leftShell, rightShell], {
+        opacity: 1,
+        drawSVG: '0% 100%',
+        filter: 'url(#glow)',
+      })
+
+      // Soft final glow
+      gsap.set(pulseGlowGroup, {
+        opacity: 0.2,
+      })
+      return
+    }
+
+    /* =======================================================================
+       CASE 2 — FIRST LOAD → Run full animation
+    ======================================================================= */
+
+    // Utility function for moving droplets along the paths
     function createDrop() {
       const drop = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
       drop.setAttribute('rx', '35')
@@ -41,7 +66,11 @@ export default function LogoAnimation() {
     const leftDrop = createDrop()
     const rightDrop = createDrop()
 
-    // Hide shell drops initially
+    // Initialization
+    gsap.set([tail, leftShell, rightShell], {
+      opacity: 1,
+      filter: 'url(#glow)',
+    })
     gsap.set([leftDrop, rightDrop], { autoAlpha: 0 })
 
     // Position drops at path start
@@ -49,22 +78,23 @@ export default function LogoAnimation() {
       motionPath: { path: tail, align: tail, alignOrigin: [0.5, 0.5], start: 0 },
       autoAlpha: 1,
     })
-
     gsap.set(leftDrop, {
       motionPath: { path: leftShell, align: leftShell, alignOrigin: [0.5, 0.5], start: 0 },
       autoAlpha: 0,
     })
-
     gsap.set(rightDrop, {
       motionPath: { path: rightShell, align: rightShell, alignOrigin: [0.5, 0.5], start: 0 },
       autoAlpha: 0,
     })
 
-    // Timeline
+    /* ===========================
+        Full GSAP Timeline
+    ============================ */
     const tl = gsap.timeline({ defaults: { ease: 'none' } })
 
-    /* ---------- Tail ---------- */
-    tl.fromTo(tail, { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 1 }, 0).to(
+    // 1. Tail
+    tl.fromTo(tail, { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 1 }, 0)
+    tl.to(
       tailDrop,
       {
         duration: 1,
@@ -83,22 +113,21 @@ export default function LogoAnimation() {
       0
     )
 
-    /* ---------- Shells ---------- */
+    // 2. Shells
     tl.addLabel('shellsStart', '+=0')
-      .set([leftDrop, rightDrop], { autoAlpha: 1 }, 'shellsStart')
-      .fromTo(
-        [leftShell, rightShell],
-        { drawSVG: '0% 0%' },
-        { drawSVG: '0% 100%', duration: 1.2 },
-        'shellsStart'
-      )
+    tl.set([leftDrop, rightDrop], { autoAlpha: 1 }, 'shellsStart')
 
-    let shellsDoneCount = 0
-    const onOneShellDone = () => {
-      shellsDoneCount++
-      if (shellsDoneCount === 2) {
-        gsap.set([leftDrop, rightDrop], { autoAlpha: 0 })
-      }
+    tl.fromTo(
+      [leftShell, rightShell],
+      { drawSVG: '0% 0%' },
+      { drawSVG: '0% 100%', duration: 1.2 },
+      'shellsStart'
+    )
+
+    let shellsDone = 0
+    const onShellDone = () => {
+      shellsDone++
+      if (shellsDone === 2) gsap.set([leftDrop, rightDrop], { autoAlpha: 0 })
     }
 
     tl.to(
@@ -111,9 +140,8 @@ export default function LogoAnimation() {
           alignOrigin: [0.5, 0.5],
           start: 0,
           end: 1,
-          autoRotate: true,
         },
-        onComplete: onOneShellDone,
+        onComplete: onShellDone,
       },
       'shellsStart'
     )
@@ -128,18 +156,17 @@ export default function LogoAnimation() {
           alignOrigin: [0.5, 0.5],
           start: 0,
           end: 1,
-          autoRotate: true,
         },
-        onComplete: onOneShellDone,
+        onComplete: onShellDone,
       },
       'shellsStart'
     )
 
-    /* ---------- Final Pulse ---------- */
+    // 3. Final pulse
     tl.call(() => {
-      pulseGlowGroup.innerHTML = '' // clear previous
-      ;[tail, leftShell, rightShell].forEach((path) => {
-        const copy = path.cloneNode(true)
+      pulseGlowGroup.innerHTML = ''
+      ;[tail, leftShell, rightShell].forEach((p) => {
+        const copy = p.cloneNode(true)
         pulseGlowGroup.appendChild(copy)
       })
 
@@ -156,6 +183,10 @@ export default function LogoAnimation() {
       )
     })
 
+    tl.call(() => {
+      sessionStorage.setItem('logoAnimated', 'true')
+    })
+
     return () => {
       tl.kill()
       gsap.killTweensOf('*')
@@ -164,6 +195,8 @@ export default function LogoAnimation() {
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
+      {/* SVG stays exactly the same as your original */}
+      {/* ---------- SVG START ---------- */}
       <svg
         ref={svgRef}
         viewBox="0 0 1024 1024"
@@ -233,9 +266,9 @@ export default function LogoAnimation() {
           d="m512,119c66.85.02,133.7,21.32,185.41,63.87,103.35,85.05,135,245.76,70.24,366.38-6.13-12.8-24.69-48.75-49.03-69.54-26.5-22.64-65.83-31.36-64.39-28.68l-.52.35c-.17.17-.34.34.17,3.53.06,15.54-9.26,50.17-19.82,61.48-24.1,25.84-51.86,31.3-64.62,48.45"
         />
 
-        {/* Final pulse glow overlay */}
         <g id="pulseGlowGroup" filter="url(#glow)" opacity="0" />
       </svg>
+      {/* ---------- SVG END ---------- */}
     </div>
   )
 }

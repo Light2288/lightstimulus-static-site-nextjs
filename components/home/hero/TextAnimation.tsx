@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, stagger, useAnimate } from 'motion/react'
+import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoad'
 
 export default function TextAnimation() {
   const [scope, animate] = useAnimate()
@@ -23,16 +24,46 @@ export default function TextAnimation() {
   }, [isMobile])
 
   useEffect(() => {
+    const root = scope.current
+    const initialLetters = root.querySelectorAll('.initial-letter')
+    const ght = root.querySelectorAll('.ght-letter')
+    const sti = root.querySelectorAll('.sti-letter')
+    const liRow = root.querySelector('.li-row')
+    const mulusRow = root.querySelector('.mulus-row')
+    const glowTarget = root.querySelector('.text-glow-target')
+
+    /* ------------------------------------------------------------
+       CASE 1 — ALREADY ANIMATED → Apply final state immediately
+    ------------------------------------------------------------ */
+    const shouldAnimate = detectRefreshOrFirstLoad('text_mount_ts')
+
+    if (!shouldAnimate) {
+      // Letters visible
+      initialLetters.forEach((el) => (el.style.opacity = '1'))
+      ght.forEach((el) => (el.style.opacity = '1'))
+      sti.forEach((el) => (el.style.opacity = '1'))
+
+      // Final positions
+      const mq = window.matchMedia('(max-width: 1239px)')
+      const mobile = mq.matches
+
+      liRow.style.transform = mobile ? 'translate(0.8em, -1.7rem)' : 'translate(0, -1.7rem)'
+
+      mulusRow.style.transform = mobile
+        ? 'translate(0.42em, 1.7rem) scale(0.78)'
+        : 'translate(-0.35em, 1.7rem) scale(0.78)'
+
+      // Colors
+      initialLetters.forEach((el) => (el.style.color = 'var(--color-accent-secondary)'))
+      ;[...ght, ...sti].forEach((el) => (el.style.color = 'currentColor'))
+
+      // Soft glow
+      glowTarget.style.filter = 'drop-shadow(0 0 6px var(--color-accent-secondary))'
+
+      return
+    }
+
     async function run() {
-      const initialLetters = scope.current.querySelectorAll('.initial-letter')
-      const liRow = scope.current.querySelector('.li-row')
-      const mulusRow = scope.current.querySelector('.mulus-row')
-
-      const ght = scope.current.querySelectorAll('.ght-letter')
-      const sti = scope.current.querySelectorAll('.sti-letter')
-
-      const glowTarget = scope.current.querySelector('.text-glow-target')
-
       /* --------------------------------
          1) Fade-in LIMULUS letters
       -------------------------------- */
@@ -95,13 +126,13 @@ export default function TextAnimation() {
       animate(
         initialLetters, // LI + MULUS
         { color: 'var(--color-accent-secondary)' },
-        { duration: 0.35, ease: 'easeOut' }
+        { duration: 0.6, ease: 'easeOut' }
       )
 
       animate(
         [...ght, ...sti], // expanding letters
         { color: 'currentColor' },
-        { duration: 0.35, ease: 'easeOut' }
+        { duration: 0.6, ease: 'easeOut' }
       )
 
       /* --------------------------------

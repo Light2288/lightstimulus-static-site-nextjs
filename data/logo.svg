@@ -1,3 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="344.5639097744361 330.27819548872174 111.73684210526318 91.21804511278197" width="53.87" height="43.61"><defs><path d="M453.3 331.28L453.3 359.85L388.64 418.5L388.64 388.42L453.3 331.28Z" id="aFZf6T5ED"></path><linearGradient id="gradientb2ThqnP5Op" gradientUnits="userSpaceOnUse" x1="420.97" y1="331.28" x2="420.97" y2="418.5"><stop style="stop-color: #06b6d4;stop-opacity: 1" offset="0%"></stop><stop style="stop-color: #67e8f9;stop-opacity: 1" offset="100%"></stop></linearGradient><path d="M410.23 331.28L410.23 359.85L345.56 418.5L345.56 388.42L410.23 331.28Z" id="a9fehgwfM"></path><linearGradient id="gradientk1wNV9Ostb" gradientUnits="userSpaceOnUse" x1="377.89" y1="331.28" x2="377.89" y2="418.5"><stop style="stop-color: #06b6d4;stop-opacity: 1" offset="0%"></stop><stop style="stop-color: #67e8f9;stop-opacity: 1" offset="100%"></stop></linearGradient></defs><g><g><use xlink:href="#aFZf6T5ED" opacity="1" fill="url(#gradientb2ThqnP5Op)"></use></g><g><use xlink:href="#a9fehgwfM" opacity="1" fill="url(#gradientk1wNV9Ostb)"></use></g></g></svg>
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter
+                id="glow"
+                x="-50%"
+                y="-50%"
+                width="300%"
+                height="300%"
+                filterUnits="userSpaceOnUse"
+        >
+            <feGaussianBlur stdDeviation="15" result="coloredBlur" />
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.8" />
+            </feComponentTransfer>
+            <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+
+        <linearGradient id="dropGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="var(--color-accent-secondary)" stop-opacity="1" />
+            <stop offset="100%" stop-color="var(--color-accent-secondary-lightest)" stop-opacity="1" />
+        </linearGradient>
+    </defs>
+
+    <!-- Tail -->
+    <path
+            id="tail"
+            fill="none"
+            stroke="var(--color-accent-secondary)"
+            stroke-linecap="round"
+            stroke-width="25"
+            d="M512.5,916.5 L512.5,124.5"
+            opacity="1"
+    />
+
+    <!-- Left Shell -->
+    <path
+            id="left-shell"
+            fill="none"
+            stroke="var(--color-accent-secondary)"
+            stroke-width="25"
+            stroke-linecap="round"
+            stroke-miterlimit="10"
+            opacity="1"
+            d="m512,119c-66.85.02-133.7,21.32-185.41,63.87-103.35,85.05-135,245.76-70.24,366.38,6.13-12.8,24.69-48.75,49.03-69.54,26.5-22.64,65.83-31.36,64.39-28.68l.52.35c.17.17.34.34-.17,3.53-.06,15.54,9.26,50.17,19.82,61.48,24.1,25.84,51.86,31.3,64.62,48.45"
+    />
+
+    <!-- Right Shell -->
+    <path
+            id="right-shell"
+            fill="none"
+            stroke="var(--color-accent-secondary)"
+            stroke-width="25"
+            stroke-linecap="round"
+            stroke-miterlimit="10"
+            opacity="1"
+            d="m512,119c66.85.02,133.7,21.32,185.41,63.87,103.35,85.05,135,245.76,70.24,366.38-6.13-12.8-24.69-48.75-49.03-69.54-26.5-22.64-65.83-31.36-64.39-28.68l-.52.35c-.17.17-.34.34.17,3.53.06,15.54-9.26,50.17-19.82,61.48-24.1,25.84-51.86,31.3-64.62,48.45"
+    />
+</svg>

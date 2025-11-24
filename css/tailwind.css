@@ -17,16 +17,16 @@
   --color-text-secondary-light: #555865;
   --color-accent-primary-light: #2e8b83; /* Teal - deeper for contrast */
   --color-accent-secondary-light: #f07c23; /* Warm amber orange */
+  --color-accent-secondary-light-brighter: #f49a5d; /* Slightly brighter for glow effects */
   --color-accent-tertiary-light: #7c3aed; /* Same violet, works fine */
-
   /* Dark Theme */
   --color-bg-dark: #0d1b2a;
   --color-text-dark: #e6edf3;
   --color-text-secondary-dark: #9fbacd;
   --color-accent-primary-dark: #3fc3b9; /* Brighter teal for dark bg */
   --color-accent-secondary-dark: #ffa94d; /* Current bright orange */
+  --color-accent-secondary-dark-brighter: #ffd27f; /* Slightly brighter for glow effects */
   --color-accent-tertiary-dark: #9d7bff; /* Lighter violet for contrast */
-
   /* 🌤️ Light ramp (default) */
   --color-primary-50: oklch(0.96 0.015 186.94);
   --color-primary-100: oklch(0.9 0.03 186.94);
@@ -112,6 +112,8 @@
 
   --color-primary-active: var(--color-primary-500);
   --color-secondary-active: var(--color-secondary-500);
+  --color-accent-secondary: var(--color-accent-secondary-light);
+  --color-accent-secondary-lightest: var(--color-accent-secondary-light-brighter);
 }
 
 .dark {
@@ -119,6 +121,8 @@
 
   --color-primary-active: var(--color-primary-dark-500);
   --color-secondary-active: var(--color-secondary-dark-500);
+  --color-accent-secondary: var(--color-accent-secondary-dark);
+  --color-accent-secondary-lightest: var(--color-accent-secondary-dark-brighter);
 }
 
 /* Apply theme variables */

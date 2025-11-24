@@ -5,7 +5,7 @@ import TextAnimation from './TextAnimation'
 
 export default function Hero() {
   return (
-    <section className="relative flex flex-col items-center justify-center gap-10 pt-16 pb-8 xl:flex-row">
+    <section className="relative flex flex-col items-center justify-center gap-10 pt-8 pb-8 xl:flex-row">
       {/* Left: Logo */}
       <div className="flex w-full justify-center md:w-auto md:flex-none">
         <LogoAnimation />

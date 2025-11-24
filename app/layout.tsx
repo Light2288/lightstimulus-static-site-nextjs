@@ -61,24 +61,49 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${plexSans.variable} ${plexMono.variable} scroll-smooth`}
       suppressHydrationWarning
     >
-      <link
-        rel="apple-touch-icon"
-        sizes="76x76"
-        href={`${basePath}/static/favicons/apple-touch-icon.png`}
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href={`${basePath}/static/favicons/favicon-32x32.png`}
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href={`${basePath}/static/favicons/favicon-16x16.png`}
-      />
-      <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
+      <head>
+        <title>{siteMetadata.title}</title>
+        {/* Apple Touch Icon */}
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href={`${basePath}/static/favicons/apple-touch-icon.png`}
+        />
+
+        {/* Standard Favicons */}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={`${basePath}/static/favicons/favicon-32x32.png`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href={`${basePath}/static/favicons/favicon-16x16.png`}
+        />
+        <link rel="icon" href={`${basePath}/static/favicons/favicon.ico`} />
+
+        {/* PWA Manifest */}
+        <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
+
+        {/* Safari Pinned Tab (monochrome SVG) */}
+        <link
+          rel="mask-icon"
+          href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
+          color="#ffb347" // your orange brand color
+        />
+
+        {/* Windows Tiles (optional, because you have the file) */}
+        <meta
+          name="msapplication-config"
+          content={`${basePath}/static/favicons/browserconfig.xml`}
+        />
+
+        {/* Theme color for Chrome/Android */}
+        <meta name="theme-color" content="#ffb347" />
+      </head>
       <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
         <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
         <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>

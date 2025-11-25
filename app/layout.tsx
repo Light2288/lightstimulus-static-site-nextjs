@@ -63,14 +63,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         <title>{siteMetadata.title}</title>
-        {/* Apple Touch Icon */}
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href={`${basePath}/static/favicons/apple-touch-icon.png`}
-        />
 
         {/* Standard Favicons */}
+        <link rel="icon" type="image/x-icon" href={`${basePath}/static/favicons/favicon.ico`} />
         <link
           rel="icon"
           type="image/png"
@@ -83,10 +78,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           sizes="16x16"
           href={`${basePath}/static/favicons/favicon-16x16.png`}
         />
-        <link rel="icon" href={`${basePath}/static/favicons/favicon.ico`} />
 
         {/* PWA Manifest */}
         <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
+
+        {/* Apple Touch Icon */}
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href={`${basePath}/static/favicons/apple-touch-icon.png`}
+        />
 
         {/* Safari Pinned Tab (monochrome SVG) */}
         <link

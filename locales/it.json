@@ -1,7 +1,15 @@
 {
   "hero": {
-    "tagline_1": "Esplorando la luce e il codice.",
-    "tagline_2": "Espandendo la realtà, un pixel alla volta."
+    "taglines": {
+      "0": "La luce rivela. Il codice interpreta. La realtà si espande.",
+      "1": "Visione oltre la risoluzione.",
+      "2": "Luce come segnale. Codice come struttura.",
+      "3": "Guidato dalla curiosità. Plasmato dalla sperimentazione.",
+      "4": "Creare prototipi per ogni nuova idea.",
+      "5": "Espandere la realtà, un pixel alla volta.",
+      "6": "Imparare creando. Esplorare sperimentando."
+    },
+    "fixed_paragraph": "Ispirato al limulo — una creatura la cui visione stratificata unisce biologia antica e ottica moderna — esploro come luce, percezione e calcolo possano modellare le interfacce di domani. Il mio lavoro abbraccia realtà aumentata, computer vision, intelligenza artificiale generativa e sviluppo mobile, guidato da una curiosità che trasforma gli esperimenti in progetti e le idee in prototipi. Che si tratti di studiare come i sistemi percepiscono il mondo o come le persone interagiscono con esso, considero la tecnologia un laboratorio vivente, in cui ogni ambito è un’occasione per imparare, costruire e scoprire nuovi modi di estendere la realtà."
   },
   "nav": {
     "home": "Home",

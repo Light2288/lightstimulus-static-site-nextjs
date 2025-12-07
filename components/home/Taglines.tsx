@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { easeOut, easeIn } from 'motion'
 import { useLanguage } from '@/contexts/LanguageContext'
 
-const INTERVAL = 6000
+const INTERVAL = 5000
 const CHAR_DELAY = 0.04
 const FADE_DURATION = 0.5 // parent fade duration
 

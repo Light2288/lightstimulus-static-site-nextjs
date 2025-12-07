@@ -425,3 +425,95 @@ input:-webkit-autofill:focus {
 .animate-heartbeat:hover {
   animation: heartbeat 1.8s ease-in-out infinite;
 }
+
+/* -----------------------------
+   Highlight words (plain color)
+   + cursor-followed glyph-only glow
+   ----------------------------- */
+
+.highlight-word {
+  color: var(--color-accent-secondary);
+  font-weight: 600;
+  cursor: default;
+  user-select: none;
+  position: relative;
+  display: inline-block;
+  white-space: normal; /* allow wrapping like normal text */
+  line-height: inherit;
+  transition:
+    filter 0.18s ease,
+    opacity 0.18s ease;
+}
+
+/* ::after duplicates the text (safely set via data-text attr) and is used as a glow overlay.
+   Important: we set display: inline-block and width: 100% so it wraps exactly like the original text.
+*/
+.highlight-word::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  white-space: normal; /* allow wrapping matching the main text */
+  line-height: inherit;
+  pointer-events: none;
+
+  color: var(--color-accent-secondary-lightest); /* subtle bright color for the glow */
+  opacity: 0;
+  mix-blend-mode: screen; /* blend the glow on top of the letters */
+  transition: opacity 0.22s ease;
+  /* mask radial gradient that will follow cursor via CSS vars */
+  -webkit-mask-image: radial-gradient(
+    120px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.6) 30%,
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0) 80%
+  );
+  mask-image: radial-gradient(
+    120px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.6) 30%,
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0) 80%
+  );
+
+  /* make duplicate text invisible except for the glow by using mix-blend and low opacity */
+  filter: blur(2px) saturate(120%);
+}
+
+/* when the word is hovered, show the glow */
+.highlight-word.is-hovered::after {
+  opacity: 1;
+}
+
+/* Background ripple (unchanged) */
+.glass-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-ripple::before {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+
+  left: var(--ripple-x, 0px);
+  top: var(--ripple-y, 0px);
+  transition: opacity 0.22s ease;
+}
+
+.glass-ripple.is-active::before {
+  opacity: 1;
+}
+
+/* Ensure the whole container keeps default cursor */
+.fixed-analogy-container {
+  cursor: default !important;
+}

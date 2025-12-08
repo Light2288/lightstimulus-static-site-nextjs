@@ -19,6 +19,13 @@ Use Motion.dev exclusively for structured animations (hero reveal, section entra
 Do not import Motion for basic hover states.
 Use the latest stable version of `@motion.dev/react` (Motion.dev) as the unified animation library for all structured animations (hero reveal, section entrances, scroll-triggered sequences).
 Framer Motion will not be used.
+GSAP will be used as an optional enhancement layer for animations that
+require higher precision or timeline-based control (e.g., logo reveal,
+light-sweep effects, complex SVG motion, or scroll-linked parallax).
+Motion.dev remains the primary animation framework for UI/section reveals,
+while GSAP is reserved for advanced sequences only. GSAP utilities and
+timelines should be placed under /lib/gsap, and animations must run
+client-side using gsap.context() for proper cleanup.
 Tailwind transitions will continue to handle microinteractions (hover, small opacity/scale effects).
 All animation utilities and motion presets will be defined in a dedicated `/lib/motion` folder for reuse.
 

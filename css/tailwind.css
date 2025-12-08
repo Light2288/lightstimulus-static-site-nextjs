@@ -425,3 +425,147 @@ input:-webkit-autofill:focus {
 .animate-heartbeat:hover {
   animation: heartbeat 1.8s ease-in-out infinite;
 }
+
+/* ==========================
+   Highlight words (glyph glow)
+   ========================== */
+.highlight-word {
+  color: var(--color-accent-secondary);
+  font-weight: 600;
+  cursor: default;
+  user-select: none;
+  position: relative;
+  display: inline-block;
+  white-space: normal;
+  line-height: inherit;
+  transition:
+    filter 0.18s ease,
+    opacity 0.18s ease;
+}
+
+/* overlay duplicate used for glyph-only glow; wraps like original */
+
+.highlight-word::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  white-space: normal;
+  line-height: inherit;
+  pointer-events: none;
+
+  color: var(--color-accent-secondary-lightest);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.22s ease;
+
+  /* mask that follows cursor inside the word */
+  -webkit-mask-image: radial-gradient(
+    150px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.75) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: radial-gradient(
+    150px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.75) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  filter: blur(3px) brightness(1.5);
+}
+
+.dark .highlight-word::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  white-space: normal;
+  line-height: inherit;
+  pointer-events: none;
+
+  color: var(--color-accent-secondary-lightest);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.22s ease;
+
+  /* mask that follows cursor inside the word */
+  -webkit-mask-image: radial-gradient(
+    150px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.75) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: radial-gradient(
+    150px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.75) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  filter: blur(3px) brightness(1.08);
+}
+
+.highlight-word.is-hovered::after {
+  opacity: 1;
+}
+
+/* ==========================
+   Background ripple (container)
+   ========================== */
+
+.glass-ripple {
+  position: relative;
+  overflow: hidden;
+  /* ensure CSS variables exist to avoid invalid reads */
+  --ripple-x: -9999px;
+  --ripple-y: -9999px;
+  --ripple-opacity: 0;
+}
+
+/* The pseudo element is positioned by the --ripple-x/y vars */
+.glass-ripple::before {
+  content: '';
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+
+  /* stronger for light mode by default */
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.05) 40%,
+    transparent 75%
+  );
+
+  left: var(--ripple-x, -9999px);
+  top: var(--ripple-y, -9999px);
+  opacity: var(--ripple-opacity, 0);
+  transition: opacity 0.12s ease-out;
+  mix-blend-mode: screen;
+}
+
+.dark .glass-ripple::before {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    transparent 75%
+  );
+}
+
+/* Ensure the whole component uses default cursor */
+.fixed-analogy-container {
+  cursor: default !important;
+}

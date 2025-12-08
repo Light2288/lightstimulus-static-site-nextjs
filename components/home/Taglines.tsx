@@ -37,7 +37,7 @@ export default function Taglines() {
   const words = active.split(' ').map((word) => word.split(''))
 
   return (
-    <section className="relative mt-6 flex min-h-[3.5rem] justify-center px-4">
+    <section className="relative mt-8 flex min-h-[3.5rem] justify-center px-4">
       <AnimatePresence mode="wait">
         {showText && (
           <motion.div

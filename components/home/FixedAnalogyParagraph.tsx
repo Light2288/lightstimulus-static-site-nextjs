@@ -179,7 +179,7 @@ export default function FixedAnalogyParagraph() {
     <section
       className={clsx(
         'fixed-analogy-container',
-        'mx-auto mt-8 max-w-4xl px-6 text-center' /* increased width */,
+        'mx-auto mt-6 max-w-5xl px-6 text-center' /* increased width */,
         'text-base leading-relaxed sm:text-lg',
         'text-text-secondary dark:text-text-secondary-dark'
       )}
@@ -188,7 +188,7 @@ export default function FixedAnalogyParagraph() {
         ref={containerRef}
         onMouseMove={handleContainerMouseMove}
         onMouseLeave={handleContainerMouseLeave}
-        className="glass-ripple rounded-xl bg-white/20 px-6 py-8 shadow-sm backdrop-blur-lg dark:bg-white/5"
+        className="glass-ripple rounded-xl bg-white/20 px-6 py-6 shadow-sm backdrop-blur-lg dark:bg-white/5"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </section>

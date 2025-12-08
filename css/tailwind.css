@@ -426,11 +426,9 @@ input:-webkit-autofill:focus {
   animation: heartbeat 1.8s ease-in-out infinite;
 }
 
-/* -----------------------------
-   Highlight words (plain color)
-   + cursor-followed glyph-only glow
-   ----------------------------- */
-
+/* ==========================
+   Highlight words (glyph glow)
+   ========================== */
 .highlight-word {
   color: var(--color-accent-secondary);
   font-weight: 600;
@@ -438,16 +436,14 @@ input:-webkit-autofill:focus {
   user-select: none;
   position: relative;
   display: inline-block;
-  white-space: normal; /* allow wrapping like normal text */
+  white-space: normal;
   line-height: inherit;
   transition:
     filter 0.18s ease,
     opacity 0.18s ease;
 }
 
-/* ::after duplicates the text (safely set via data-text attr) and is used as a glow overlay.
-   Important: we set display: inline-block and width: 100% so it wraps exactly like the original text.
-*/
+/* overlay duplicate used for glyph-only glow; wraps like original */
 .highlight-word::after {
   content: attr(data-text);
   position: absolute;
@@ -455,65 +451,85 @@ input:-webkit-autofill:focus {
   top: 0;
   display: inline-block;
   width: 100%;
-  white-space: normal; /* allow wrapping matching the main text */
+  white-space: normal;
   line-height: inherit;
   pointer-events: none;
 
-  color: var(--color-accent-secondary-lightest); /* subtle bright color for the glow */
+  color: var(--color-accent-secondary-lightest);
   opacity: 0;
-  mix-blend-mode: screen; /* blend the glow on top of the letters */
+  mix-blend-mode: screen;
   transition: opacity 0.22s ease;
-  /* mask radial gradient that will follow cursor via CSS vars */
+
+  /* mask that follows cursor inside the word */
   -webkit-mask-image: radial-gradient(
-    120px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    150px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
     rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.6) 30%,
-    rgba(0, 0, 0, 0.25) 55%,
-    rgba(0, 0, 0, 0) 80%
+    rgba(0, 0, 0, 0.75) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
   );
   mask-image: radial-gradient(
-    120px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    150px circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
     rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.6) 30%,
-    rgba(0, 0, 0, 0.25) 55%,
-    rgba(0, 0, 0, 0) 80%
+    rgba(0, 0, 0, 0.75) 35%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
   );
 
-  /* make duplicate text invisible except for the glow by using mix-blend and low opacity */
-  filter: blur(2px) saturate(120%);
+  filter: blur(3px) brightness(1.08);
 }
 
-/* when the word is hovered, show the glow */
 .highlight-word.is-hovered::after {
   opacity: 1;
 }
 
-/* Background ripple (unchanged) */
+/* ==========================
+   Background ripple (container)
+   ========================== */
+
 .glass-ripple {
   position: relative;
   overflow: hidden;
+  /* ensure CSS variables exist to avoid invalid reads */
+  --ripple-x: -9999px;
+  --ripple-y: -9999px;
+  --ripple-opacity: 0;
 }
 
+/* The pseudo element is positioned by the --ripple-x/y vars */
 .glass-ripple::before {
   content: '';
   position: absolute;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
-  opacity: 0;
+  width: 240px;
+  height: 240px;
   transform: translate(-50%, -50%);
   pointer-events: none;
 
-  left: var(--ripple-x, 0px);
-  top: var(--ripple-y, 0px);
-  transition: opacity 0.22s ease;
+  /* stronger for light mode by default */
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.12) 40%,
+    transparent 75%
+  );
+
+  left: var(--ripple-x, -9999px);
+  top: var(--ripple-y, -9999px);
+  opacity: var(--ripple-opacity, 0);
+  transition: opacity 0.12s ease-out;
+  mix-blend-mode: screen;
 }
 
-.glass-ripple.is-active::before {
-  opacity: 1;
+.dark .glass-ripple::before {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    transparent 75%
+  );
 }
 
-/* Ensure the whole container keeps default cursor */
+/* Ensure the whole component uses default cursor */
 .fixed-analogy-container {
   cursor: default !important;
 }

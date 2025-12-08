@@ -179,7 +179,7 @@ export default function FixedAnalogyParagraph() {
     <section
       className={clsx(
         'fixed-analogy-container',
-        'mx-auto mt-16 max-w-4xl px-6 text-center' /* increased width */,
+        'mx-auto mt-8 max-w-4xl px-6 text-center' /* increased width */,
         'text-base leading-relaxed sm:text-lg',
         'text-text-secondary dark:text-text-secondary-dark'
       )}

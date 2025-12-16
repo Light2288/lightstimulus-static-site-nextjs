@@ -20,5 +20,11 @@
   },
   "contact": {
     "form_title": "Scrivimi"
+  },
+  "home": {
+    "projects": {
+      "title": "Progetti in evidenza",
+      "view_all": "Vedi tutti"
+    }
   }
 }

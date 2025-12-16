@@ -20,5 +20,11 @@
   },
   "contact": {
     "form_title": "Get in touch"
+  },
+  "home": {
+    "projects": {
+      "title": "Featured Projects",
+      "view_all": "View all"
+    }
   }
 }

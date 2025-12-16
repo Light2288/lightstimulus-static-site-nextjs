@@ -9,7 +9,7 @@
       "5": "Espandere la realtà, un pixel alla volta.",
       "6": "Imparare creando. Esplorare sperimentando."
     },
-    "fixed_paragraph": "Ispirato al limulo — una creatura antichissima il cui sistema visivo, quasi immutato da milioni di anni, continua a leggere il mondo con una calma precisione — osservo come interpreta ciò che lo circonda. La sua visione si adatta alla luce, estrae forma dal rumore e segue gradienti e movimento con un’eleganza scolpita dal tempo. In questa costanza ritrovo una metafora del mio lavoro: cogliere il sottile, filtrare l’essenziale, trovare struttura nella complessità.\n\nLuce, percezione e calcolo guidano le interfacce che costruisco. Il mio lavoro abbraccia realtà aumentata ed estesa, computer vision, machine learning, flussi di lavoro di AI generativa, ingegneria mobile, pipeline di dati e interfacce sperimentali. Ogni ambito è uno spazio per mettere alla prova un’idea. Ogni prototipo è un passo verso sistemi che rispondono, si adattano e rivelano. Considero la tecnologia un laboratorio vivente — un luogo in cui la luce diventa dato, la percezione diventa logica e le interazioni create diventano nuovi modi di estendere la realtà."
+    "fixed_paragraph": "Ispirato dal limulo — una creatura antichissima il cui sistema visivo, quasi immutato da milioni di anni, continua a leggere il mondo con una calma precisione — osservo come interpreta ciò che lo circonda. La sua visione si adatta alla luce, estrae forma dal rumore e segue gradienti e movimento con un’eleganza scolpita dal tempo. In questa costanza ritrovo una metafora del mio lavoro: cogliere il sottile, filtrare l’essenziale, trovare struttura nella complessità.\n\nLuce, percezione e calcolo guidano le interfacce che costruisco. Il mio lavoro abbraccia realtà aumentata ed estesa, computer vision, machine learning, flussi di lavoro di AI generativa, ingegneria mobile, pipeline di dati e interfacce sperimentali. Ogni ambito è uno spazio per mettere alla prova un’idea. Ogni prototipo è un passo verso sistemi che rispondono, si adattano e rivelano. Considero la tecnologia un laboratorio vivente — un luogo in cui la luce diventa dato, la percezione diventa logica e le interazioni create diventano nuovi modi di estendere la realtà."
   },
   "nav": {
     "home": "Home",
@@ -20,5 +20,11 @@
   },
   "contact": {
     "form_title": "Scrivimi"
+  },
+  "home": {
+    "projects": {
+      "title": "Progetti in evidenza",
+      "view_all": "Vedi tutti"
+    }
   }
 }

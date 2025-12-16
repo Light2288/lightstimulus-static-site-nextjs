@@ -147,9 +147,60 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
+// -----------------------
+// PROJECT DOCUMENT TYPE
+// -----------------------
+
+export const Project = defineDocumentType(() => ({
+  name: 'Project',
+  filePathPattern: 'projects/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: {
+      type: 'json',
+      required: true,
+      // { en: string; it: string }
+    },
+    summary: {
+      type: 'json',
+      required: true,
+      // { en: string; it: string }
+    },
+    date: { type: 'date', required: true },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    coverImage: { type: 'string' },
+  },
+  computedFields: {
+    ...computedFields,
+
+    // Default (EN) fallback — useful for RSS, SEO, safety
+    titleEn: {
+      type: 'string',
+      resolve: (doc) => doc.title?.en ?? '',
+    },
+    summaryEn: {
+      type: 'string',
+      resolve: (doc) => doc.summary?.en ?? '',
+    },
+
+    structuredData: {
+      type: 'json',
+      resolve: (doc) => ({
+        '@context': 'https://schema.org',
+        '@type': 'CreativeWork',
+        headline: doc.title?.en,
+        description: doc.summary?.en,
+        datePublished: doc.date,
+        image: doc.coverImage || siteMetadata.socialBanner,
+        url: `${siteMetadata.siteUrl}/projects/${doc.slug}`,
+      }),
+    },
+  },
+}))
+
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Authors, Project],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [

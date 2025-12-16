@@ -4,6 +4,7 @@ import Main from './Main'
 import Hero from '@/components/home/hero/Hero'
 import Taglines from '@/components/home/Taglines'
 import FixedAnalogyParagraph from '@/components/home/FixedAnalogyParagraph'
+import ProjectsPreview from '@/components/home/ProjectsPreview'
 
 export default async function Page() {
   const sortedPosts = sortPosts(allBlogs)
@@ -14,6 +15,9 @@ export default async function Page() {
       <Hero />
       <Taglines />
       <FixedAnalogyParagraph />
+
+      <ProjectsPreview />
+
       <Main posts={posts} />
     </>
   )

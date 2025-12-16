@@ -16,17 +16,26 @@ interface Props {
 export default function ProjectCardBase({ href, title, summary, coverImage, small }: Props) {
   return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -6 }}
+      initial="rest"
+      whileHover="hover"
+      whileInView="rest"
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ type: 'spring', stiffness: 220, damping: 22 }}
+      variants={{
+        rest: { y: 0 },
+        hover: { y: -5 },
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 260, // ↓ less stiff
+        damping: 26, // ↑ smoother settle
+        mass: 0.8, // ↑ more weight
+      }}
       className={clsx(
         'group relative overflow-hidden rounded-xl',
         'glass-bg backdrop-blur-lg',
         'border border-white/25 dark:border-white/10',
         'shadow-md hover:shadow-xl',
-        'transition-all duration-300'
+        'transition-shadow duration-200'
       )}
     >
       {/* Glow layer */}
@@ -42,19 +51,29 @@ export default function ProjectCardBase({ href, title, summary, coverImage, smal
       {coverImage && (
         <Link href={href} aria-label={title} className="relative z-10 block">
           <div className="relative overflow-hidden">
-            <Image
-              alt={title}
-              src={coverImage}
-              width={600}
-              height={360}
-              className={clsx(
-                'w-full object-cover transition-transform duration-700',
-                'group-hover:scale-105',
-                small ? 'h-40 md:h-48' : 'h-48 md:h-60'
-              )}
-            />
+            <motion.div
+              variants={{
+                rest: { scale: 1 },
+                hover: { scale: 1.06 },
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 320,
+                damping: 28,
+                mass: 0.7,
+              }}
+            >
+              <Image
+                alt={title}
+                src={coverImage}
+                width={600}
+                height={360}
+                className={clsx('w-full object-cover', small ? 'h-40 md:h-48' : 'h-48 md:h-60')}
+              />
+            </motion.div>
+
             {/* Image overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
           </div>
         </Link>
       )}

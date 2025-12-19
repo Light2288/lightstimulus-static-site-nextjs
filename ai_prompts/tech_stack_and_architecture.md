@@ -105,67 +105,79 @@ useful package you would install:
 ```
 {
 "name": "tailwind-nextjs-starter-blog",
-"version": "2.4.0",
-"private": true,
-"dependencies": {
-"@headlessui/react": "2.2.0",
-"@heroicons/react": "^2.2.0",
-"@next/bundle-analyzer": "15.2.4",
-"@tailwindcss/forms": "^0.5.9",
-"@tailwindcss/postcss": "^4.0.5",
-"@tailwindcss/typography": "^0.5.15",
-"body-scroll-lock": "^4.0.0-beta.0",
-"clsx": "^2.1.1",
-"contentlayer2": "0.5.5",
-"cross-env": "^7.0.3",
-"esbuild": "0.25.2",
-"github-slugger": "^2.0.0",
-"gray-matter": "^4.0.2",
-"hast-util-from-html-isomorphic": "^2.0.0",
-"lucide-react": "^0.545.0",
-"next": "^15.5.4",
-"next-contentlayer2": "0.5.5",
-"next-seo": "^6.8.0",
-"next-themes": "^0.4.6",
-"pliny": "0.4.1",
-"postcss": "^8.4.24",
-"react": "19.0.0",
-"react-dom": "19.0.0",
-"reading-time": "1.5.0",
-"rehype-autolink-headings": "^7.1.0",
-"rehype-citation": "^2.3.0",
-"rehype-katex": "^7.0.0",
-"rehype-katex-notranslate": "^1.1.4",
-"rehype-preset-minify": "7.0.0",
-"rehype-prism-plus": "^2.0.0",
-"rehype-slug": "^6.0.0",
-"remark": "^15.0.0",
-"remark-gfm": "^4.0.0",
-"remark-github-blockquote-alert": "^1.2.1",
-"remark-math": "^6.0.0",
-"tailwindcss": "^4.0.5",
-"unist-util-visit": "^5.0.0"
-},
-"devDependencies": {
-"@eslint/eslintrc": "^3.2.0",
-"@eslint/js": "^9.16.0",
-"@svgr/webpack": "^8.0.1",
-"@types/mdx": "^2.0.12",
-"@types/react": "^19.0.8",
-"@typescript-eslint/eslint-plugin": "^8.12.0",
-"@typescript-eslint/parser": "^8.12.0",
-"eslint": "^9.14.0",
-"eslint-config-next": "15.2.4",
-"eslint-config-prettier": "^9.1.0",
-"eslint-plugin-prettier": "^5.2.0",
-"globals": "^15.12.0",
-"husky": "^9.0.0",
-"image-size": "^2.0.2",
-"lint-staged": "^13.0.0",
-"prettier": "^3.0.0",
-"prettier-plugin-tailwindcss": "^0.6.11",
-"typescript": "^5.1.3"
-}
+  "version": "2.4.0",
+  "private": true,
+  "scripts": {
+    "start": "next dev",
+    "dev": "cross-env INIT_CWD=$PWD next dev",
+    "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "serve": "next start",
+    "analyze": "cross-env ANALYZE=true next build",
+    "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix && prettier --write .",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@headlessui/react": "2.2.0",
+    "@heroicons/react": "^2.2.0",
+    "@next/bundle-analyzer": "15.2.4",
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/postcss": "^4.0.5",
+    "@tailwindcss/typography": "^0.5.15",
+    "body-scroll-lock": "^4.0.0-beta.0",
+    "clsx": "^2.1.1",
+    "contentlayer2": "0.5.5",
+    "cross-env": "^7.0.3",
+    "esbuild": "0.25.2",
+    "github-slugger": "^2.0.0",
+    "gray-matter": "^4.0.2",
+    "gsap": "^3.13.0",
+    "hast-util-from-html-isomorphic": "^2.0.0",
+    "lucide-react": "^0.545.0",
+    "motion": "^12.23.24",
+    "next": "^15.5.4",
+    "next-contentlayer2": "0.5.5",
+    "next-seo": "^6.8.0",
+    "next-themes": "^0.4.6",
+    "pliny": "0.4.1",
+    "postcss": "^8.4.24",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "reading-time": "1.5.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-citation": "^2.3.0",
+    "rehype-katex": "^7.0.0",
+    "rehype-katex-notranslate": "^1.1.4",
+    "rehype-preset-minify": "7.0.0",
+    "rehype-prism-plus": "^2.0.0",
+    "rehype-slug": "^6.0.0",
+    "remark": "^15.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-github-blockquote-alert": "^1.2.1",
+    "remark-math": "^6.0.0",
+    "tailwindcss": "^4.0.5",
+    "unist-util-visit": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.16.0",
+    "@svgr/webpack": "^8.0.1",
+    "@types/mdx": "^2.0.12",
+    "@types/react": "^19.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.12.0",
+    "@typescript-eslint/parser": "^8.12.0",
+    "eslint": "^9.14.0",
+    "eslint-config-next": "15.2.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.0",
+    "globals": "^15.12.0",
+    "husky": "^9.0.0",
+    "image-size": "^2.0.2",
+    "lint-staged": "^13.0.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "typescript": "^5.1.3"
+  },
 ```
 
 ## 🗂️ Folder / Project Structure
@@ -223,6 +235,8 @@ generated folders:
 │   ├── MDXComponents.tsx
 │   ├── MobileNav.tsx
 │   ├── PageTitle.tsx
+│   ├── ProjectCardBase.tsx
+│   ├── ProjectCardSmall.tsx
 │   ├── ScrollTopAndComment.tsx
 │   ├── SearchButton.tsx
 │   ├── SectionContainer.tsx
@@ -233,8 +247,12 @@ generated folders:
 │   │   ├── Header.tsx
 │   │   ├── LanguageToggle.tsx
 │   │   ├── Layout.tsx
+│   │   ├── LogoStatic.tsx
+│   │   ├── SectionHeader.tsx
 │   │   └── ThemeToggle.tsx
 │   ├── home
+│   │   ├── FixedAnalogyParagraph.tsx
+│   │   ├── ProjectsPreview.tsx
 │   │   ├── Taglines.tsx
 │   │   └── hero
 │   │   ├── Hero.tsx
@@ -268,6 +286,17 @@ generated folders:
 │   │   └── the-time-machine.mdx
 │   ├── headerNavLinks.ts
 │   ├── logo.svg
+│   ├── projects
+│   │   ├── project-1.mdx
+│   │   ├── project-10.mdx
+│   │   ├── project-2.mdx
+│   │   ├── project-3.mdx
+│   │   ├── project-4.mdx
+│   │   ├── project-5.mdx
+│   │   ├── project-6.mdx
+│   │   ├── project-7.mdx
+│   │   ├── project-8.mdx
+│   │   └── project-9.mdx
 │   ├── projectsData.ts
 │   ├── references-data.bib
 │   └── siteMetadata.js
@@ -300,7 +329,11 @@ generated folders:
 ├── scripts
 │   ├── postbuild.mjs
 │   └── rss.mjs
-└── tsconfig.json
+├── tsconfig.json
+├── types
+│   └── project.d.ts
+└── utils
+└── detectRefreshOrFirstLoad.ts
 
 To improve maintainability, create two additional component folders:
 

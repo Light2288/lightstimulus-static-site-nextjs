@@ -3,7 +3,7 @@
 import { allProjects } from 'contentlayer/generated'
 import { useLanguage } from '@/contexts/LanguageContext'
 import SectionHeader from '@/components/common/SectionHeader'
-import ProjectCardSmall from '@/components/ProjectCardSmall'
+import ProjectCardSmall from '@/components/projects/ProjectCardSmall'
 import Link from '@/components/Link'
 import { useMemo } from 'react'
 

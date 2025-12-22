@@ -1,4 +1,4 @@
-import ProjectCardBase from '@/components/ProjectCardBase'
+import ProjectCardBase from '@/components/projects/ProjectCardBase'
 
 interface Props {
   href: string

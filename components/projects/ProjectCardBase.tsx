@@ -10,10 +10,20 @@ interface Props {
   title: string
   summary: string
   coverImage?: string
+  date?: string
+  tags?: string[]
   small?: boolean
 }
 
-export default function ProjectCardBase({ href, title, summary, coverImage, small }: Props) {
+export default function ProjectCardBase({
+  href,
+  title,
+  summary,
+  coverImage,
+  date,
+  tags = [],
+  small,
+}: Props) {
   return (
     <motion.article
       initial="rest"
@@ -26,12 +36,12 @@ export default function ProjectCardBase({ href, title, summary, coverImage, smal
       }}
       transition={{
         type: 'spring',
-        stiffness: 260, // ↓ less stiff
-        damping: 26, // ↑ smoother settle
-        mass: 0.8, // ↑ more weight
+        stiffness: 260,
+        damping: 26,
+        mass: 0.8,
       }}
       className={clsx(
-        'group relative overflow-hidden rounded-xl',
+        'group relative flex h-full flex-col overflow-hidden rounded-xl',
         'glass-bg backdrop-blur-lg',
         'border border-white/25 dark:border-white/10',
         'shadow-md hover:shadow-xl',
@@ -51,6 +61,18 @@ export default function ProjectCardBase({ href, title, summary, coverImage, smal
       {coverImage && (
         <Link href={href} aria-label={title} className="relative z-10 block">
           <div className="relative overflow-hidden">
+            {/* Date badge */}
+            {date && (
+              <div className="absolute top-3 right-3 z-20 rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+                <time dateTime={date}>
+                  {new Intl.DateTimeFormat('en', {
+                    year: 'numeric',
+                    month: 'short',
+                  }).format(new Date(date))}
+                </time>
+              </div>
+            )}
+
             <motion.div
               variants={{
                 rest: { scale: 1 },
@@ -79,14 +101,29 @@ export default function ProjectCardBase({ href, title, summary, coverImage, smal
       )}
 
       {/* Content */}
-      <div className="relative z-10 p-5">
+      <div className="relative z-10 flex flex-1 flex-col p-5">
         <h3 className="mb-2 bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-lg font-semibold tracking-tight text-transparent">
           <Link href={href}>{title}</Link>
         </h3>
 
-        <p className="text-text-secondary dark:text-text-secondary-dark text-sm leading-relaxed">
+        {/* Summary (clamped) */}
+        <p className="text-text-secondary dark:text-text-secondary-dark [display:-webkit-box] overflow-hidden text-sm leading-relaxed [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
           {summary}
         </p>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li
+                key={tag}
+                className="rounded-full border border-white/20 px-2 py-0.5 text-xs backdrop-blur-sm"
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </motion.article>
   )

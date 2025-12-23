@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog, Authors } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
@@ -118,11 +118,13 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
                       Tags
                     </h2>
-                    <div className="flex flex-wrap">
-                      {tags.map((tag) => (
-                        <Tag key={tag.id} tag={tag} />
-                      ))}
-                    </div>
+                    <Suspense fallback={null}>
+                      <div className="flex flex-wrap">
+                        {tags.map((tag) => (
+                          <Tag key={tag.id} tag={tag} />
+                        ))}
+                      </div>
+                    </Suspense>
                   </div>
                 )}
                 {(next || prev) && (

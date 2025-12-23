@@ -7,7 +7,6 @@ import { motion } from 'motion/react'
 import clsx from 'clsx'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { LocalizedTag } from '../../types/localizedTag'
-import { Suspense } from 'react'
 
 interface Props {
   href: string
@@ -100,15 +99,13 @@ export default function ProjectCardBase({
 
         {/* Tags */}
         {tags.length > 0 && (
-          <Suspense fallback={null}>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <li key={tag.id}>
-                  <Tag key={tag.id} tag={tag} />
-                </li>
-              ))}
-            </ul>
-          </Suspense>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li key={tag.id}>
+                <Tag key={tag.id} tag={tag} />
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </motion.article>

@@ -9,7 +9,6 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
-import { Suspense } from 'react'
 
 interface PaginationProps {
   totalPages: number
@@ -158,13 +157,11 @@ export default function ListLayoutWithTags({
                             {title}
                           </Link>
                         </h2>
-                        <Suspense fallback={null}>
-                          <div className="flex flex-wrap">
-                            {tags?.map((tag) => (
-                              <Tag key={tag.id} tag={tag} />
-                            ))}
-                          </div>
-                        </Suspense>
+                        <div className="flex flex-wrap">
+                          {tags?.map((tag) => (
+                            <Tag key={tag.id} tag={tag} />
+                          ))}
+                        </div>
                       </div>
 
                       <div className="prose max-w-none text-gray-500 dark:text-gray-400">

@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -135,13 +135,11 @@ export default function ListLayout({
                           {title}
                         </Link>
                       </h3>
-                      <Suspense fallback={null}>
-                        <div className="flex flex-wrap">
-                          {tags?.map((tag) => (
-                            <Tag key={tag.id} tag={tag} />
-                          ))}
-                        </div>
-                      </Suspense>
+                      <div className="flex flex-wrap">
+                        {tags?.map((tag) => (
+                          <Tag key={tag.id} tag={tag} />
+                        ))}
+                      </div>
                     </div>
                     <div className="prose max-w-none text-gray-500 dark:text-gray-400">
                       {summary}

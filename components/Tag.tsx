@@ -2,45 +2,38 @@
 
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { slug } from 'github-slugger'
 import clsx from 'clsx'
 
 interface Props {
-  text: string
+  id: string
+  label: string
 }
 
-const Tag = ({ text }: Props) => {
+export default function Tag({ id, label }: Props) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-
-  const tagSlug = slug(text)
   const activeTag = searchParams.get('tag')
 
-  const isActive = activeTag === tagSlug
-
   const params = new URLSearchParams(searchParams.toString())
-
-  if (isActive) {
+  if (activeTag === id) {
     params.delete('tag')
   } else {
-    params.set('tag', tagSlug)
+    params.set('tag', id)
   }
 
-  const href = params.toString() ? `${pathname}?${params.toString()}` : pathname
+  const href = params.toString() ? `${pathname}?${params}` : pathname
 
   return (
     <Link
       href={href}
       className={clsx(
-        'mr-3 text-sm font-medium uppercase transition-colors',
-        isActive
-          ? 'text-primary-600 dark:text-primary-400'
-          : 'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
+        'rounded-full px-3 py-1 text-xs font-medium',
+        activeTag === id
+          ? 'bg-primary-500 text-white'
+          : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
       )}
     >
-      {text.split(' ').join('-')}
+      {label}
     </Link>
   )
 }
-
-export default Tag

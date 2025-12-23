@@ -102,7 +102,7 @@ export default function ProjectCardBase({
           <ul className="mt-4 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <li key={tag.id}>
-                <Tag id={tag.id} label={tag.label[lang]} />
+                <Tag key={tag.id} tag={tag} />
               </li>
             ))}
           </ul>

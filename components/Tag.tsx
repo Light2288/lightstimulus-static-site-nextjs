@@ -3,14 +3,21 @@
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import clsx from 'clsx'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-interface Props {
+interface TagType {
   id: string
-  label: string
-  className?: string // optional override for different contexts
+  label: { en: string; it: string } // full structured label
 }
 
-export default function Tag({ id, label, className }: Props) {
+interface Props {
+  tag: TagType
+  className?: string
+}
+
+export default function Tag({ tag, className }: Props) {
+  const { id, label } = tag
+  const { lang } = useLanguage() // get language inside the client component
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const activeTag = searchParams.get('tag')
@@ -35,7 +42,7 @@ export default function Tag({ id, label, className }: Props) {
         className
       )}
     >
-      {label}
+      {label[lang] ?? label.en}
     </Link>
   )
 }

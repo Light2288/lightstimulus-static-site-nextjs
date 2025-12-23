@@ -4,6 +4,8 @@ import readingTime from 'reading-time'
 import { slug } from 'github-slugger'
 import path from 'path'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
+import { createProjectTagCount } from './lib/generateProjectTagData'
+
 // Remark packages
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -159,21 +161,49 @@ export const Project = defineDocumentType(() => ({
     title: {
       type: 'json',
       required: true,
-      // { en: string; it: string }
     },
     summary: {
       type: 'json',
       required: true,
-      // { en: string; it: string }
     },
     date: { type: 'date', required: true },
-    tags: { type: 'list', of: { type: 'string' }, default: [] },
+
+    tags: {
+      type: 'list',
+      of: {
+        type: 'json', // { id: string, label: { en, it } }
+      },
+      default: [],
+    },
+
+    projectType: {
+      type: 'enum',
+      options: ['research', 'experiment', 'product'],
+    },
+
+    status: {
+      type: 'enum',
+      options: ['concept', 'in-progress', 'completed'],
+    },
+
     coverImage: { type: 'string' },
+
+    // ✅ NEW
+    stack: {
+      type: 'list',
+      of: { type: 'string' },
+      default: [],
+    },
+
+    links: {
+      type: 'json',
+    },
+
+    github: { type: 'string' },
+    demo: { type: 'string' },
   },
   computedFields: {
     ...computedFields,
-
-    // Default (EN) fallback — useful for RSS, SEO, safety
     titleEn: {
       type: 'string',
       resolve: (doc) => doc.title?.en ?? '',
@@ -182,7 +212,6 @@ export const Project = defineDocumentType(() => ({
       type: 'string',
       resolve: (doc) => doc.summary?.en ?? '',
     },
-
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
@@ -231,8 +260,9 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs } = await importData()
-    createTagCount(allBlogs)
+    const { allBlogs, allProjects } = await importData()
+    await createTagCount(allBlogs)
+    await createProjectTagCount(allProjects)
     createSearchIndex(allBlogs)
   },
 })

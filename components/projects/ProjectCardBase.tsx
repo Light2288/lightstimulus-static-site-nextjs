@@ -2,6 +2,7 @@
 
 import Image from '@/components/Image'
 import Link from '@/components/Link'
+import Tag from '@/components/Tag'
 import { motion } from 'motion/react'
 import clsx from 'clsx'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -100,11 +101,8 @@ export default function ProjectCardBase({
         {tags.length > 0 && (
           <ul className="mt-4 flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <li
-                key={tag.id}
-                className="border-primary-500/40 text-primary-600 dark:text-primary-400 hover:border-primary-500 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors"
-              >
-                {tag.label[lang]}
+              <li key={tag.id}>
+                <Tag id={tag.id} label={tag.label[lang]} />
               </li>
             ))}
           </ul>

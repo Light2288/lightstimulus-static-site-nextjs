@@ -7,9 +7,10 @@ import clsx from 'clsx'
 interface Props {
   id: string
   label: string
+  className?: string // optional override for different contexts
 }
 
-export default function Tag({ id, label }: Props) {
+export default function Tag({ id, label, className }: Props) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const activeTag = searchParams.get('tag')
@@ -27,10 +28,11 @@ export default function Tag({ id, label }: Props) {
     <Link
       href={href}
       className={clsx(
-        'rounded-full px-3 py-1 text-xs font-medium',
+        'rounded-full border px-2 py-0.5 text-xs font-medium transition-colors',
         activeTag === id
-          ? 'bg-primary-500 text-white'
-          : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+          ? 'bg-primary-500 border-primary-500 text-white'
+          : 'border-primary-500/40 text-primary-600 dark:text-primary-400 hover:border-primary-500',
+        className
       )}
     >
       {label}

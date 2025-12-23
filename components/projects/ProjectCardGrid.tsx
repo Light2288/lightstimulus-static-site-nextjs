@@ -1,6 +1,7 @@
 'use client'
 
 import ProjectCardBase from '@/components/projects/ProjectCardBase'
+import { LocalizedTag } from '../../types/localizedTag'
 
 interface Props {
   href: string
@@ -8,17 +9,10 @@ interface Props {
   summary: string
   coverImage?: string
   date: string
-  tags?: string[]
+  tags?: LocalizedTag[]
 }
 
-export default function ProjectCardGrid({
-  href,
-  title,
-  summary,
-  coverImage,
-  date,
-  tags = [],
-}: Props) {
+export default function ProjectCardGrid({ href, title, summary, coverImage, date, tags }: Props) {
   return (
     <ProjectCardBase
       href={href}

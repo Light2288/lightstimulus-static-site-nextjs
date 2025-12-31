@@ -157,7 +157,7 @@ export const Authors = defineDocumentType(() => ({
     github: { type: 'string' },
     layout: { type: 'string' },
   },
-  baseComputedFields,
+  computedFields: baseComputedFields,
 }))
 
 // -----------------------

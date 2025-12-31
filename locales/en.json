@@ -26,5 +26,38 @@
       "title": "Featured Projects",
       "view_all": "View all"
     }
+  },
+  "projects": {
+    "back": "Back to projects",
+    "meta": {
+      "details": "Details",
+      "stack": "Stack",
+      "links": "Links",
+      "type": "Type",
+      "status": "Status",
+      "date": "Date",
+      "types": {
+        "research": "Research",
+        "experiment": "Experiment",
+        "prototype": "Prototype",
+        "product": "Product"
+      },
+      "statuses": {
+        "concept": "Concept",
+        "in-progress": "In progress",
+        "completed": "Completed"
+      }
+    },
+    "links": {
+      "github": "GitHub",
+      "demo": "Live Demo",
+      "website": "Website",
+      "article": "Article",
+      "paper": "Research Paper",
+      "docs": "Documentation",
+      "video": "Video",
+      "npm": "NPM Package",
+      "figma": "Figma"
+    }
   }
 }

@@ -1,4 +1,5 @@
 // layouts/ProjectLayout.tsx
+'use client'
 
 import { ReactNode } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -6,10 +7,11 @@ import type { Project } from 'contentlayer/generated'
 
 import SectionContainer from '@/components/SectionContainer'
 import Link from '@/components/Link'
-import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 
 import ProjectHeader from '@/components/projects/ProjectHeader'
-import ProjectMeta from '@/components/projects/ProjectMeta'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface ProjectLayoutProps {
   content: CoreContent<Project>
@@ -17,32 +19,26 @@ interface ProjectLayoutProps {
 }
 
 export default function ProjectLayout({ content, children }: ProjectLayoutProps) {
+  const { t } = useLanguage()
+
   return (
     <SectionContainer>
       <ScrollTopAndComment />
 
-      <article>
+      <article className="mx-auto w-full max-w-5xl">
         <ProjectHeader project={content} />
 
-        <div className="grid grid-cols-1 gap-12 pt-12 xl:grid-cols-4">
-          {/* Main content */}
-          <div className="xl:col-span-3">
-            <div className="prose dark:prose-invert max-w-none">{children}</div>
-          </div>
-
-          {/* Meta / sidebar */}
-          <aside className="xl:col-span-1">
-            <ProjectMeta project={content} />
-          </aside>
+        <div className="pt-12">
+          <div className="prose dark:prose-invert max-w-none">{children}</div>
         </div>
 
         <footer className="pt-12">
           <Link
             href="/projects"
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label="Back to projects"
+            aria-label={t('projects.back')}
           >
-            &larr; Back to projects
+            &larr; {t('projects.back')}
           </Link>
         </footer>
       </article>

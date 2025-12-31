@@ -1,48 +1,62 @@
+'use client'
+
 import Link from '@/components/Link'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Project } from 'contentlayer/generated'
+import { useLanguage } from '@/contexts/LanguageContext'
+
+import { Globe, MonitorPlay, FileText, GraduationCap, BookOpen, Video } from 'lucide-react'
+
+import { SiGithub, SiFigma, SiNpm } from '@icons-pack/react-simple-icons'
 
 interface ProjectLinksProps {
   project: CoreContent<Project>
 }
 
-const LABEL_MAP: Record<string, string> = {
-  github: 'GitHub',
-  demo: 'Demo',
-  website: 'Website',
+const ICON_MAP: Record<string, React.ElementType> = {
+  github: SiGithub,
+  demo: MonitorPlay,
+  website: Globe,
+  article: FileText,
+  paper: GraduationCap,
+  docs: BookOpen,
+  video: Video,
+  npm: SiNpm,
+  figma: SiFigma,
 }
 
 export default function ProjectLinks({ project }: ProjectLinksProps) {
+  const { t } = useLanguage()
   const links = project.links
 
   if (!links) return null
 
   const entries = Object.entries(links).filter(
-    (entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1].length > 0
+    (entry): entry is [string, string] =>
+      typeof entry[1] === 'string' && entry[1].length > 0 && entry[0] in ICON_MAP
   )
 
   if (entries.length === 0) return null
 
   return (
-    <div>
-      <h3 className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-        Links
-      </h3>
+    <ul className="space-y-3 text-sm">
+      {entries.map(([key, href]) => {
+        const Icon = ICON_MAP[key]
 
-      <ul className="mt-2 space-y-2 text-sm">
-        {entries.map(([key, href]) => (
+        return (
           <li key={key}>
             <Link
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 flex items-center gap-2"
             >
-              {LABEL_MAP[key] ?? key}
+              <Icon className="h-4 w-4" />
+              <span>{t(`projects.links.${key}`)}</span>
             </Link>
           </li>
-        ))}
-      </ul>
-    </div>
+        )
+      })}
+    </ul>
   )
 }

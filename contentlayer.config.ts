@@ -5,6 +5,7 @@ import { slug } from 'github-slugger'
 import path from 'path'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
 import { createProjectTagCount } from './lib/generateProjectTagData'
+import { extractLocalizedSection } from './lib/mdx/extractLocalizedSection'
 
 // Remark packages
 import remarkGfm from 'remark-gfm'
@@ -44,7 +45,7 @@ const icon = fromHtmlIsomorphic(
   { fragment: true }
 )
 
-const computedFields: ComputedFields = {
+const baseComputedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
@@ -58,6 +59,10 @@ const computedFields: ComputedFields = {
     type: 'string',
     resolve: (doc) => doc._raw.sourceFilePath,
   },
+}
+
+const blogComputedFields: ComputedFields = {
+  ...baseComputedFields,
   toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
 }
 
@@ -119,7 +124,7 @@ export const Blog = defineDocumentType(() => ({
     canonicalUrl: { type: 'string' },
   },
   computedFields: {
-    ...computedFields,
+    ...blogComputedFields,
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
@@ -152,7 +157,7 @@ export const Authors = defineDocumentType(() => ({
     github: { type: 'string' },
     layout: { type: 'string' },
   },
-  computedFields,
+  baseComputedFields,
 }))
 
 // -----------------------
@@ -204,12 +209,9 @@ export const Project = defineDocumentType(() => ({
     links: {
       type: 'json',
     },
-
-    github: { type: 'string' },
-    demo: { type: 'string' },
   },
   computedFields: {
-    ...computedFields,
+    ...baseComputedFields,
     titleEn: {
       type: 'string',
       resolve: (doc) => doc.title?.en ?? '',
@@ -217,6 +219,14 @@ export const Project = defineDocumentType(() => ({
     summaryEn: {
       type: 'string',
       resolve: (doc) => doc.summary?.en ?? '',
+    },
+    bodyEn: {
+      type: 'string',
+      resolve: (doc) => extractLocalizedSection({ body: doc.body.raw, lang: 'en' }),
+    },
+    bodyIt: {
+      type: 'string',
+      resolve: (doc) => extractLocalizedSection({ body: doc.body.raw, lang: 'it' }),
     },
     structuredData: {
       type: 'json',

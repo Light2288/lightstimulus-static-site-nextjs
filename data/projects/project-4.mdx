@@ -2,25 +2,191 @@
 title:
   en: Dataflow Architectures
   it: Architetture Dataflow
+
 summary:
   en: Designing data pipelines for real-time and experimental systems.
   it: Progettazione di pipeline dati per sistemi real-time e sperimentali.
-coverImage: /static/images/projects/dataflow.jpg
+
 date: 2024-02-01
 
 projectType: research
 status: completed
+
+coverImage: /static/images/projects/dataflow.jpg
+
 tags:
   - id: data-architecture
-    label: { en: Data Architecture, it: Architettura Dati }
+    label:
+      en: Data Architecture
+      it: Architettura Dati
   - id: real-time
-    label: { en: Real-time, it: Tempo Reale }
+    label:
+      en: Real-time
+      it: Tempo Reale
   - id: systems
-    label: { en: Systems, it: Sistemi }
+    label:
+      en: Systems
+      it: Sistemi
 
 stack:
   - Kafka
   - Node.js
   - PostgreSQL
-links: {}
+
+links:
+  demo: https://dataflow-architecture.example.com
+  github: https://github.com/example/dataflow-architecture
+  article: https://blog.example.com/dataflow-architecture
 ---
+
+<Lang value="en">
+
+### Overview
+
+**Dataflow Architectures** is a research project focused on the design and evaluation of data pipelines for real-time, reactive, and experimental systems.  
+The project investigates how data moves through complex systems, how it transforms over time, and how architectural decisions impact latency, reliability, and adaptability.
+
+Rather than optimizing for a single use case, the work explores general principles for building dataflows that remain robust under change.
+
+### Motivation
+
+Modern systems increasingly rely on continuous streams of data rather than static datasets.  
+From telemetry and user interactions to sensor input and AI pipelines, data is always in motion.
+
+Key challenges addressed include:
+
+- Handling high-throughput event streams
+- Preserving consistency under partial failure
+- Balancing latency with correctness
+- Supporting experimentation without architectural rewrites
+
+Dataflow Architectures aims to provide patterns and abstractions that make these challenges tractable.
+
+### Architectural Principles
+
+The project is guided by a set of core principles:
+
+1. **Explicit Data Movement**  
+   Data transitions between stages are treated as first-class architectural elements.
+
+2. **Loose Coupling**  
+   Producers and consumers are decoupled to allow independent evolution.
+
+3. **Backpressure Awareness**  
+   Flow control is built into the system to prevent overload and cascading failure.
+
+4. **Observability by Design**  
+   Metrics, logs, and traces are integral, not additive.
+
+These principles inform both system structure and implementation choices.
+
+### Reference Pipeline
+
+A reference pipeline was developed to validate the architecture:
+
+- **Ingestion** via Kafka topics with schema evolution support
+- **Processing** using Node.js services for transformation and enrichment
+- **Persistence** in PostgreSQL for durable state and analytical queries
+- **Replayability** to enable debugging and experimentation
+
+The pipeline supports both real-time consumption and delayed, batch-style analysis.
+
+### Evaluation
+
+The architecture was evaluated across multiple dimensions:
+
+- End-to-end latency under load
+- Failure recovery and replay correctness
+- Developer ergonomics during iteration
+- Suitability for experimental feature development
+
+Results showed that clear data boundaries and replayable streams significantly reduced system fragility and improved iteration speed.
+
+### Outcomes
+
+The project produced:
+
+- A set of reusable architectural patterns
+- A documented reference implementation
+- Guidelines for evolving dataflows over time
+- A foundation for future experimental systems
+
+The research phase is complete, and its outcomes have informed subsequent product and prototype work.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**Architetture Dataflow** è un progetto di ricerca focalizzato sulla progettazione e valutazione di pipeline dati per sistemi real-time, reattivi e sperimentali.  
+Il progetto analizza come i dati attraversano sistemi complessi, come si trasformano nel tempo e come le decisioni architetturali influenzano latenza, affidabilità e adattabilità.
+
+Piuttosto che ottimizzare per un singolo caso d’uso, il lavoro esplora principi generali per costruire flussi di dati robusti al cambiamento.
+
+### Motivazione
+
+I sistemi moderni si basano sempre più su flussi continui di dati anziché su dataset statici.  
+Telemetria, interazioni utente, input da sensori e pipeline di AI sono esempi di dati costantemente in movimento.
+
+Le principali sfide affrontate includono:
+
+- Gestione di stream ad alto throughput
+- Mantenimento della consistenza in caso di fallimenti parziali
+- Bilanciamento tra latenza e correttezza
+- Supporto alla sperimentazione senza riscritture architetturali
+
+Architetture Dataflow mira a fornire pattern e astrazioni per rendere queste sfide gestibili.
+
+### Principi Architetturali
+
+Il progetto è guidato da una serie di principi fondamentali:
+
+1. **Movimento dei Dati Esplicito**  
+   Le transizioni dei dati tra gli stadi sono elementi architetturali di primo livello.
+
+2. **Disaccoppiamento**  
+   Produttori e consumatori sono separati per consentire evoluzione indipendente.
+
+3. **Consapevolezza del Backpressure**  
+   Il controllo del flusso è integrato per prevenire sovraccarichi e fallimenti a catena.
+
+4. **Osservabilità Integrata**  
+   Metriche, log e trace fanno parte del sistema fin dall’inizio.
+
+Questi principi influenzano sia la struttura del sistema sia le scelte implementative.
+
+### Pipeline di Riferimento
+
+È stata sviluppata una pipeline di riferimento per validare l’architettura:
+
+- **Ingestione** tramite topic Kafka con supporto all’evoluzione degli schemi
+- **Elaborazione** con servizi Node.js per trasformazione e arricchimento
+- **Persistenza** in PostgreSQL per stato durabile e query analitiche
+- **Replay** per abilitare debugging e sperimentazione
+
+La pipeline supporta sia consumo real-time sia analisi differite di tipo batch.
+
+### Valutazione
+
+L’architettura è stata valutata su più dimensioni:
+
+- Latenza end-to-end sotto carico
+- Recupero da errori e correttezza del replay
+- Ergonomia per gli sviluppatori durante l’iterazione
+- Adeguatezza per lo sviluppo di funzionalità sperimentali
+
+I risultati mostrano che confini chiari dei dati e stream riproducibili riducono la fragilità del sistema e migliorano la velocità di iterazione.
+
+### Risultati
+
+Il progetto ha prodotto:
+
+- Un insieme di pattern architetturali riutilizzabili
+- Un’implementazione di riferimento documentata
+- Linee guida per l’evoluzione dei dataflow nel tempo
+- Una base per futuri lavori di tipo product e prototype
+
+La fase di ricerca è completata e i risultati hanno informato progetti successivi.
+
+</Lang>

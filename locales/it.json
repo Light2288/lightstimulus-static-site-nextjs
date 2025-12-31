@@ -26,5 +26,38 @@
       "title": "Progetti in evidenza",
       "view_all": "Vedi tutti"
     }
+  },
+  "projects": {
+    "back": "Torna ai progetti",
+    "meta": {
+      "details": "Dettagli",
+      "stack": "Stack",
+      "links": "Link",
+      "type": "Tipo",
+      "status": "Stato",
+      "date": "Data",
+      "types": {
+        "research": "Ricerca",
+        "experiment": "Esperimento",
+        "prototype": "Prototipo",
+        "product": "Prodotto"
+      },
+      "statuses": {
+        "concept": "Concetto",
+        "in-progress": "In corso",
+        "completed": "Completato"
+      }
+    },
+    "links": {
+      "github": "GitHub",
+      "demo": "Demo",
+      "website": "Sito web",
+      "article": "Articolo",
+      "paper": "Articolo di ricerca",
+      "docs": "Documentazione",
+      "video": "Video",
+      "npm": "Pacchetto NPM",
+      "figma": "Figma"
+    }
   }
 }

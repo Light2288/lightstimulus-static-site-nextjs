@@ -212,19 +212,13 @@ generated folders:
 │   ├── layout.tsx
 │   ├── not-found.tsx
 │   ├── page.tsx
+│   ├── project-tag-data.json
 │   ├── projects
 │   │   └── page.tsx
 │   ├── robots.ts
 │   ├── seo.tsx
 │   ├── sitemap.ts
 │   ├── tag-data.json
-│   ├── tags
-│   │   ├── [tag]
-│   │   │   ├── page
-│   │   │   │   └── [page]
-│   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
-│   │   └── page.tsx
 │   └── theme-providers.tsx
 ├── components
 │   ├── Card.tsx
@@ -235,8 +229,6 @@ generated folders:
 │   ├── MDXComponents.tsx
 │   ├── MobileNav.tsx
 │   ├── PageTitle.tsx
-│   ├── ProjectCardBase.tsx
-│   ├── ProjectCardSmall.tsx
 │   ├── ScrollTopAndComment.tsx
 │   ├── SearchButton.tsx
 │   ├── SectionContainer.tsx
@@ -258,6 +250,11 @@ generated folders:
 │   │   ├── Hero.tsx
 │   │   ├── LogoAnimation.tsx
 │   │   └── TextAnimation.tsx
+│   ├── projects
+│   │   ├── ProjectCardBase.tsx
+│   │   ├── ProjectCardGrid.tsx
+│   │   ├── ProjectCardSmall.tsx
+│   │   └── ProjectsGrid.tsx
 │   └── social-icons
 │   ├── icons.tsx
 │   └── index.tsx
@@ -312,8 +309,10 @@ generated folders:
 │   ├── ListLayoutWithTags.tsx
 │   ├── PostBanner.tsx
 │   ├── PostLayout.tsx
-│   └── PostSimple.tsx
+│   ├── PostSimple.tsx
+│   └── ProjectsListLayoutWithTags.tsx
 ├── lib
+│   ├── generateProjectTagData.ts
 │   └── preferences
 │   └── PreferencesService.ts
 ├── locales
@@ -331,6 +330,7 @@ generated folders:
 │   └── rss.mjs
 ├── tsconfig.json
 ├── types
+│   ├── localizedTag.d.ts
 │   └── project.d.ts
 └── utils
 └── detectRefreshOrFirstLoad.ts

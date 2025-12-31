@@ -1,26 +1,199 @@
 ---
 title:
   en: Generative XR
-  it: XR Generativa
+it: XR Generativa
+
 summary:
   en: Generative AI workflows applied to extended reality.
   it: Flussi di lavoro di AI generativa applicati alla realtà estesa.
-coverImage: /static/images/projects/generative-xr.jpg
+
 date: 2024-02-18
 
 projectType: research
-status: prototype
+status: in-progress
+
+coverImage: /static/images/projects/generative-xr.jpg
+
 tags:
   - id: generative-ai
-    label: { en: Generative AI, it: AI Generativa }
+    label:
+      en: Generative AI
+      it: AI Generativa
   - id: xr
-    label: { en: XR, it: XR }
+    label:
+      en: XR
+      it: XR
   - id: machine-learning
-    label: { en: Machine Learning, it: Machine Learning }
+    label:
+      en: Machine Learning
+      it: Machine Learning
 
 stack:
   - Python
   - Stable Diffusion
   - Unity
-links: {}
+
+links:
+  github: https://github.com/example/generative-xr
+  demo: https://demo.example.com/generative-xr
+  website: https://www.example.com/generative-xr
+  article: https://medium.example.com/generative-xr
+  paper: https://research.example.com/generative-xr.pdf
+  docs: https://docs.example.com/generative-xr
+  video: https://video.example.com/generative-xr
+  npm: https://www.npmjs.com/package/generative-xr
+  figma: https://www.figma.com/file/EXAMPLE/generative-xr
 ---
+
+<Lang value="en">
+
+### Overview
+
+**Generative XR** is a research project exploring how generative AI models can be integrated into extended reality
+pipelines to enable dynamic, adaptive, and content-rich XR experiences.
+The project focuses on treating generation not as an offline asset creation step, but as a live component of the XR
+system.
+
+The goal is to understand how AI-generated content can meaningfully interact with spatial context, user intent, and
+real-time constraints.
+
+### Research Motivation
+
+XR systems traditionally rely on pre-authored assets and deterministic logic.
+While this ensures predictability, it limits variability, personalization, and scalability.
+
+Generative XR investigates questions such as:
+
+- How can generative models respond to spatial and contextual input?
+- What role can AI play in real-time scene composition?
+- How does generation affect user perception of agency and immersion?
+
+The project aims to bridge generative AI workflows with interactive 3D environments.
+
+### System Architecture
+
+The prototype is structured around a modular architecture:
+
+1. **Prompt & Context Layer**
+   User input, spatial data, and environmental cues are combined into structured prompts.
+
+2. **Generative Engine**
+   Diffusion-based models are used to generate textures, imagery, and visual elements on demand.
+
+3. **XR Runtime Integration**
+   Generated assets are streamed into Unity and adapted to the spatial context.
+
+4. **Feedback Loop**
+   User interaction influences subsequent generations, enabling iterative refinement.
+
+Python is used for model orchestration, while Unity manages rendering and interaction.
+
+### Experiments
+
+Initial experiments focused on:
+
+- Generating environment textures based on spatial constraints
+- AI-assisted scene theming and mood adaptation
+- Prompt-driven visual variation inside immersive environments
+
+Evaluation emphasized latency, coherence, and perceived responsiveness rather than raw visual fidelity.
+
+### Challenges & Findings
+
+Key challenges identified include:
+
+- Managing generation latency within immersive contexts
+- Maintaining visual consistency across generated assets
+- Balancing creative variability with spatial constraints
+
+Early findings suggest that constrained generation, guided by spatial data, significantly improves user acceptance and
+immersion.
+
+### Future Directions
+
+Planned developments include:
+
+- Real-time multimodal generation (text, image, 3D cues)
+- Integration with agent-based AI workflows
+- Multi-user shared generative spaces
+- Exploration of generative XR for design and prototyping tools
+
+Generative XR remains an active research effort aimed at expanding the expressive potential of XR systems.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**XR Generativa** è un progetto di ricerca che esplora l’integrazione di modelli di AI generativa all’interno di
+pipeline di realtà estesa per abilitare esperienze XR dinamiche, adattive e ricche di contenuto.
+Il progetto considera la generazione non come una fase offline, ma come una componente attiva del sistema XR.
+
+L’obiettivo è comprendere come contenuti generati possano interagire con il contesto spaziale, l’intento dell’utente e
+i vincoli real-time.
+
+### Motivazione della Ricerca
+
+I sistemi XR tradizionali si basano su asset predefiniti e logiche deterministiche.
+Questo approccio garantisce controllo, ma limita variabilità, personalizzazione e scalabilità.
+
+Il progetto indaga domande come:
+
+- Come possono i modelli generativi rispondere a input spaziali e contestuali?
+- Qual è il ruolo dell’AI nella composizione delle scene in tempo reale?
+- In che modo la generazione influenza la percezione di agency e immersione?
+
+L’obiettivo è collegare flussi di lavoro di AI generativa con ambienti 3D interattivi.
+
+### Architettura del Sistema
+
+Il prototipo è organizzato in un’architettura modulare:
+
+1. **Livello di Prompt e Contesto**
+   Input dell’utente, dati spaziali e segnali ambientali vengono combinati in prompt strutturati.
+
+2. **Motore Generativo**
+   Modelli di diffusione generano texture ed elementi visivi on demand.
+
+3. **Integrazione XR Runtime**
+   Gli asset generati vengono integrati in Unity e adattati al contesto spaziale.
+
+4. **Ciclo di Feedback**
+   L’interazione dell’utente influenza le generazioni successive.
+
+Python gestisce l’orchestrazione dei modelli, mentre Unity cura rendering e interazione.
+
+### Esperimenti
+
+Gli esperimenti iniziali si sono concentrati su:
+
+- Generazione di texture ambientali basate su vincoli spaziali
+- Variazioni visive guidate da prompt in ambienti immersivi
+- Supporto AI alla tematizzazione delle scene
+
+La valutazione ha privilegiato latenza, coerenza e reattività percepita.
+
+### Sfide e Osservazioni
+
+Le principali sfide includono:
+
+- Gestione della latenza in contesti immersivi
+- Coerenza visiva tra asset generati
+- Bilanciamento tra creatività e vincoli spaziali
+
+I risultati preliminari indicano che la generazione guidata dal contesto migliora l’immersione e l’accettazione da
+parte degli utenti.
+
+### Sviluppi Futuri
+
+Le direzioni future includono:
+
+- Generazione multimodale in tempo reale
+- Integrazione con workflow di AI agentica
+- Spazi generativi condivisi multi-utente
+- Applicazioni per design e prototipazione XR
+
+XR Generativa rimane un progetto di ricerca attivo, orientato all’evoluzione dei sistemi XR generativi.
+
+</Lang>

@@ -7,8 +7,21 @@ summary:
   it: Esplorazione di sistemi visivi bio-ispirati e modelli di percezione.
 date: 2024-01-10
 projectType: research
-status: prototype
+status: in-progress
 coverImage: /static/images/projects/limulus-vision.jpg
+tags:
+  - id: computer-vision
+    label:
+      en: Computer Vision
+      it: Visione Artificiale
+  - id: bio-inspired
+    label:
+      en: Bio-inspired
+      it: Bio-ispirato
+  - id: perception
+    label:
+      en: Perception
+      it: Percezione
 stack:
   - Python
   - OpenCV
@@ -21,22 +34,124 @@ links:
 
 ### Overview
 
-Limulus Vision explores bio-inspired visual systems based on the horseshoe crab’s compound eye.
+**Limulus Vision** is a research-oriented project that explores bio-inspired approaches to visual perception, drawing direct inspiration from the compound eye of the horseshoe crab (_Limulus polyphemus_).  
+Unlike human vision, the limulus visual system prioritizes motion, contrast, and temporal change over spatial resolution, making it remarkably robust in low-light and noisy environments.
 
-### Goals
+This project investigates how these principles can be translated into modern computational vision systems.
 
-- Study non-uniform sampling
-- Implement biologically plausible perception models
+### Motivation
 
----
+Traditional computer vision pipelines often rely on dense, uniform sampling and high-resolution imagery. While effective, these approaches can be inefficient and brittle when operating under constrained conditions.
+
+The limulus offers an alternative model:
+
+- Non-uniform spatial sampling
+- Strong temporal integration
+- Early noise suppression
+- Emphasis on edges and motion gradients
+
+Limulus Vision aims to reinterpret these biological strategies as computational primitives.
+
+### System Architecture
+
+The system is structured as a modular perception pipeline:
+
+1. **Adaptive Sampling Layer**  
+   Incoming frames are resampled using a non-uniform grid inspired by compound eye geometry.
+
+2. **Temporal Filtering**  
+   Frame-to-frame differences are emphasized to enhance motion sensitivity while suppressing static noise.
+
+3. **Feature Extraction**  
+   Edge orientation, local contrast, and motion vectors are extracted using lightweight convolutional operators.
+
+4. **Learning Layer**  
+   PyTorch-based models are trained to classify or segment perceptual patterns using the bio-inspired representations.
+
+Each stage is designed to be independently testable and replaceable.
+
+### Experiments & Results
+
+Initial experiments focused on:
+
+- Low-light motion detection
+- Robust edge extraction under noise
+- Comparison with standard CNN baselines
+
+Early results show improved robustness in scenarios where conventional pipelines degrade rapidly, especially in low signal-to-noise conditions.
+
+### Future Directions
+
+Planned next steps include:
+
+- Extending the model to event-based vision sensors
+- Integrating spiking neural network components
+- Deploying the pipeline on embedded hardware
+- Exploring applications in robotics and XR perception systems
+
+This project is ongoing and actively evolving.
+
+</Lang>
 
 <Lang value="it">
 
 ### Panoramica
 
-Limulus Vision esplora sistemi visivi bio-ispirati basati sull’occhio composto del limulo.
+**Limulus Vision** è un progetto di ricerca che esplora approcci bio-ispirati alla percezione visiva, prendendo ispirazione diretta dall’occhio composto del limulo (_Limulus polyphemus_).  
+A differenza della visione umana, il sistema visivo del limulo privilegia movimento, contrasto e variazioni temporali rispetto alla risoluzione spaziale, risultando estremamente robusto in condizioni di scarsa illuminazione e rumore.
 
-### Obiettivi
+Il progetto studia come questi principi possano essere tradotti in sistemi di visione computazionale moderni.
 
-- Studio del campionamento non uniforme
-- Implementazione di modelli percettivi biologicamente plausibili
+### Motivazione
+
+Le pipeline tradizionali di computer vision si basano spesso su campionamento uniforme e immagini ad alta risoluzione. Sebbene efficaci, questi approcci possono risultare inefficienti e fragili in condizioni operative limitate.
+
+Il limulo offre un modello alternativo basato su:
+
+- Campionamento spaziale non uniforme
+- Forte integrazione temporale
+- Soppressione precoce del rumore
+- Enfasi su bordi e gradienti di movimento
+
+Limulus Vision mira a reinterpretare queste strategie biologiche come primitive computazionali.
+
+### Architettura del Sistema
+
+Il sistema è strutturato come una pipeline percettiva modulare:
+
+1. **Livello di Campionamento Adattivo**  
+   I frame in ingresso vengono ricampionati utilizzando una griglia non uniforme ispirata alla geometria dell’occhio composto.
+
+2. **Filtraggio Temporale**  
+   Le differenze tra frame consecutivi vengono enfatizzate per aumentare la sensibilità al movimento e ridurre il rumore statico.
+
+3. **Estrazione delle Caratteristiche**  
+   Orientamento dei bordi, contrasto locale e vettori di movimento vengono estratti tramite operatori convoluzionali leggeri.
+
+4. **Livello di Apprendimento**  
+   Modelli basati su PyTorch vengono addestrati per classificare o segmentare pattern percettivi utilizzando le rappresentazioni bio-ispirate.
+
+Ogni stadio è progettato per essere testabile e sostituibile in modo indipendente.
+
+### Esperimenti e Risultati
+
+Gli esperimenti iniziali si sono concentrati su:
+
+- Rilevamento del movimento in condizioni di scarsa illuminazione
+- Estrazione robusta dei bordi in presenza di rumore
+- Confronto con baseline CNN tradizionali
+
+I primi risultati mostrano una maggiore robustezza in scenari in cui le pipeline convenzionali degradano rapidamente, in particolare in condizioni di basso rapporto segnale/rumore.
+
+### Sviluppi Futuri
+
+I prossimi passi previsti includono:
+
+- Estensione del modello a sensori di visione event-based
+- Integrazione di componenti a reti neurali a spike
+- Deploy della pipeline su hardware embedded
+- Esplorazione di applicazioni in robotica e sistemi XR
+
+Il progetto è in continuo sviluppo ed evoluzione.
+
+</Lang>

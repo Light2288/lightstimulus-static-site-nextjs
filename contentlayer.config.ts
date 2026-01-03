@@ -105,38 +105,51 @@ export const Blog = defineDocumentType(() => ({
   filePathPattern: 'blog/**/*.mdx',
   contentType: 'mdx',
   fields: {
-    title: { type: 'string', required: true },
+    title: {
+      type: 'json', // { en, it }
+      required: true,
+    },
+    summary: {
+      type: 'json', // { en, it }
+      required: true,
+    },
     date: { type: 'date', required: true },
+
     tags: {
       type: 'list',
       of: {
-        type: 'json', // { id: string, label: { en, it } }
+        type: 'json', // { id, label: { en, it } }
       },
       default: [],
     },
+
     lastmod: { type: 'date' },
     draft: { type: 'boolean' },
-    summary: { type: 'string' },
     images: { type: 'json' },
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
   },
+
   computedFields: {
     ...blogComputedFields,
-    structuredData: {
-      type: 'json',
-      resolve: (doc) => ({
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        headline: doc.title,
-        datePublished: doc.date,
-        dateModified: doc.lastmod || doc.date,
-        description: doc.summary,
-        image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
-        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
-      }),
+
+    titleEn: {
+      type: 'string',
+      resolve: (doc) => doc.title?.en ?? '',
+    },
+    titleIt: {
+      type: 'string',
+      resolve: (doc) => doc.title?.it ?? '',
+    },
+    summaryEn: {
+      type: 'string',
+      resolve: (doc) => doc.summary?.en ?? '',
+    },
+    summaryIt: {
+      type: 'string',
+      resolve: (doc) => doc.summary?.it ?? '',
     },
   },
 }))

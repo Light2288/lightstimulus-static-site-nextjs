@@ -25,6 +25,10 @@
     "projects": {
       "title": "Featured Projects",
       "view_all": "View all"
+    },
+    "blog": {
+      "title": "Latest blog posts",
+      "view_all": "View all posts"
     }
   },
   "projects": {

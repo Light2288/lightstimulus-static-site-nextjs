@@ -25,6 +25,10 @@
     "projects": {
       "title": "Progetti in evidenza",
       "view_all": "Vedi tutti"
+    },
+    "blog": {
+      "title": "Ultimi articoli dal blog",
+      "view_all": "Vedi tutti i post"
     }
   },
   "projects": {

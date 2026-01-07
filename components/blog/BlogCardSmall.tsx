@@ -5,7 +5,7 @@ import Tag from '@/components/Tag'
 import { motion } from 'motion/react'
 import clsx from 'clsx'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { LocalizedTag } from '../../types/localizedTag'
+import { LocalizedTag } from '@/types/localizedTag'
 
 interface Props {
   slug: string

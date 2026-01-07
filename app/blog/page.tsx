@@ -1,31 +1,19 @@
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
+import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
-import ListLayout from '@/layouts/ListLayoutWithTags'
-import { Suspense } from 'react'
+import BlogListClient from '@/components/blog/BlogListClient'
 
 const POSTS_PER_PAGE = 5
 
 export const metadata = genPageMetadata({ title: 'Blog' })
 
-export default async function BlogPage(props: { searchParams: Promise<{ page: string }> }) {
-  const posts = allCoreContent(sortPosts(allBlogs))
-  const pageNumber = 1
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
-  const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE * pageNumber)
-  const pagination = {
-    currentPage: pageNumber,
-    totalPages: totalPages,
-  }
+export default function BlogPage() {
+  const allPosts = allCoreContent(sortPosts(allBlogs))
+
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE)
+  const pagePosts = allPosts.slice(0, POSTS_PER_PAGE)
 
   return (
-    <Suspense fallback={null}>
-      <ListLayout
-        posts={posts}
-        initialDisplayPosts={initialDisplayPosts}
-        pagination={pagination}
-        title="All Posts"
-      />
-    </Suspense>
+    <BlogListClient posts={pagePosts} allPosts={allPosts} totalPages={totalPages} currentPage={1} />
   )
 }

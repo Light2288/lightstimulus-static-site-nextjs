@@ -1,4 +1,13 @@
 {
+  "common": {
+    "all": "Tutti",
+    "previous": "Precedente",
+    "next": "Successivo"
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Riflessioni e appunti su ricerca, tecnologia e sperimentazione"
+  },
   "hero": {
     "taglines": {
       "0": "La luce rivela. Il codice interpreta. La realtà si espande.",
@@ -25,9 +34,15 @@
     "projects": {
       "title": "Progetti in evidenza",
       "view_all": "Vedi tutti"
+    },
+    "blog": {
+      "title": "Ultimi articoli dal blog",
+      "view_all": "Vedi tutti"
     }
   },
   "projects": {
+    "title": "Progetti",
+    "description": "Una selezione di ricerche, prototipi ed esperimenti.",
     "back": "Torna ai progetti",
     "meta": {
       "details": "Dettagli",

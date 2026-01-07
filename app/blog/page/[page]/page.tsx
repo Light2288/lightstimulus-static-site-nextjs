@@ -1,45 +1,36 @@
-import ListLayout from '@/layouts/ListLayoutWithTags'
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
+import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
+import BlogListClient from '@/components/blog/BlogListClient'
 
 const POSTS_PER_PAGE = 5
 
 export const generateStaticParams = async () => {
   const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)
-  const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
-
-  return paths
+  return Array.from({ length: totalPages }, (_, i) => ({
+    page: String(i + 1),
+  }))
 }
 
-export default async function Page(props: { params: Promise<{ page: string }> }) {
-  const params = await props.params
-  const posts = allCoreContent(sortPosts(allBlogs))
-  const pageNumber = parseInt(params.page as string)
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
+export default async function BlogPage({ params }: { params: Promise<{ page: string }> }) {
+  const { page } = await params
+  const pageNumber = Number(page)
 
-  // Return 404 for invalid page numbers or empty pages
-  if (pageNumber <= 0 || pageNumber > totalPages || isNaN(pageNumber)) {
-    return notFound()
-  }
-  const initialDisplayPosts = posts.slice(
-    POSTS_PER_PAGE * (pageNumber - 1),
-    POSTS_PER_PAGE * pageNumber
-  )
-  const pagination = {
-    currentPage: pageNumber,
-    totalPages: totalPages,
-  }
+  if (Number.isNaN(pageNumber) || pageNumber < 1) return notFound()
+
+  const allPosts = allCoreContent(sortPosts(allBlogs))
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE)
+
+  if (pageNumber > totalPages) return notFound()
+
+  const pagePosts = allPosts.slice(POSTS_PER_PAGE * (pageNumber - 1), POSTS_PER_PAGE * pageNumber)
 
   return (
-    <Suspense fallback={null}>
-      <ListLayout
-        posts={posts}
-        initialDisplayPosts={initialDisplayPosts}
-        pagination={pagination}
-        title="All Posts"
-      />
-    </Suspense>
+    <BlogListClient
+      posts={pagePosts}
+      allPosts={allPosts}
+      totalPages={totalPages}
+      currentPage={pageNumber}
+    />
   )
 }

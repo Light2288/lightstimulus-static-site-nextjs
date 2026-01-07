@@ -196,7 +196,6 @@ generated folders:
 │   ├── styling_and_design.md
 │   └── tech_stack_and_architecture.md
 ├── app
-│   ├── Main.tsx
 │   ├── about
 │   │   └── page.tsx
 │   ├── api
@@ -214,6 +213,8 @@ generated folders:
 │   ├── page.tsx
 │   ├── project-tag-data.json
 │   ├── projects
+│   │   ├── [slug]
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── robots.ts
 │   ├── seo.tsx
@@ -234,6 +235,8 @@ generated folders:
 │   ├── SectionContainer.tsx
 │   ├── TableWrapper.tsx
 │   ├── Tag.tsx
+│   ├── blog
+│   │   └── BlogCardSmall.tsx
 │   ├── common
 │   │   ├── Footer.tsx
 │   │   ├── Header.tsx
@@ -243,6 +246,7 @@ generated folders:
 │   │   ├── SectionHeader.tsx
 │   │   └── ThemeToggle.tsx
 │   ├── home
+│   │   ├── BlogPreview.tsx
 │   │   ├── FixedAnalogyParagraph.tsx
 │   │   ├── ProjectsPreview.tsx
 │   │   ├── Taglines.tsx
@@ -250,10 +254,15 @@ generated folders:
 │   │   ├── Hero.tsx
 │   │   ├── LogoAnimation.tsx
 │   │   └── TextAnimation.tsx
+│   ├── mdx
+│   │   └── Lang.tsx
 │   ├── projects
 │   │   ├── ProjectCardBase.tsx
 │   │   ├── ProjectCardGrid.tsx
 │   │   ├── ProjectCardSmall.tsx
+│   │   ├── ProjectContent.tsx
+│   │   ├── ProjectHeader.tsx
+│   │   ├── ProjectLinks.tsx
 │   │   └── ProjectsGrid.tsx
 │   └── social-icons
 │   ├── icons.tsx
@@ -310,9 +319,12 @@ generated folders:
 │   ├── PostBanner.tsx
 │   ├── PostLayout.tsx
 │   ├── PostSimple.tsx
+│   ├── ProjectLayout.tsx
 │   └── ProjectsListLayoutWithTags.tsx
 ├── lib
 │   ├── generateProjectTagData.ts
+│   ├── mdx
+│   │   └── extractLocalizedSection.ts
 │   └── preferences
 │   └── PreferencesService.ts
 ├── locales
@@ -330,8 +342,7 @@ generated folders:
 │   └── rss.mjs
 ├── tsconfig.json
 ├── types
-│   ├── localizedTag.d.ts
-│   └── project.d.ts
+│   └── localizedTag.d.ts
 └── utils
 └── detectRefreshOrFirstLoad.ts
 

@@ -1,7 +1,7 @@
 'use client'
 
 import ProjectCardBase from '@/components/projects/ProjectCardBase'
-import { LocalizedTag } from '../../types/localizedTag'
+import { LocalizedTag } from '@/types/localizedTag'
 
 interface Props {
   href: string

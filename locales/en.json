@@ -1,4 +1,16 @@
 {
+  "common": {
+    "all": "All",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Thoughts and notes on research, technology, and experimentation."
+  },
+  "contact": {
+    "form_title": "Get in touch"
+  },
   "hero": {
     "taglines": {
       "0": "Light reveals. Code interprets. Reality extends.",
@@ -11,6 +23,16 @@
     },
     "fixed_paragraph": "Inspired by the limulus — an ancient creature whose near-unchanged visual system has endured for millions of years — I look at how it reads the world. Its vision shifts with the light, isolates patterns from noise, and follows gradients and motion with an elegance shaped by time. In that persistence, I see a metaphor for my work: sensing the subtle, filtering the essential, finding structure in complexity.\n\nLight, perception, and computation guide the interfaces I build. My work spans augmented and extended reality, computer vision, machine learning, generative-AI workflows, mobile engineering, data pipelines, and experimental interfaces. Each field is a space to test ideas. Each prototype is a step toward systems that respond, adapt, and reveal. I treat technology as a living laboratory — a place where light becomes data, perception becomes logic, and crafted interactions become new ways to extend reality."
   },
+  "home": {
+    "projects": {
+      "title": "Featured Projects",
+      "view_all": "View all "
+    },
+    "blog": {
+      "title": "Latest blog posts",
+      "view_all": "View all"
+    }
+  },
   "nav": {
     "home": "Home",
     "projects": "Projects",
@@ -18,16 +40,9 @@
     "about": "About",
     "contact": "Contact"
   },
-  "contact": {
-    "form_title": "Get in touch"
-  },
-  "home": {
-    "projects": {
-      "title": "Featured Projects",
-      "view_all": "View all"
-    }
-  },
   "projects": {
+    "title": "Projects",
+    "description": "A selection of research, prototypes, and experiments.",
     "back": "Back to projects",
     "meta": {
       "details": "Details",

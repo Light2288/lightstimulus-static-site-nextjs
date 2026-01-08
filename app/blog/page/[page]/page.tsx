@@ -2,6 +2,7 @@ import { allBlogs } from 'contentlayer/generated'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { notFound } from 'next/navigation'
 import BlogListClient from '@/components/blog/BlogListClient'
+import { Suspense } from 'react'
 
 const POSTS_PER_PAGE = 5
 
@@ -26,11 +27,13 @@ export default async function BlogPage({ params }: { params: Promise<{ page: str
   const pagePosts = allPosts.slice(POSTS_PER_PAGE * (pageNumber - 1), POSTS_PER_PAGE * pageNumber)
 
   return (
-    <BlogListClient
-      posts={pagePosts}
-      allPosts={allPosts}
-      totalPages={totalPages}
-      currentPage={pageNumber}
-    />
+    <Suspense fallback={null}>
+      <BlogListClient
+        posts={pagePosts}
+        allPosts={allPosts}
+        totalPages={totalPages}
+        currentPage={pageNumber}
+      />
+    </Suspense>
   )
 }

@@ -108,13 +108,13 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
-      </Layout>
+      {/*<script*/}
+      {/*  type="application/ld+json"*/}
+      {/*  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}*/}
+      {/*/>*/}
+      {/*<Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>*/}
+      {/*  <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />*/}
+      {/*</Layout>*/}
     </>
   )
 }

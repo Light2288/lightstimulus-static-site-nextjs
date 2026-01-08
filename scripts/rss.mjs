@@ -30,7 +30,7 @@ const generateRss = (config, posts, page = 'feed.xml') => `
       <language>${config.language}</language>
       <managingEditor>${config.email} (${config.author})</managingEditor>
       <webMaster>${config.email} (${config.author})</webMaster>
-      <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>
+      <lastBuildDate>${posts[0] ? new Date(posts[0].date).toUTCString() : new Date().toUTCString()}</lastBuildDate>
       <atom:link href="${config.siteUrl}/${page}" rel="self" type="application/rss+xml"/>
       ${posts.map((post) => generateRssItem(config, post)).join('')}
     </channel>

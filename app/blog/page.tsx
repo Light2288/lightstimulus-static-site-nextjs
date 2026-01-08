@@ -2,6 +2,7 @@ import { allBlogs } from 'contentlayer/generated'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
 import BlogListClient from '@/components/blog/BlogListClient'
+import { Suspense } from 'react'
 
 const POSTS_PER_PAGE = 5
 
@@ -14,6 +15,13 @@ export default function BlogPage() {
   const pagePosts = allPosts.slice(0, POSTS_PER_PAGE)
 
   return (
-    <BlogListClient posts={pagePosts} allPosts={allPosts} totalPages={totalPages} currentPage={1} />
+    <Suspense fallback={null}>
+      <BlogListClient
+        posts={pagePosts}
+        allPosts={allPosts}
+        totalPages={totalPages}
+        currentPage={1}
+      />
+    </Suspense>
   )
 }

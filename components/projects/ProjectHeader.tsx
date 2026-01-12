@@ -24,12 +24,6 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
     <header className="space-y-8 pt-12">
       {/* Cover image */}
       {project.coverImage && (
-        // <div className="mx-auto mt-6 max-w-3xl shadow-lg">
-        //   <div className="glass-bg relative aspect-[16/9] w-full overflow-hidden rounded-2xl">
-        //     <Image src={project.coverImage} alt={title} fill className="object-cover" priority />
-        //     <div className="absolute inset-0 bg-black/5 dark:bg-black/20" />
-        //   </div>
-        // </div>
         <div className="glass-bg relative aspect-[16/9] max-h-[420px] w-full overflow-hidden rounded-2xl shadow-lg md:max-h-[480px]">
           <Image src={project.coverImage} alt={title} fill className="object-cover" priority />
         </div>

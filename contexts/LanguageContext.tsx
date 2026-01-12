@@ -9,7 +9,7 @@ type Lang = 'en' | 'it'
 
 interface LanguageContextType {
   lang: Lang
-  t: (key: string) => string
+  t: (key: string, vars?: Record<string, string | number>) => string
   switchLang: (lang: Lang) => void
 }
 
@@ -39,7 +39,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     PreferencesService.setPref('lang', newLang)
   }
 
-  const t = (key: string): string => {
+  const t = (key: string, vars?: Record<string, string | number>): string => {
     const parts = key.split('.')
     let value: string | Record<string, unknown> = translations[lang]
 
@@ -51,7 +51,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    return typeof value === 'string' ? value : key
+    if (typeof value !== 'string') return key
+
+    if (!vars) return value
+
+    return value.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] !== undefined ? String(vars[k]) : ''))
   }
 
   return (

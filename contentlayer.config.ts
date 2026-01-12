@@ -4,7 +4,6 @@ import readingTime from 'reading-time'
 import path from 'path'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
 import { createProjectTagCount } from './lib/generateProjectTagData'
-import { extractLocalizedSection } from './lib/mdx/extractLocalizedSection'
 
 // Remark packages
 import remarkGfm from 'remark-gfm'
@@ -222,14 +221,6 @@ export const Project = defineDocumentType(() => ({
     summaryEn: {
       type: 'string',
       resolve: (doc) => doc.summary?.en ?? '',
-    },
-    bodyEn: {
-      type: 'string',
-      resolve: (doc) => extractLocalizedSection({ body: doc.body.raw, lang: 'en' }),
-    },
-    bodyIt: {
-      type: 'string',
-      resolve: (doc) => extractLocalizedSection({ body: doc.body.raw, lang: 'it' }),
     },
     structuredData: {
       type: 'json',

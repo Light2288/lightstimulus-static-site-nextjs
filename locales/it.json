@@ -6,7 +6,10 @@
   },
   "blog": {
     "title": "Blog",
-    "description": "Riflessioni e appunti su ricerca, tecnologia e sperimentazione"
+    "description": "Riflessioni e appunti su ricerca, tecnologia e sperimentazione",
+    "reading_time": "Tempo di lettura: {{minutes}} min",
+    "previous_article": "Articolo precedente: {{prevTitle}}",
+    "next_article": "Articolo successivo: {{nextTitle}}"
   },
   "hero": {
     "taglines": {

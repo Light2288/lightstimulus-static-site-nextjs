@@ -393,6 +393,7 @@ generated folders:
 │   │   │   └── [page]
 │   │   │   └── page.tsx
 │   │   └── page.tsx
+│   ├── blog-tag-data.json
 │   ├── layout.tsx
 │   ├── not-found.tsx
 │   ├── page.tsx
@@ -404,7 +405,6 @@ generated folders:
 │   ├── robots.ts
 │   ├── seo.tsx
 │   ├── sitemap.ts
-│   ├── tag-data.json
 │   └── theme-providers.tsx
 ├── components
 │   ├── Card.tsx
@@ -421,7 +421,8 @@ generated folders:
 │   ├── TableWrapper.tsx
 │   ├── Tag.tsx
 │   ├── blog
-│   │   └── BlogCardSmall.tsx
+│   │   ├── BlogCardSmall.tsx
+│   │   └── BlogListClient.tsx
 │   ├── common
 │   │   ├── Footer.tsx
 │   │   ├── Header.tsx
@@ -448,7 +449,8 @@ generated folders:
 │   │   ├── ProjectContent.tsx
 │   │   ├── ProjectHeader.tsx
 │   │   ├── ProjectLinks.tsx
-│   │   └── ProjectsGrid.tsx
+│   │   ├── ProjectsGrid.tsx
+│   │   └── ProjectsListClient.tsx
 │   └── social-icons
 │   ├── icons.tsx
 │   └── index.tsx
@@ -499,14 +501,13 @@ generated folders:
 ├── jsconfig.json
 ├── layouts
 │   ├── AuthorLayout.tsx
-│   ├── ListLayout.tsx
-│   ├── ListLayoutWithTags.tsx
+│   ├── ListWithTagsLayout.tsx
 │   ├── PostBanner.tsx
 │   ├── PostLayout.tsx
 │   ├── PostSimple.tsx
-│   ├── ProjectLayout.tsx
-│   └── ProjectsListLayoutWithTags.tsx
+│   └── ProjectLayout.tsx
 ├── lib
+│   ├── generateBlogTagData.ts
 │   ├── generateProjectTagData.ts
 │   ├── mdx
 │   │   └── extractLocalizedSection.ts

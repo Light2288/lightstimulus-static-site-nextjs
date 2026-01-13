@@ -7,7 +7,7 @@
   "blog": {
     "title": "Blog",
     "description": "Thoughts and notes on research, technology, and experimentation.",
-    "reading_time": "Reading time: {{minutes}} minutes",
+    "reading_time": "Reading time: {{minutes}} min",
     "previous_article": "Previous article: {{prevTitle}}",
     "next_article": "Next article: {{nextTitle}}"
   },

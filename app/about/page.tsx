@@ -1,20 +1,48 @@
-import { Authors, allAuthors } from 'contentlayer/generated'
+import { allAuthors } from 'contentlayer/generated'
+import SectionContainer from '@/components/SectionContainer'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import AuthorLayout from '@/layouts/AuthorLayout'
-import { coreContent } from 'pliny/utils/contentlayer'
-import { genPageMetadata } from 'app/seo'
+import { FocusAreas } from '@/components/about/FocusAreas'
+import { ExploringNow } from '@/components/about/ExploringNow'
+import { CVDownloadCard } from '@/components/about/CVDownloadCard'
+import AboutProfile from '@/components/about/AboutProfile'
 
-export const metadata = genPageMetadata({ title: 'About' })
+export default function AboutPage() {
+  const author = allAuthors.find((a) => a.slug === 'default')
 
-export default function Page() {
-  const author = allAuthors.find((p) => p.slug === 'default') as Authors
-  const mainContent = coreContent(author)
+  if (!author) return null
 
   return (
-    <>
-      <AuthorLayout content={mainContent}>
-        <MDXLayoutRenderer code={author.body.code} />
-      </AuthorLayout>
-    </>
+    <SectionContainer>
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <h1 className="mb-4 text-4xl font-bold">About</h1>
+
+        <AboutProfile
+          name={author.name}
+          avatar={author.avatar}
+          occupation={author.occupation}
+          company={author.company}
+          socials={{
+            email: author.email,
+            github: author.github,
+            linkedin: author.linkedin,
+            twitter: author.twitter,
+            bluesky: author.bluesky,
+          }}
+        />
+
+        {/* Narrative author */}
+        {/* Narrative author */}
+        <div className="mt-8">
+          <article className="prose prose-invert max-w-none">
+            <MDXLayoutRenderer code={author.body.code} />
+          </article>
+        </div>
+
+        {/* Structured sections */}
+        <FocusAreas areas={author.focusAreas} />
+        <ExploringNow items={author.exploringNow} />
+        <CVDownloadCard cv={author.cv} />
+      </section>
+    </SectionContainer>
   )
 }

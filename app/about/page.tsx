@@ -5,6 +5,8 @@ import { FocusAreas } from '@/components/about/FocusAreas'
 import { ExploringNow } from '@/components/about/ExploringNow'
 import { CVDownloadCard } from '@/components/about/CVDownloadCard'
 import AboutProfile from '@/components/about/AboutProfile'
+import { certifications } from '@/data/authors/certifications'
+import { CertificationsGrid } from '@/components/about/CertificationsGrid'
 
 export default function AboutPage() {
   const author = allAuthors.find((a) => a.slug === 'default')
@@ -30,10 +32,8 @@ export default function AboutPage() {
           }}
         />
 
-        {/* Narrative author */}
-        {/* Narrative author */}
         <div className="mt-8">
-          <article className="prose prose-invert max-w-none">
+          <article className="prose dark:prose-invert max-w-none">
             <MDXLayoutRenderer code={author.body.code} />
           </article>
         </div>
@@ -41,6 +41,7 @@ export default function AboutPage() {
         {/* Structured sections */}
         <FocusAreas areas={author.focusAreas} />
         <ExploringNow items={author.exploringNow} />
+        <CertificationsGrid items={certifications} />
         <CVDownloadCard cv={author.cv} />
       </section>
     </SectionContainer>

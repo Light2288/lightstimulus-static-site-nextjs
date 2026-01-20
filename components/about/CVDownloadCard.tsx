@@ -1,3 +1,7 @@
+'use client'
+
+import { motion } from 'motion/react'
+
 type CV = {
   url: string
   label?: string
@@ -14,19 +18,24 @@ export function CVDownloadCard({ cv }: { cv?: CV }) {
         Curriculum Vitae
       </h2>
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-        <p className="mt-1 text-sm text-gray-300">
+      <motion.div
+        initial={{ y: 0 }}
+        whileHover={{ y: -3 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+        className="glass-bg flex flex-col gap-4 rounded-xl border border-white/20 p-6 shadow-md backdrop-blur transition-shadow hover:shadow-lg sm:flex-row sm:items-center sm:justify-between dark:border-white/10"
+      >
+        <p className="text-text-secondary text-sm dark:text-gray-300">
           A concise overview of my experience, skills, and selected projects.
         </p>
 
         <a
           href={`${basePath}${cv.url}`}
           download
-          className="inline-flex items-center justify-center rounded-xl bg-white/10 px-5 py-2 text-sm font-medium transition hover:bg-white/20"
+          className="inline-flex items-center justify-center rounded-lg border border-[var(--color-primary-500)] px-5 py-2 text-sm font-medium whitespace-nowrap text-[var(--color-primary-500)] transition hover:bg-[var(--color-primary-500)] hover:text-white focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)]/40 focus-visible:outline-none"
         >
           {cv.label ?? 'Download CV'}
         </a>
-      </div>
+      </motion.div>
     </section>
   )
 }

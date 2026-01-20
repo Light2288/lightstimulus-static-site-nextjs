@@ -1,3 +1,7 @@
+'use client'
+
+import { motion } from 'motion/react'
+
 type FocusArea = {
   title: string
   description: string
@@ -14,13 +18,18 @@ export function FocusAreas({ areas }: { areas: FocusArea[] }) {
 
       <div className="grid gap-6 sm:grid-cols-2">
         {areas.map((area) => (
-          <div
+          <motion.div
             key={area.title}
-            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10"
+            initial={{ y: 0 }}
+            whileHover={{ y: -3 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+            className="glass-bg rounded-xl border border-white/20 p-6 shadow-md backdrop-blur transition-shadow hover:shadow-lg dark:border-white/10"
           >
             <h3 className="mb-2 text-lg font-medium">{area.title}</h3>
-            <p className="text-sm text-gray-300">{area.description}</p>
-          </div>
+            <p className="text-text-secondary text-sm leading-relaxed dark:text-gray-300">
+              {area.description}
+            </p>
+          </motion.div>
         ))}
       </div>
     </section>

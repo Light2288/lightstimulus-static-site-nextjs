@@ -420,6 +420,12 @@ generated folders:
 │   ├── SectionContainer.tsx
 │   ├── TableWrapper.tsx
 │   ├── Tag.tsx
+│   ├── about
+│   │   ├── AboutContent.tsx
+│   │   ├── AboutProfile.tsx
+│   │   ├── CVDownloadCard.tsx
+│   │   ├── ExploringNow.tsx
+│   │   └── FocusAreas.tsx
 │   ├── blog
 │   │   ├── BlogCardSmall.tsx
 │   │   └── BlogListClient.tsx
@@ -462,8 +468,7 @@ generated folders:
 │   └── tailwind.css
 ├── data
 │   ├── authors
-│   │   ├── default.mdx
-│   │   └── sparrowhawk.mdx
+│   │   └── default.mdx
 │   ├── blog
 │   │   ├── code-sample.mdx
 │   │   ├── deriving-ols-estimator.mdx
@@ -501,16 +506,12 @@ generated folders:
 ├── jsconfig.json
 ├── layouts
 │   ├── AuthorLayout.tsx
+│   ├── BlogPostLayout.tsx
 │   ├── ListWithTagsLayout.tsx
-│   ├── PostBanner.tsx
-│   ├── PostLayout.tsx
-│   ├── PostSimple.tsx
 │   └── ProjectLayout.tsx
 ├── lib
 │   ├── generateBlogTagData.ts
 │   ├── generateProjectTagData.ts
-│   ├── mdx
-│   │   └── extractLocalizedSection.ts
 │   └── preferences
 │   └── PreferencesService.ts
 ├── locales

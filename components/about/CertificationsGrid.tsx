@@ -1,7 +1,15 @@
 'use client'
 
+import Image from '@/components/Image'
 import { motion } from 'motion/react'
-import { Certification } from '@/data/authors/certifications'
+
+type Certification = {
+  title: string
+  issuer: string
+  year: number
+  image?: string
+  url?: string
+}
 
 export function CertificationsGrid({ items }: { items: Certification[] }) {
   if (!items.length) return null
@@ -20,21 +28,35 @@ export function CertificationsGrid({ items }: { items: Certification[] }) {
             transition={{ type: 'spring', stiffness: 260, damping: 22 }}
             className="glass-bg rounded-xl border border-white/20 p-5 shadow-md backdrop-blur transition-shadow hover:shadow-lg dark:border-white/10"
           >
-            <h3 className="text-sm leading-snug font-semibold">{cert.title}</h3>
-            <p className="text-text-secondary mt-1 text-xs">
-              {cert.issuer} · {cert.year}
-            </p>
+            <div className="flex items-start gap-3">
+              {cert.image && (
+                <Image
+                  src={cert.image}
+                  alt={cert.issuer}
+                  width={36}
+                  height={36}
+                  className="mt-0.5 rounded"
+                />
+              )}
 
-            {cert.url && (
-              <a
-                href={cert.url}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-block text-xs font-medium text-[var(--color-primary-500)] hover:underline"
-              >
-                View credential →
-              </a>
-            )}
+              <div>
+                <h3 className="text-sm leading-snug font-semibold">{cert.title}</h3>
+                <p className="text-text-secondary mt-1 text-xs">
+                  {cert.issuer} · {cert.year}
+                </p>
+
+                {cert.url && (
+                  <a
+                    href={cert.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 inline-block text-xs font-medium text-[var(--color-primary-500)] hover:underline"
+                  >
+                    View credential →
+                  </a>
+                )}
+              </div>
+            </div>
           </motion.div>
         ))}
       </div>

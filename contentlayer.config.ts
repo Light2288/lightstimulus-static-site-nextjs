@@ -177,6 +177,21 @@ export const Authors = defineDocumentType(() => ({
       default: [],
     },
 
+    certifications: {
+      type: 'list',
+      of: {
+        type: 'json',
+        fields: {
+          title: { type: 'string', required: true },
+          issuer: { type: 'string', required: true },
+          year: { type: 'number', required: true },
+          image: { type: 'string' },
+          url: { type: 'string' },
+        },
+      },
+      default: [],
+    },
+
     cv: {
       type: 'json',
       fields: {

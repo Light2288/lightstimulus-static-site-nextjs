@@ -4,6 +4,35 @@
     "previous": "Precedente",
     "next": "Successivo"
   },
+  "about": {
+    "contact_bridge": {
+      "text": "Se stai lavorando su sistemi complessi, esplorando nuove idee o semplicemente ti piace confrontarti su temi tecnologici, sono sempre disponibile a scambiare punti di vista.",
+      "link": "Vai alla pagina contatti →"
+    },
+    "profile": {
+      "highlights": {
+        "0": "Senior Application Architect & Technical Leader",
+        "1": "People Manager (team di oltre 20 professionisti)",
+        "2": "Piattaforme per la pubblica amministrazione usate da milioni di utenti",
+        "3": "Sistemi Frontend, Mobile, Cloud e AI su larga scala"
+      }
+    },
+    "certifications": {
+      "title": "Certificazioni e competenze",
+      "view": "Vedi certificazione →"
+    },
+    "cv": {
+      "title": "Curriculum Vitae",
+      "description": "Una sintesi della mia esperienza, delle mie competenze e dei miei progetti principali.",
+      "download": "Scarica CV"
+    },
+    "exploring": {
+      "title": "Cosa sto esplorando ora"
+    },
+    "focus": {
+      "title": "Aree di focus"
+    }
+  },
   "blog": {
     "title": "Blog",
     "description": "Riflessioni e appunti su ricerca, tecnologia e sperimentazione",

@@ -4,6 +4,7 @@ import Image from '@/components/Image'
 import SocialIcon from '@/components/social-icons'
 import clsx from 'clsx'
 import { motion } from 'motion/react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Props {
   name?: string
@@ -20,6 +21,8 @@ interface Props {
 }
 
 export default function AboutProfile({ name, avatar, occupation, company, socials }: Props) {
+  const { t } = useLanguage()
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 8 }}
@@ -61,18 +64,16 @@ export default function AboutProfile({ name, avatar, occupation, company, social
           {socials.email && <SocialIcon kind="mail" href={`mailto:${socials.email}`} />}
           {socials.github && <SocialIcon kind="github" href={socials.github} />}
           {socials.linkedin && <SocialIcon kind="linkedin" href={socials.linkedin} />}
-          {socials.twitter && <SocialIcon kind="x" href={socials.twitter} />}
-          {socials.bluesky && <SocialIcon kind="bluesky" href={socials.bluesky} />}
         </div>
       </div>
 
       {/* High-signal highlights */}
       <div className="text-text-secondary space-y-3 text-sm md:col-span-2 lg:col-span-1 lg:pl-4">
         <ul className="space-y-3">
-          <li>• Senior Application Architect & Technical Leader</li>
-          <li>• People Manager (20+ professionals)</li>
-          <li>• Public sector platforms used by millions</li>
-          <li>• Frontend, Mobile, Cloud & AI systems at scale</li>
+          <li>• {t('about.profile.highlights.0')}</li>
+          <li>• {t('about.profile.highlights.1')}</li>
+          <li>• {t('about.profile.highlights.2')}</li>
+          <li>• {t('about.profile.highlights.3')}</li>
         </ul>
       </div>
     </motion.section>

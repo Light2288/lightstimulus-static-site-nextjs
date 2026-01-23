@@ -6,6 +6,8 @@ import { ExploringNow } from '@/components/about/ExploringNow'
 import { CVDownloadCard } from '@/components/about/CVDownloadCard'
 import AboutProfile from '@/components/about/AboutProfile'
 import { CertificationsGrid } from '@/components/about/CertificationsGrid'
+import { AboutContactBridge } from '@/components/about/AboutContactBridge'
+import { components } from '@/components/MDXComponents'
 
 export default function AboutPage() {
   const author = allAuthors.find((a) => a.slug === 'default')
@@ -33,7 +35,7 @@ export default function AboutPage() {
 
         <div className="mt-8">
           <article className="prose dark:prose-invert max-w-none">
-            <MDXLayoutRenderer code={author.body.code} />
+            <MDXLayoutRenderer code={author.body.code} components={components} />
           </article>
         </div>
 
@@ -42,6 +44,7 @@ export default function AboutPage() {
         <ExploringNow items={author.exploringNow} />
         <CertificationsGrid items={author.certifications ?? []} />
         <CVDownloadCard cv={author.cv} />
+        <AboutContactBridge />
       </section>
     </SectionContainer>
   )

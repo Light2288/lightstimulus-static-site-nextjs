@@ -158,14 +158,13 @@ export const Authors = defineDocumentType(() => ({
     linkedin: { type: 'string' },
     github: { type: 'string' },
 
-    // ✅ NEW
     focusAreas: {
       type: 'list',
       of: {
         type: 'json',
         fields: {
-          title: { type: 'string', required: true },
-          description: { type: 'string', required: true },
+          title: { type: 'json', required: true }, // { en, it }
+          description: { type: 'json', required: true }, // { en, it }
         },
       },
       default: [],
@@ -173,7 +172,7 @@ export const Authors = defineDocumentType(() => ({
 
     exploringNow: {
       type: 'list',
-      of: { type: 'string' },
+      of: { type: 'json' }, // { en, it }
       default: [],
     },
 

@@ -60,7 +60,10 @@
     "contact": "Contatti"
   },
   "contact": {
-    "form_title": "Scrivimi"
+    "title": "Scrivimi",
+    "intro": "Sono sempre disponibile a confrontarmi su tecnologia, sistemi e idee in evoluzione.\n\nSe stai lavorando su problemi complessi, esplorando nuove direzioni o semplicemente vuoi scambiare punti di vista, non esitare a contattarmi.",
+    "methods_intro": "Il modo più semplice per contattarmi è via email.",
+    "linkedin_hint": "Puoi anche trovarmi su "
   },
   "home": {
     "projects": {

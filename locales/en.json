@@ -41,7 +41,10 @@
     "next_article": "Next article: {{nextTitle}}"
   },
   "contact": {
-    "form_title": "Get in touch"
+    "title": "Get in touch",
+    "intro": "I’m always open to thoughtful conversations around technology, systems, and ideas in progress.\n\nIf you’re working on complex challenges, exploring new directions, or simply want to exchange perspectives, feel free to reach out.",
+    "methods_intro": "The easiest way to contact me is by email.",
+    "linkedin_hint": "You can also reach me on "
   },
   "hero": {
     "taglines": {

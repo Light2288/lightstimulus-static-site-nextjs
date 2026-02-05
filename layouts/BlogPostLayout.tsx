@@ -1,6 +1,7 @@
 import Image from '@/components/Image'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import BlogPostLayoutClient from '@/components/blog/BlogPostLayoutClient'
+import BlogPostHeaderClient from '@/components/blog/BlogPostHeaderClient'
+import BlogPostNavigationClient from '@/components/blog/BlogPostNavigationClient'
 import { ReactNode } from 'react'
 import { Blog } from 'contentlayer/generated'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -30,12 +31,15 @@ export default function BlogPostLayout({ content, next, prev, children }: BlogPo
             </div>
           )}
 
-          {/* Client-side language-dependent content */}
-          <BlogPostLayoutClient content={content} next={next} prev={prev} />
+          {/* Client-side language-dependent header content */}
+          <BlogPostHeaderClient content={content} />
         </header>
 
         {/* Content */}
         <div className="prose prose-lg dark:prose-invert mx-auto mt-16">{children}</div>
+
+        {/* Navigation - after content */}
+        <BlogPostNavigationClient next={next} prev={prev} />
       </article>
     </>
   )

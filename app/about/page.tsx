@@ -8,6 +8,13 @@ import AboutProfile from '@/components/about/AboutProfile'
 import { CertificationsGrid } from '@/components/about/CertificationsGrid'
 import { AboutContactBridge } from '@/components/about/AboutContactBridge'
 import { components } from '@/components/MDXComponents'
+import { genPageMetadata } from '@/app/seo'
+
+export const metadata = genPageMetadata({
+  title: 'About',
+  description:
+    'Learn about Davide Aliti - Senior Application Architect, Technical Leader, and technology enthusiast exploring AR, XR, AI, and computer vision.',
+})
 
 export default function AboutPage() {
   const author = allAuthors.find((a) => a.slug === 'default')

@@ -28,9 +28,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     if (saved) {
       setLang(saved)
     } else {
-      const browserLang = navigator.language.startsWith('it') ? 'it' : 'en'
-      setLang(browserLang)
-      PreferencesService.setPref('lang', browserLang)
+      // Always default to English unless user has previously selected a language
+      setLang('en')
+      PreferencesService.setPref('lang', 'en')
     }
   }, [])
 

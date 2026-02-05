@@ -104,7 +104,10 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   return (
     <>
       {/* SEO schema */}
-      {/* <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} /> */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <Layout content={mainContent} next={next} prev={prev}>
         <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />

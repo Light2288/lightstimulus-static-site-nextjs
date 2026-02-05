@@ -1,17 +1,11 @@
-// layouts/ProjectLayout.tsx
-'use client'
-
 import { ReactNode } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Project } from 'contentlayer/generated'
 
 import SectionContainer from '@/components/SectionContainer'
-import Link from '@/components/Link'
-
 import ProjectHeader from '@/components/projects/ProjectHeader'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-
-import { useLanguage } from '@/contexts/LanguageContext'
+import ProjectLayoutClient from '@/components/projects/ProjectLayoutClient'
 
 interface ProjectLayoutProps {
   content: CoreContent<Project>
@@ -19,8 +13,6 @@ interface ProjectLayoutProps {
 }
 
 export default function ProjectLayout({ content, children }: ProjectLayoutProps) {
-  const { t } = useLanguage()
-
   return (
     <SectionContainer>
       <ScrollTopAndComment />
@@ -32,15 +24,8 @@ export default function ProjectLayout({ content, children }: ProjectLayoutProps)
           <div className="prose dark:prose-invert max-w-none">{children}</div>
         </div>
 
-        <footer className="pt-12">
-          <Link
-            href="/projects"
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label={t('projects.back')}
-          >
-            &larr; {t('projects.back')}
-          </Link>
-        </footer>
+        {/* Client component for language-dependent back link */}
+        <ProjectLayoutClient />
       </article>
     </SectionContainer>
   )

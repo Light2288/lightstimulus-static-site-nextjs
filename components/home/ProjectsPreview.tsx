@@ -1,28 +1,17 @@
 'use client'
 
-import { allProjects } from 'contentlayer/generated'
 import { useLanguage } from '@/contexts/LanguageContext'
 import SectionHeader from '@/components/common/SectionHeader'
 import ProjectCardSmall from '@/components/projects/ProjectCardSmall'
 import Link from '@/components/Link'
-import { useMemo } from 'react'
+import { Project } from 'contentlayer/generated'
 
-export default function ProjectsPreview() {
+interface ProjectsPreviewProps {
+  projects: Project[]
+}
+
+export default function ProjectsPreview({ projects }: ProjectsPreviewProps) {
   const { lang, t } = useLanguage()
-
-  const projects = useMemo(
-    () =>
-      allProjects
-        .sort((a, b) => +new Date(b.date) - +new Date(a.date))
-        .slice(0, 4)
-        .map((p) => ({
-          slug: p.slug,
-          title: p.title[lang] ?? p.title.en,
-          summary: p.summary[lang] ?? p.summary.en,
-          coverImage: p.coverImage,
-        })),
-    [lang]
-  )
 
   return (
     <section className="mx-auto mt-12 max-w-6xl px-6">
@@ -42,8 +31,8 @@ export default function ProjectsPreview() {
           <ProjectCardSmall
             key={p.slug}
             href={`/projects/${p.slug}`}
-            title={p.title}
-            summary={p.summary}
+            title={p.title[lang] ?? p.title.en}
+            summary={p.summary[lang] ?? p.summary.en}
             coverImage={p.coverImage}
           />
         ))}

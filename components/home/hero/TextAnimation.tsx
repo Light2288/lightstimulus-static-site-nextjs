@@ -4,6 +4,27 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, stagger, useAnimate } from 'motion/react'
 import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoad'
 
+// Animation timing constants (in seconds)
+const FADE_IN_DURATION = 0.5
+const FADE_IN_STAGGER = 0.08
+const SPLIT_DURATION = 0.5
+const EXPANSION_DURATION = 0.5
+const EXPANSION_STAGGER = 0.05
+const COLOR_CHANGE_DURATION = 0.6
+const GLOW_FADE_IN_DURATION = 0.4
+const GLOW_FADE_OUT_DURATION = 1.0
+
+// Layout constants
+const MOBILE_BREAKPOINT = 1239 // pixels
+const VERTICAL_OFFSET = 1.7 // rem
+const SCALE_FACTOR = 0.78
+const MOBILE_LI_OFFSET = 0.8 // em
+const DESKTOP_LI_OFFSET = 0 // em
+const MOBILE_MULUS_OFFSET = 0.42 // em
+const DESKTOP_MULUS_OFFSET = -0.35 // em
+const INITIAL_LETTER_Y_OFFSET = 8 // pixels
+const EXPANSION_X_OFFSET = 12 // pixels
+
 export default function TextAnimation() {
   const [scope, animate] = useAnimate()
   const isMobileRef = useRef(false)
@@ -12,7 +33,7 @@ export default function TextAnimation() {
 
   // Detect mobile breakpoint
   useLayoutEffect(() => {
-    const mq = window.matchMedia('(max-width: 1239px)')
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`)
     const onChange = () => setIsMobile(mq.matches)
     onChange()
     mq.addEventListener('change', onChange)
@@ -44,14 +65,16 @@ export default function TextAnimation() {
       sti.forEach((el) => (el.style.opacity = '1'))
 
       // Final positions
-      const mq = window.matchMedia('(max-width: 1239px)')
+      const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`)
       const mobile = mq.matches
 
-      liRow.style.transform = mobile ? 'translate(0.8em, -1.7rem)' : 'translate(0, -1.7rem)'
+      liRow.style.transform = mobile
+        ? `translate(${MOBILE_LI_OFFSET}em, -${VERTICAL_OFFSET}rem)`
+        : `translate(${DESKTOP_LI_OFFSET}em, -${VERTICAL_OFFSET}rem)`
 
       mulusRow.style.transform = mobile
-        ? 'translate(0.42em, 1.7rem) scale(0.78)'
-        : 'translate(-0.35em, 1.7rem) scale(0.78)'
+        ? `translate(${MOBILE_MULUS_OFFSET}em, ${VERTICAL_OFFSET}rem) scale(${SCALE_FACTOR})`
+        : `translate(${DESKTOP_MULUS_OFFSET}em, ${VERTICAL_OFFSET}rem) scale(${SCALE_FACTOR})`
 
       // Colors
       initialLetters.forEach((el) => (el.style.color = 'var(--color-accent-secondary)'))
@@ -69,30 +92,45 @@ export default function TextAnimation() {
       -------------------------------- */
       await animate(
         initialLetters,
-        { opacity: [0, 1], y: [8, 0] },
-        { duration: 0.5, delay: stagger(0.08), ease: 'easeInOut' }
+        { opacity: [0, 1], y: [INITIAL_LETTER_Y_OFFSET, 0] },
+        { duration: FADE_IN_DURATION, delay: stagger(FADE_IN_STAGGER), ease: 'easeInOut' }
       )
 
       /* --------------------------------
          2) Split to LIGHT / MULUS
       -------------------------------- */
       const animations = [
-        animate(liRow, { y: '-1.7rem' }, { duration: 0.5, ease: 'easeOut' }),
-        animate(mulusRow, { y: '1.7rem' }, { duration: 0.5, ease: 'easeOut' }),
+        animate(
+          liRow,
+          { y: `-${VERTICAL_OFFSET}rem` },
+          { duration: SPLIT_DURATION, ease: 'easeOut' }
+        ),
+        animate(
+          mulusRow,
+          { y: `${VERTICAL_OFFSET}rem` },
+          { duration: SPLIT_DURATION, ease: 'easeOut' }
+        ),
       ]
 
       // Mobile scaling and horizontal correction
-      // if (isMobileRef.current) {
       if (isMobileRef.current) {
-        animations.push(animate(liRow, { x: '0.8em' }, { duration: 0.5, ease: 'easeOut' }))
+        animations.push(
+          animate(
+            liRow,
+            { x: `${MOBILE_LI_OFFSET}em` },
+            { duration: SPLIT_DURATION, ease: 'easeOut' }
+          )
+        )
       }
-      animations.push(animate(mulusRow, { scale: 0.78 }, { duration: 0.5, ease: 'easeOut' }))
+      animations.push(
+        animate(mulusRow, { scale: SCALE_FACTOR }, { duration: SPLIT_DURATION, ease: 'easeOut' })
+      )
 
       animations.push(
         animate(
           mulusRow,
-          { x: isMobileRef.current ? '0.42em' : '-0.35em' },
-          { duration: 0.5, ease: 'easeOut' }
+          { x: isMobileRef.current ? `${MOBILE_MULUS_OFFSET}em` : `${DESKTOP_MULUS_OFFSET}em` },
+          { duration: SPLIT_DURATION, ease: 'easeOut' }
         )
       )
 
@@ -104,35 +142,29 @@ export default function TextAnimation() {
       await Promise.all([
         animate(
           ght,
-          { opacity: [0, 1], x: [-12, 0] },
-          { duration: 0.5, delay: stagger(0.05), ease: 'easeOut' }
+          { opacity: [0, 1], x: [-EXPANSION_X_OFFSET, 0] },
+          { duration: EXPANSION_DURATION, delay: stagger(EXPANSION_STAGGER), ease: 'easeOut' }
         ),
         animate(
           sti,
-          { opacity: [0, 1], x: [12, 0] },
-          { duration: 0.5, delay: stagger(0.05), ease: 'easeOut' }
+          { opacity: [0, 1], x: [EXPANSION_X_OFFSET, 0] },
+          { duration: EXPANSION_DURATION, delay: stagger(EXPANSION_STAGGER), ease: 'easeOut' }
         ),
       ])
 
       /* --------------------------------
-         4) Color new letters orange
+         4) Color change
       -------------------------------- */
-      // animate(
-      //   [...ght, ...sti],
-      //   { color: 'var(--color-accent-secondary)' },
-      //   { duration: 0.35, ease: 'easeOut' }
-      // )
-
       animate(
         initialLetters, // LI + MULUS
         { color: 'var(--color-accent-secondary)' },
-        { duration: 0.6, ease: 'easeOut' }
+        { duration: COLOR_CHANGE_DURATION, ease: 'easeOut' }
       )
 
       animate(
         [...ght, ...sti], // expanding letters
         { color: 'currentColor' },
-        { duration: 0.6, ease: 'easeOut' }
+        { duration: COLOR_CHANGE_DURATION, ease: 'easeOut' }
       )
 
       /* --------------------------------
@@ -148,7 +180,7 @@ export default function TextAnimation() {
             'drop-shadow(0 0 24px var(--color-accent-secondary))',
           ],
         },
-        { duration: 0.4, ease: 'easeOut' }
+        { duration: GLOW_FADE_IN_DURATION, ease: 'easeOut' }
       )
 
       // Fade to soft glow
@@ -160,7 +192,7 @@ export default function TextAnimation() {
             'drop-shadow(0 0 6px var(--color-accent-secondary))',
           ],
         },
-        { duration: 1.0, ease: 'easeOut' }
+        { duration: GLOW_FADE_OUT_DURATION, ease: 'easeOut' }
       )
     }
 

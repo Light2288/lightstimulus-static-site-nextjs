@@ -4,7 +4,19 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import clsx from 'clsx'
 import { useRef, useEffect, useMemo } from 'react'
 
-/* Config: words & sentence targets (first occurrence only) */
+/**
+ * FixedAnalogyParagraph component
+ *
+ * Displays text with interactive highlighted words and sentences that respond to mouse hover.
+ * Features a glass morphism background with ripple effect that follows the cursor.
+ *
+ * Key features:
+ * - Highlights specific words and sentences configured in WORD_HIGHLIGHTS and SENTENCE_HIGHLIGHTS
+ * - On hover, highlighted text reveals with a gradient mask effect
+ * - Background ripple effect follows cursor position across the entire container
+ * - Uses CSS custom properties (--ripple-x, --ripple-y, --cursor-x, --cursor-y) for smooth animations
+ */
+
 const WORD_HIGHLIGHTS = [
   'limulus',
   'limulo',

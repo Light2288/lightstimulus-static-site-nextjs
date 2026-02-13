@@ -6,12 +6,8 @@ import Footer from '@/components/common/Footer'
 import SectionContainer from '@/components/SectionContainer'
 import { ThemeProviders } from '@/app/theme-providers'
 import { LanguageProvider } from '@/contexts/LanguageContext'
-import { PreferencesService } from '@/lib/preferences/PreferencesService'
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const theme = PreferencesService.getPref('theme') || 'system'
-  const lang = PreferencesService.getPref('lang') || 'en'
-
   return (
     <ThemeProviders>
       <LanguageProvider>

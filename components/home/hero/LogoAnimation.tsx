@@ -7,6 +7,18 @@ import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoa
 
 gsap.registerPlugin(MotionPathPlugin, DrawSVGPlugin)
 
+// Animation timing constants (in seconds)
+const TAIL_DRAW_DURATION = 1
+const SHELL_DRAW_DURATION = 1.2
+const PULSE_FADE_IN_DURATION = 0.4
+const PULSE_FADE_OUT_DURATION = 1.0
+const PULSE_OPACITY_PEAK = 0.6
+const FINAL_GLOW_OPACITY = 0.2
+
+// SVG droplet dimensions
+const DROPLET_RX = 35
+const DROPLET_RY = 20
+
 export default function LogoAnimation() {
   const svgRef = useRef<SVGSVGElement | null>(null)
 
@@ -41,7 +53,7 @@ export default function LogoAnimation() {
 
       // Soft final glow
       gsap.set(pulseGlowGroup, {
-        opacity: 0.2,
+        opacity: FINAL_GLOW_OPACITY,
       })
       return
     }
@@ -53,8 +65,8 @@ export default function LogoAnimation() {
     // Utility function for moving droplets along the paths
     function createDrop() {
       const drop = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
-      drop.setAttribute('rx', '35')
-      drop.setAttribute('ry', '20')
+      drop.setAttribute('rx', String(DROPLET_RX))
+      drop.setAttribute('ry', String(DROPLET_RY))
       drop.setAttribute('fill', 'url(#dropGradient)')
       drop.setAttribute('filter', 'url(#glow)')
       svg.appendChild(drop)
@@ -93,11 +105,11 @@ export default function LogoAnimation() {
     const tl = gsap.timeline({ defaults: { ease: 'none' } })
 
     // 1. Tail
-    tl.fromTo(tail, { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 1 }, 0)
+    tl.fromTo(tail, { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: TAIL_DRAW_DURATION }, 0)
     tl.to(
       tailDrop,
       {
-        duration: 1,
+        duration: TAIL_DRAW_DURATION,
         motionPath: {
           path: tail,
           align: tail,
@@ -120,7 +132,7 @@ export default function LogoAnimation() {
     tl.fromTo(
       [leftShell, rightShell],
       { drawSVG: '0% 0%' },
-      { drawSVG: '0% 100%', duration: 1.2 },
+      { drawSVG: '0% 100%', duration: SHELL_DRAW_DURATION },
       'shellsStart'
     )
 
@@ -133,7 +145,7 @@ export default function LogoAnimation() {
     tl.to(
       leftDrop,
       {
-        duration: 1.2,
+        duration: SHELL_DRAW_DURATION,
         motionPath: {
           path: leftShell,
           align: leftShell,
@@ -149,7 +161,7 @@ export default function LogoAnimation() {
     tl.to(
       rightDrop,
       {
-        duration: 1.2,
+        duration: SHELL_DRAW_DURATION,
         motionPath: {
           path: rightShell,
           align: rightShell,
@@ -174,10 +186,10 @@ export default function LogoAnimation() {
         pulseGlowGroup,
         { opacity: 0 },
         {
-          opacity: 0.6,
-          duration: 0.4,
+          opacity: PULSE_OPACITY_PEAK,
+          duration: PULSE_FADE_IN_DURATION,
           onComplete: () => {
-            gsap.to(pulseGlowGroup, { opacity: 0, duration: 1 })
+            gsap.to(pulseGlowGroup, { opacity: 0, duration: PULSE_FADE_OUT_DURATION })
           },
         }
       )

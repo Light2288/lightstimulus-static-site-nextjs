@@ -73,6 +73,7 @@ export default function ProjectCardBase({
                 src={coverImage}
                 width={600}
                 height={360}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
                 className={clsx('w-full object-cover', small ? 'h-40' : 'h-48')}
               />
             </motion.div>

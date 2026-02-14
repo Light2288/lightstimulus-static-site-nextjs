@@ -46,6 +46,7 @@ export default function AboutProfile({ name, avatar, occupation, company, social
             alt={name ?? 'Avatar'}
             width={144}
             height={144}
+            sizes="144px"
             className="h-36 w-36 rounded-full"
           />
         </motion.div>

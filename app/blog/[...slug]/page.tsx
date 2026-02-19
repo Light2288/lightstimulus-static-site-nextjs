@@ -130,6 +130,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   return (
     <>
       {/* Article structured data */}
+      {/* SEO schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

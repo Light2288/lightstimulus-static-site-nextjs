@@ -31,7 +31,6 @@ export default function BlogPostLayout({ content, next, prev, children }: BlogPo
             </div>
           )}
 
-          {/* Client-side language-dependent header content */}
           <BlogPostHeaderClient content={content} />
         </header>
 

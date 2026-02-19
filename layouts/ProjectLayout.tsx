@@ -24,7 +24,6 @@ export default function ProjectLayout({ content, children }: ProjectLayoutProps)
           <div className="prose dark:prose-invert max-w-none">{children}</div>
         </div>
 
-        {/* Client component for language-dependent back link */}
         <ProjectLayoutClient />
       </article>
     </SectionContainer>

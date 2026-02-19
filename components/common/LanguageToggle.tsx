@@ -29,7 +29,7 @@ export default function LanguageToggle() {
 
   return (
     <button
-      aria-label={`Toggle language (current: ${label})`}
+      aria-label={lang === 'en' ? 'Switch to Italian' : "Passa all'inglese"}
       onClick={toggleLang}
       className="relative inline-flex items-center gap-x-2 rounded px-2 py-1 text-sm font-medium hover:bg-[color:var(--color-accent-primary-light)]/10 focus:outline-2 focus:outline-[color:var(--color-accent-primary-light)] dark:hover:bg-[color:var(--color-accent-primary-dark)]/10"
     >

@@ -1,15 +1,36 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Link from '../Link'
-import MobileNav from '../MobileNav'
 import ThemeToggle from './ThemeToggle'
 import SearchButton from '../SearchButton'
 import LanguageToggle from './LanguageToggle'
 import { useLanguage } from '@/contexts/LanguageContext'
 import LogoStatic from '@/components/common/LogoStatic'
+
+// Dynamic import for MobileNav - only loaded on mobile devices
+const MobileNav = dynamic(() => import('../MobileNav'), {
+  ssr: false,
+  loading: () => (
+    <button aria-label="Toggle Menu" className="sm:hidden">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        className="h-8 w-8 text-gray-900 dark:text-gray-100"
+      >
+        <path
+          fillRule="evenodd"
+          d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </button>
+  ),
+})
 
 /**
  * Header

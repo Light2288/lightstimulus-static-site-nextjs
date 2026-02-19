@@ -4,14 +4,8 @@ import type { Project } from 'contentlayer/generated'
 
 import SectionContainer from '@/components/SectionContainer'
 import ProjectHeader from '@/components/projects/ProjectHeader'
-import dynamic from 'next/dynamic'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import ProjectLayoutClient from '@/components/projects/ProjectLayoutClient'
-
-// Dynamic import for ScrollTopAndComment - reduces initial bundle size
-// Component is not needed for SEO and can load after initial render
-const ScrollTopAndComment = dynamic(() => import('@/components/ScrollTopAndComment'), {
-  ssr: false,
-})
 
 interface ProjectLayoutProps {
   content: CoreContent<Project>

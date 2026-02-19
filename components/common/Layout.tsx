@@ -14,7 +14,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="flex min-h-screen flex-col bg-[var(--color-bg-light)] text-[var(--color-text-light)] transition-colors duration-300 dark:bg-[var(--color-bg-dark)] dark:text-[var(--color-text-dark)]">
           <Header />
           <SectionContainer>
-            <main className="flex-1 pt-16">{children}</main>
+            <main id="main-content" className="flex-1 pt-16">
+              {children}
+            </main>
           </SectionContainer>
           <Footer />
         </div>

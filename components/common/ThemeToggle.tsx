@@ -46,10 +46,17 @@ export default function ThemeToggle() {
         ? 'Light'
         : 'Dark'
 
+  const getAriaLabel = () => {
+    if (!mounted) return 'Toggle theme'
+    if (theme === 'light') return 'Switch to dark mode'
+    if (theme === 'dark') return 'Switch to system theme'
+    return 'Switch to light mode' // system
+  }
+
   return (
     <div className="group relative flex items-center">
       <button
-        aria-label={`Toggle theme (current: ${label})`}
+        aria-label={getAriaLabel()}
         onClick={handleToggle}
         className="relative flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-transparent text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
       >

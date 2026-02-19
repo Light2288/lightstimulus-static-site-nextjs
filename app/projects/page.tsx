@@ -4,7 +4,11 @@ import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import ProjectsListClient from '@/components/projects/ProjectsListClient'
 import { Suspense } from 'react'
 
-export const metadata = genPageMetadata({ title: 'Projects' })
+export const metadata = genPageMetadata({
+  title: 'Projects',
+  description:
+    'Explore my portfolio of projects spanning AR/VR, computer vision, machine learning, mobile development, and experimental interfaces.',
+})
 
 export default function ProjectsPage() {
   const projects = allCoreContent(sortPosts(allProjects))

@@ -1,6 +1,12 @@
 import Image from '@/components/Image'
-import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import dynamic from 'next/dynamic'
 import BlogPostHeaderClient from '@/components/blog/BlogPostHeaderClient'
+
+// Dynamic import for ScrollTopAndComment - reduces initial bundle size
+// Component is not needed for SEO and can load after initial render
+const ScrollTopAndComment = dynamic(() => import('@/components/ScrollTopAndComment'), {
+  ssr: false,
+})
 import BlogPostNavigationClient from '@/components/blog/BlogPostNavigationClient'
 import { ReactNode } from 'react'
 import { Blog } from 'contentlayer/generated'

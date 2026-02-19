@@ -7,6 +7,7 @@ import { allProjects } from 'contentlayer/generated'
 import { coreContent } from 'pliny/utils/contentlayer'
 
 import { genPageMetadata } from '@/app/seo'
+import siteMetadata from '@/data/siteMetadata'
 import ProjectLayout from '@/layouts/ProjectLayout'
 import ProjectContent from '@/components/projects/ProjectContent'
 
@@ -54,6 +55,32 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const content = coreContent(project)
 
+  // Breadcrumb structured data for SEO
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteMetadata.siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Projects',
+        item: `${siteMetadata.siteUrl}/projects`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: project.title?.en || project.title,
+        item: `${siteMetadata.siteUrl}/projects/${project.slug}`,
+      },
+    ],
+  }
+
   return (
     <>
       {project.structuredData && (
@@ -64,6 +91,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           }}
         />
       )}
+
+      {/* Breadcrumb structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd),
+        }}
+      />
 
       <ProjectLayout content={content}>
         <ProjectContent code={project.body.code} />

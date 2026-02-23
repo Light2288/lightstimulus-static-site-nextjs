@@ -1,4 +1,9 @@
-const headerNavLinks = [
+export interface NavLink {
+  href: string
+  title: string
+}
+
+const headerNavLinks: NavLink[] = [
   { href: '/', title: 'Home' },
   { href: '/projects', title: 'Projects' },
   { href: '/blog', title: 'Blog' },

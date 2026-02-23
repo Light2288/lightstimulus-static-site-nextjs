@@ -1,4 +1,4 @@
-export function detectRefreshOrFirstLoad(key: string) {
+export function detectRefreshOrFirstLoad(key: string): boolean {
   const prev = sessionStorage.getItem(key)
   const now = Date.now()
 

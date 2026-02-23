@@ -68,6 +68,14 @@ module.exports = () => {
     reactStrictMode: true,
     trailingSlash: false,
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+
+    // Performance optimizations
+    swcMinify: true, // Ensure SWC minifier is used (default in Next.js 13+)
+    compress: true, // Enable gzip compression
+    generateEtags: true, // Generate ETags for better caching
+    poweredByHeader: false, // Remove X-Powered-By header for security
+    productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
+
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
     },

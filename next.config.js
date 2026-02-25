@@ -86,6 +86,8 @@ module.exports = () => {
           hostname: 'picsum.photos',
         },
       ],
+      // For static export, we need to disable optimization or use a custom loader
+      // Since we're pre-compressing images, we can safely use unoptimized
       unoptimized: true,
     },
     async headers() {

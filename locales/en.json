@@ -61,11 +61,11 @@
   "home": {
     "projects": {
       "title": "Featured Projects",
-      "view_all": "View all "
+      "view_all": "View all projects"
     },
     "blog": {
       "title": "Latest blog posts",
-      "view_all": "View all"
+      "view_all": "View all posts"
     }
   },
   "nav": {

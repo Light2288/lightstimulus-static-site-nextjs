@@ -45,3 +45,6 @@ yarn-error.log*
 
 # Contentlayer
 .contentlayer
+
+# Image optimization backups
+public/static/images/original-backups/

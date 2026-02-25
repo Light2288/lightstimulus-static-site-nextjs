@@ -68,11 +68,11 @@
   "home": {
     "projects": {
       "title": "Progetti in evidenza",
-      "view_all": "Vedi tutti"
+      "view_all": "Vedi tutti i progetti"
     },
     "blog": {
       "title": "Ultimi articoli dal blog",
-      "view_all": "Vedi tutti"
+      "view_all": "Vedi tutti gli articoli"
     }
   },
   "projects": {

@@ -17,7 +17,7 @@ export default function Footer() {
       </div>
 
       {/* Metadata */}
-      <div className="flex flex-wrap justify-center gap-2 text-center text-xs sm:text-sm">
+      <div className="flex flex-wrap justify-center gap-2 text-center text-xs text-gray-700 sm:text-sm dark:text-gray-300">
         <span>{siteMetadata.author}</span>
         <span>•</span>
         <span>© {year}</span>
@@ -30,7 +30,7 @@ export default function Footer() {
         </Link>
       </div>
 
-      <div className="text-primary-500 dark:text-primary-500 animate-heartbeat mt-4 text-center text-xs transition-opacity duration-300 hover:opacity-90">
+      <div className="animate-heartbeat mt-4 text-center text-xs text-gray-700 transition-opacity duration-300 hover:opacity-90 dark:text-gray-300">
         Built with ❤️ using{' '}
         <a
           href="https://nextjs.org/"

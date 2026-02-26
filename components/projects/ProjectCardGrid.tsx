@@ -10,9 +10,18 @@ interface Props {
   coverImage?: string
   date: string
   tags?: LocalizedTag[]
+  priority?: boolean
 }
 
-export default function ProjectCardGrid({ href, title, summary, coverImage, date, tags }: Props) {
+export default function ProjectCardGrid({
+  href,
+  title,
+  summary,
+  coverImage,
+  date,
+  tags,
+  priority,
+}: Props) {
   return (
     <ProjectCardBase
       href={href}
@@ -21,6 +30,7 @@ export default function ProjectCardGrid({ href, title, summary, coverImage, date
       coverImage={coverImage}
       date={date}
       tags={tags}
+      priority={priority}
     />
   )
 }

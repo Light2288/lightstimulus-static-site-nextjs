@@ -9,8 +9,8 @@ const IMAGES_ROOT = path.join(PROJECT_ROOT, 'public', 'static', 'images')
 
 const JPEG_QUALITY = 82
 const PNG_QUALITY = 85
-const MAX_WIDTH = 2400
-const MAX_HEIGHT = 2400
+const MAX_WIDTH = 1000
+const MAX_HEIGHT = 1000
 
 // Directories to exclude from compression
 const EXCLUDE_DIRS = ['original-backups']

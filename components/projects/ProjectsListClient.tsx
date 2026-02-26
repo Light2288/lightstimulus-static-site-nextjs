@@ -24,17 +24,21 @@ export default function ProjectsListClient({ projects }: Props) {
       title={t('projects.title')}
       description={t('projects.description')}
       getItemTags={(project) => project.tags as LocalizedTag[]}
-      renderItem={(project) => (
-        <ProjectCardGrid
-          key={project.slug}
-          href={`/projects/${project.slug}`}
-          title={project.title?.[lang] ?? project.title?.en}
-          summary={project.summary?.[lang] ?? project.summary?.en}
-          coverImage={project.coverImage}
-          date={project.date}
-          tags={project.tags as LocalizedTag[]}
-        />
-      )}
+      renderItem={(project) => {
+        const index = projects.findIndex((p) => p.slug === project.slug)
+        return (
+          <ProjectCardGrid
+            key={project.slug}
+            href={`/projects/${project.slug}`}
+            title={project.title?.[lang] ?? project.title?.en}
+            summary={project.summary?.[lang] ?? project.summary?.en}
+            coverImage={project.coverImage}
+            date={project.date}
+            tags={project.tags as LocalizedTag[]}
+            priority={index === 0}
+          />
+        )
+      }}
     />
   )
 }

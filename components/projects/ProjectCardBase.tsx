@@ -16,6 +16,7 @@ interface Props {
   date?: string
   tags?: LocalizedTag[]
   small?: boolean
+  priority?: boolean
 }
 
 export default function ProjectCardBase({
@@ -26,6 +27,7 @@ export default function ProjectCardBase({
   date,
   tags = [],
   small = false,
+  priority = false,
 }: Props) {
   const { lang } = useLanguage()
 
@@ -46,7 +48,6 @@ export default function ProjectCardBase({
         'shadow-md transition-shadow hover:shadow-xl'
       )}
     >
-      {/* Image */}
       {coverImage && (
         <Link href={href} aria-label={title} className="relative block">
           <div className="relative overflow-hidden">
@@ -74,6 +75,8 @@ export default function ProjectCardBase({
                 width={600}
                 height={360}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                priority={priority}
+                fetchPriority={priority ? 'high' : 'auto'}
                 className={clsx('w-full object-cover', small ? 'h-40' : 'h-48')}
               />
             </motion.div>
@@ -83,7 +86,6 @@ export default function ProjectCardBase({
         </Link>
       )}
 
-      {/* Content */}
       <div className="p-5">
         <h3 className="mb-2 text-lg leading-snug font-semibold">
           <Link
@@ -98,12 +100,11 @@ export default function ProjectCardBase({
           {summary}
         </p>
 
-        {/* Tags */}
         {tags.length > 0 && (
           <ul className="mt-4 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <li key={tag.id}>
-                <Tag key={tag.id} tag={tag} />
+                <Tag tag={tag} />
               </li>
             ))}
           </ul>

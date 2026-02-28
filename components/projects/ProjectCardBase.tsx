@@ -87,14 +87,14 @@ export default function ProjectCardBase({
       )}
 
       <div className="p-5">
-        <h3 className="mb-2 text-lg leading-snug font-semibold">
+        <h2 className="mb-2 text-lg leading-snug font-semibold">
           <Link
             href={href}
             className="bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-transparent"
           >
             {title}
           </Link>
-        </h3>
+        </h2>
 
         <p className="text-text-secondary dark:text-text-secondary-dark line-clamp-3 text-sm leading-relaxed">
           {summary}

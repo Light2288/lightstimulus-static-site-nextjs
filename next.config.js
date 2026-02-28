@@ -76,6 +76,17 @@ module.exports = () => {
     poweredByHeader: false, // Remove X-Powered-By header for security
     productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
 
+    // Compiler options for modern browsers (reduces polyfills)
+    compiler: {
+      // Remove console logs in production
+      removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+    },
+
+    // Target modern browsers to reduce transpilation
+    experimental: {
+      // Already using modern target via browserslist
+    },
+
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
     },

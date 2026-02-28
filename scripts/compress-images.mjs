@@ -9,11 +9,15 @@ const IMAGES_ROOT = path.join(PROJECT_ROOT, 'public', 'static', 'images')
 
 const JPEG_QUALITY = 82
 const PNG_QUALITY = 85
+const WEBP_QUALITY = 80
 const MAX_WIDTH = 1000
 const MAX_HEIGHT = 1000
 
+// Responsive image widths to generate
+const RESPONSIVE_WIDTHS = [640, 800, 1000]
+
 // Directories to exclude from compression
-const EXCLUDE_DIRS = ['original-backups']
+const EXCLUDE_DIRS = ['original-backups', 'responsive']
 
 async function compressImage(filePath, relativePath) {
   const fileName = path.basename(filePath)
@@ -31,7 +35,7 @@ async function compressImage(filePath, relativePath) {
     try {
       await fs.access(backupPath)
       console.log(`  ⊘ Already processed, skipping`)
-      return
+      return { skipped: true }
     } catch {
       // Backup doesn't exist, proceed with compression
     }
@@ -43,7 +47,16 @@ async function compressImage(filePath, relativePath) {
     const metadata = await sharp(filePath).metadata()
     const needsResize = metadata.width > MAX_WIDTH || metadata.height > MAX_HEIGHT
     const ext = path.extname(filePath).toLowerCase()
+    const fileNameWithoutExt = path.basename(fileName, ext)
 
+    // Create responsive variants directory
+    const responsiveDir = path.join(path.dirname(filePath), 'responsive')
+    await fs.mkdir(responsiveDir, { recursive: true })
+
+    let totalSavings = 0
+    const originalSize = (await fs.stat(backupPath)).size
+
+    // 1. Compress original/main image
     let sharpInstance = sharp(filePath).resize(
       needsResize ? MAX_WIDTH : undefined,
       needsResize ? MAX_HEIGHT : undefined,
@@ -70,20 +83,69 @@ async function compressImage(filePath, relativePath) {
     }
 
     await sharpInstance.toFile(filePath + '.tmp')
-
-    // Replace original with compressed version
     await fs.rename(filePath + '.tmp', filePath)
 
-    // Get file sizes
-    const originalSize = (await fs.stat(backupPath)).size
     const compressedSize = (await fs.stat(filePath)).size
-    const savings = ((1 - compressedSize / originalSize) * 100).toFixed(1)
+    totalSavings += originalSize - compressedSize
+
+    // 2. Generate responsive variants (JPEG/PNG)
+    for (const width of RESPONSIVE_WIDTHS) {
+      if (width >= metadata.width) continue // Skip if original is smaller
+
+      const variantPath = path.join(responsiveDir, `${fileNameWithoutExt}-${width}w${ext}`)
+
+      let variantSharp = sharp(backupPath).resize(width, null, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+
+      if (ext === '.png') {
+        variantSharp = variantSharp.png({
+          quality: PNG_QUALITY,
+          compressionLevel: 9,
+          palette: true,
+        })
+      } else {
+        variantSharp = variantSharp.jpeg({
+          quality: JPEG_QUALITY,
+          progressive: true,
+          mozjpeg: true,
+        })
+      }
+
+      await variantSharp.toFile(variantPath)
+    }
+
+    // 3. Generate WebP variants for all sizes
+    const webpSizes = RESPONSIVE_WIDTHS.filter((w) => w < metadata.width)
+    webpSizes.push(Math.min(metadata.width, MAX_WIDTH)) // Add original size
+
+    for (const width of webpSizes) {
+      const variantPath = path.join(responsiveDir, `${fileNameWithoutExt}-${width}w.webp`)
+
+      await sharp(backupPath)
+        .resize(width, null, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .webp({
+          quality: WEBP_QUALITY,
+          effort: 6,
+        })
+        .toFile(variantPath)
+    }
+
+    const savings = ((totalSavings / originalSize) * 100).toFixed(1)
 
     console.log(
       `  ✓ ${formatBytes(originalSize)} → ${formatBytes(compressedSize)} (${savings}% smaller)`
     )
+    console.log(`  ✓ Generated ${webpSizes.length} WebP variants + responsive sizes`)
+
+    return { processed: true, originalSize, compressedSize }
   } catch (error) {
     console.error(`  ✗ Error: ${error.message}`)
+    return { error: true }
   }
 }
 
@@ -120,7 +182,7 @@ async function findImages(dir, baseDir = dir) {
 }
 
 async function compressAllImages() {
-  console.log('🖼️  Starting image compression for all static images...\n')
+  console.log('🖼️  Starting image compression + responsive variant generation...\n')
 
   // Find all images recursively
   const images = await findImages(IMAGES_ROOT)
@@ -138,33 +200,20 @@ async function compressAllImages() {
   let totalCompressedSize = 0
 
   for (const { fullPath, relativePath } of images) {
-    await compressImage(fullPath, relativePath)
+    const result = await compressImage(fullPath, relativePath)
 
-    // Check if file was processed by comparing with backup
-    const fileName = path.basename(fullPath)
-    const dirName = path.dirname(relativePath)
-    const backupPath = path.join(IMAGES_ROOT, 'original-backups', dirName, fileName)
-
-    try {
-      const backupStats = await fs.stat(backupPath)
-      const currentStats = await fs.stat(fullPath)
-
-      if (backupStats.mtimeMs < currentStats.mtimeMs) {
-        processed++
-        totalOriginalSize += backupStats.size
-        totalCompressedSize += currentStats.size
-      } else {
-        skipped++
-      }
-    } catch {
-      // Backup doesn't exist, likely skipped
+    if (result?.skipped) {
       skipped++
+    } else if (result?.processed) {
+      processed++
+      totalOriginalSize += result.originalSize
+      totalCompressedSize += result.compressedSize
     }
   }
 
-  console.log('\n' + '='.repeat(50))
-  console.log('✅ Image compression complete!')
-  console.log('='.repeat(50))
+  console.log('\n' + '='.repeat(60))
+  console.log('✅ Image optimization complete!')
+  console.log('='.repeat(60))
   console.log(`📊 Processed: ${processed} images`)
   console.log(`⊘ Skipped: ${skipped} images (already compressed)`)
 
@@ -176,6 +225,7 @@ async function compressAllImages() {
   }
 
   console.log(`💡 Original images backed up to: public/static/images/original-backups/`)
+  console.log(`📁 Responsive variants saved to: [image-dir]/responsive/`)
 }
 
 compressAllImages().catch(console.error)

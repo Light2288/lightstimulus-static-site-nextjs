@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_15_copy" data-name="Layer 15 copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <path id="left-shell" d="m512,76.33c-73.04.02-146.08,23.3-202.58,69.79-112.92,92.93-147.5,268.52-76.74,400.3,6.7-13.98,26.97-53.27,53.57-75.98,28.95-24.73,71.93-34.27,70.35-31.33l.56.38c.19.19.37.37-.19,3.86-.06,16.98,10.12,54.82,21.66,67.17,26.33,28.23,56.66,34.2,70.61,52.94" fill="none" stroke="#f07c23" stroke-linecap="round" stroke-miterlimit="10" stroke-width="16"/>
-  <path id="right-shell" d="m512,76.33c73.04.02,146.08,23.3,202.58,69.79,112.92,92.93,147.5,268.52,76.74,400.3-6.7-13.98-26.97-53.27-53.57-75.98-28.95-24.73-71.93-34.27-70.35-31.33l-.56.38c-.19.19-.37.37.19,3.86.06,16.98-10.12,54.82-21.66,67.17-26.33,28.23-56.66,34.2-70.61,52.94" fill="none" stroke="#f07c23" stroke-linecap="round" stroke-miterlimit="10" stroke-width="16"/>
-  <line id="tail" x1="512.55" y1="82.34" x2="512.55" y2="947.67" fill="none" stroke="#f07c23" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="16"/>
-</svg>

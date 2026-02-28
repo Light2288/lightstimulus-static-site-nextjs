@@ -8,9 +8,16 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-16 flex flex-col items-center border-t border-gray-200/40 bg-[var(--color-bg-light)] py-8 text-sm text-gray-600 transition-colors duration-300 dark:border-gray-700/40 dark:bg-[var(--color-bg-dark)] dark:text-gray-400">
+    <footer
+      className="mt-16 flex flex-col items-center border-t border-gray-200/40 bg-[var(--color-bg-light)] py-8 text-sm text-gray-600 transition-colors duration-300 dark:border-gray-700/40 dark:bg-[var(--color-bg-dark)] dark:text-gray-400"
+      style={{
+        minHeight: '200px',
+        contain: 'layout',
+        contentVisibility: 'auto',
+      }}
+    >
       {/* Social Icons */}
-      <div className="mb-4 flex flex-wrap justify-center gap-5">
+      <div className="mb-4 flex flex-wrap justify-center gap-5" style={{ contain: 'layout style' }}>
         <SocialIcon kind="mail" href={`mailto:${siteMetadata.email}`} size={6} />
         <SocialIcon kind="github" href={siteMetadata.github} size={6} />
         <SocialIcon kind="linkedin" href={siteMetadata.linkedin} size={6} />

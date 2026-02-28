@@ -1,9 +1,12 @@
 # Browsers that we support
 
 # Modern browsers with good ES2022 support
-> 0.5%
+>0.5%
 last 2 versions
-Firefox ESR
 not dead
+not IE 11
+not op_mini all
+not android < 5
+not samsung < 10
 not IE 11
 not op_mini all

@@ -49,7 +49,7 @@ export default function ProjectLinks({ project }: ProjectLinksProps) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 flex items-center gap-2"
+              className="text-primary-600 hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200 flex items-center gap-2"
             >
               <Icon className="h-4 w-4" />
               <span>{t(`projects.links.${key}`)}</span>

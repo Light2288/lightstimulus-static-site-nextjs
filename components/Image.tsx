@@ -4,13 +4,14 @@ const basePath = process.env.BASE_PATH || ''
 
 interface ResponsiveImageProps extends ImageProps {
   src: string
+  fetchpriority?: 'high' | 'low' | 'auto'
 }
 
 /**
  * Enhanced Image component with manual responsive image support for static export
  * Generates srcset with WebP and fallback images for optimal performance
  */
-const Image = ({ src, alt, ...rest }: ResponsiveImageProps) => {
+const Image = ({ src, alt, fetchpriority, ...rest }: ResponsiveImageProps) => {
   // Get the full path with basePath
   const fullSrc = `${basePath}${src}`
 
@@ -48,14 +49,14 @@ const Image = ({ src, alt, ...rest }: ResponsiveImageProps) => {
           sizes={rest.sizes}
         />
 
-        {/* Fallback img tag */}
-        <NextImage src={fullSrc} alt={alt} {...rest} />
+        {/* Fallback img tag with fetchpriority support */}
+        <NextImage src={fullSrc} alt={alt} {...(fetchpriority && { fetchpriority })} {...rest} />
       </picture>
     )
   }
 
-  // For non-static images or other formats, use original behavior
-  return <NextImage src={fullSrc} alt={alt} {...rest} />
+  // For non-static images or other formats, use original behavior with fetchpriority support
+  return <NextImage src={fullSrc} alt={alt} {...(fetchpriority && { fetchpriority })} {...rest} />
 }
 
 export default Image

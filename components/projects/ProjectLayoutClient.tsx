@@ -10,7 +10,7 @@ export default function ProjectLayoutClient() {
     <footer className="pt-12">
       <Link
         href="/projects"
-        className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+        className="text-primary-600 hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200"
         aria-label={t('projects.back')}
       >
         &larr; {t('projects.back')}

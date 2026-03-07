@@ -64,6 +64,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <title>{siteMetadata.title}</title>
 
+        {/* Resource Hints - Preconnect for Google Fonts (faster font loading) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
         {/* Standard Favicons */}
         <link rel="icon" type="image/x-icon" href={`${basePath}/static/favicons/favicon.ico`} />
         <link

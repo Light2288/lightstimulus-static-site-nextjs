@@ -52,7 +52,9 @@ function Pagination({ currentPage, totalPages }: PaginationProps) {
           {`← ${t('common.previous')}`}
         </Link>
       ) : (
-        <span className="opacity-40">← Previous</span>
+        <span className="cursor-not-allowed opacity-60" aria-disabled="true">
+          ← Previous
+        </span>
       )}
 
       <span className="text-sm opacity-70">
@@ -64,7 +66,9 @@ function Pagination({ currentPage, totalPages }: PaginationProps) {
           {`${t('common.next')} →`}
         </Link>
       ) : (
-        <span className="opacity-40">Next →</span>
+        <span className="cursor-not-allowed opacity-60" aria-disabled="true">
+          Next →
+        </span>
       )}
     </nav>
   )

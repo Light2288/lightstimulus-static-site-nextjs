@@ -1,12 +1,24 @@
 # Browsers that we support
+# Target ONLY modern browsers with native ES2022+ support
+# This eliminates unnecessary polyfills and reduces bundle size
 
-# Modern browsers with good ES2022 support
->0.5%
-last 2 versions
+# Modern desktop browsers (2021+)
+last 2 chrome versions
+last 2 firefox versions
+last 2 safari versions
+last 2 edge versions
+
+# Modern mobile browsers
+last 2 ios_saf versions
+last 2 android versions
+
+# Explicitly exclude old browsers
 not dead
 not IE 11
 not op_mini all
-not android < 5
-not samsung < 10
-not IE 11
-not op_mini all
+not android < 90
+not samsung < 15
+not safari < 14
+not firefox < 91
+not chrome < 90
+not edge < 90

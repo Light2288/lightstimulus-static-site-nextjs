@@ -16,8 +16,8 @@ export default function Footer() {
         <SocialIcon kind="linkedin" href={siteMetadata.linkedin} size={6} />
       </div>
 
-      {/* Metadata */}
-      <div className="flex flex-wrap justify-center gap-2 text-center text-xs text-gray-700 sm:text-sm dark:text-gray-300">
+      {/* Metadata - Fixed height to prevent CLS */}
+      <div className="flex h-6 flex-wrap justify-center gap-2 text-center text-xs text-gray-700 sm:text-sm dark:text-gray-300">
         <span>{siteMetadata.author}</span>
         <span>•</span>
         <span>© {year}</span>
@@ -30,7 +30,8 @@ export default function Footer() {
         </Link>
       </div>
 
-      <div className="animate-heartbeat mt-4 text-center text-xs text-gray-700 transition-opacity duration-300 hover:opacity-90 dark:text-gray-300">
+      {/* Built with section - Fixed height to prevent CLS */}
+      <div className="animate-heartbeat mt-4 flex min-h-[3rem] items-center text-center text-xs text-gray-700 transition-opacity duration-300 hover:opacity-90 dark:text-gray-300">
         Built with ❤️ using{' '}
         <a
           href="https://nextjs.org/"

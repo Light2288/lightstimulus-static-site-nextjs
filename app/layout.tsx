@@ -62,8 +62,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
-        <title>{siteMetadata.title}</title>
-
         {/* Standard Favicons */}
         <link rel="icon" type="image/x-icon" href={`${basePath}/static/favicons/favicon.ico`} />
         <link

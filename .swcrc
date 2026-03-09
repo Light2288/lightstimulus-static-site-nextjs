@@ -1,0 +1,42 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "dynamicImport": true
+    },
+    "target": "es2022",
+    "loose": false,
+    "externalHelpers": false,
+    "keepClassNames": true,
+    "transform": {
+      "legacyDecorator": false,
+      "decoratorMetadata": false,
+      "react": {
+        "runtime": "automatic",
+        "pragma": "React.createElement",
+        "pragmaFrag": "React.Fragment",
+        "throwIfNamespace": true,
+        "development": false,
+        "useBuiltins": true
+      }
+    }
+  },
+  "env": {
+    "targets": {
+      "chrome": "90",
+      "firefox": "91",
+      "safari": "14",
+      "edge": "90"
+    },
+    "mode": "entry",
+    "coreJs": "3",
+    "bugfixes": true,
+    "loose": false,
+    "include": [],
+    "exclude": [
+      "transform-typeof-symbol"
+    ]
+  },
+  "minify": false
+}

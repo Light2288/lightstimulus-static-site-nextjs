@@ -82,9 +82,11 @@ module.exports = () => {
       removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
     },
 
-    // Target modern browsers to reduce transpilation
+    // SWC transpilation settings for modern browsers
+    // This is critical for removing polyfills
     experimental: {
-      // Already using modern target via browserslist
+      swcTraceProfiling: false,
+      forceSwcTransforms: false,
     },
 
     eslint: {
@@ -114,6 +116,28 @@ module.exports = () => {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       })
+
+      // Configure SWC to target modern browsers (ES2022)
+      // This prevents polyfills for Array.at, Object.hasOwn, etc.
+      if (options.nextRuntime !== 'edge') {
+        const transpilePackages = config.module.rules.find((rule) => rule.oneOf)
+        if (transpilePackages) {
+          transpilePackages.oneOf.forEach((rule) => {
+            if (rule.use && rule.use.loader === 'next-swc-loader') {
+              if (!rule.use.options) rule.use.options = {}
+              rule.use.options.env = {
+                targets: {
+                  chrome: '90',
+                  firefox: '91',
+                  safari: '14',
+                  edge: '90',
+                },
+                bugfixes: true,
+              }
+            }
+          })
+        }
+      }
 
       return config
     },

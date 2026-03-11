@@ -8,7 +8,7 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-16 flex flex-col items-center border-t border-gray-200/40 bg-[var(--color-bg-light)] py-8 text-sm text-gray-600 transition-colors duration-300 dark:border-gray-700/40 dark:bg-[var(--color-bg-dark)] dark:text-gray-400">
+    <footer className="mt-16 flex min-h-[180px] flex-col items-center border-t border-gray-200/40 bg-[var(--color-bg-light)] py-8 text-sm text-gray-600 transition-colors duration-300 dark:border-gray-700/40 dark:bg-[var(--color-bg-dark)] dark:text-gray-400">
       {/* Social Icons - Fixed height container to prevent CLS */}
       <div className="mb-4 flex h-8 flex-wrap justify-center gap-5">
         <SocialIcon kind="mail" href={`mailto:${siteMetadata.email}`} size={6} />
@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="flex h-6 flex-wrap justify-center gap-2 text-center text-xs text-gray-700 sm:text-sm dark:text-gray-300">
         <span>{siteMetadata.author}</span>
         <span>•</span>
-        <span>© {year}</span>
+        <span suppressHydrationWarning>© {year}</span>
         <span>•</span>
         <Link
           href="/"

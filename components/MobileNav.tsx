@@ -33,14 +33,16 @@ const MobileNav = () => {
       <button aria-label="Toggle Menu" onClick={onToggleNav} className="sm:hidden">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="hover:text-primary-500 dark:hover:text-primary-400 h-8 w-8 text-gray-900 dark:text-gray-100"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="hover:text-primary-500 dark:hover:text-primary-400 h-6 w-6 text-gray-900 dark:text-gray-100"
         >
           <path
-            fillRule="evenodd"
-            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-            clipRule="evenodd"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
           />
         </svg>
       </button>
@@ -78,7 +80,7 @@ const MobileNav = () => {
                   <Link
                     key={link.title}
                     href={link.href}
-                    className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-2xl font-bold tracking-widest text-gray-900 outline outline-0 dark:text-gray-100"
+                    className="hover:text-primary-500 dark:hover:text-primary-400 mb-4 py-2 pr-4 text-lg font-semibold tracking-wide text-gray-900 outline outline-0 dark:text-gray-100"
                     onClick={onToggleNav}
                   >
                     {t(`nav.${link.title.toLowerCase()}`)}

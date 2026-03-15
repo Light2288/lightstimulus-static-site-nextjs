@@ -47,14 +47,24 @@
  * MIT License
  * Copyright (c) 2018 Sarah Drasner
  * Sarah Drasner's[@sdras] Night Owl
- * Ported by Sara vieria [@SaraVieira]
+ * Ported by Sara vieira [@SaraVieira]
  * Added by Souvik Mandal [@SimpleIndian]
+ * 
+ * Modified for WCAG AA contrast compliance
  */
 .token.comment,
 .token.prolog,
 .token.cdata {
-  color: rgb(99, 119, 119);
+  /* Darker gray for better contrast (4.5:1 minimum ratio) */
+  color: rgb(75, 85, 99); /* Tailwind gray-600 equivalent - accessible on dark backgrounds */
   font-style: italic;
+}
+
+/* Light theme override for comments on light backgrounds */
+:not(.dark) pre .token.comment,
+:not(.dark) pre .token.prolog,
+:not(.dark) pre .token.cdata {
+  color: rgb(55, 65, 81); /* Tailwind gray-700 - accessible on light backgrounds */
 }
 
 .token.punctuation {

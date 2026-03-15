@@ -265,14 +265,17 @@ pre {
   /* Prose / typography */
   .prose {
     & a {
-      color: var(--color-primary-500);
+      /* Match tag pattern: darker in light mode, same as tags */
+      color: var(--color-primary-700);
+      text-decoration-color: var(--color-primary-500);
 
       &:hover {
-        color: var(--color-primary-600);
+        color: var(--color-primary-800);
+        text-decoration-color: var(--color-primary-600);
       }
 
       & code {
-        color: var(--color-primary-400);
+        color: var(--color-primary-700);
       }
     }
 
@@ -286,25 +289,66 @@ pre {
     }
 
     & :where(code):not(pre code) {
-      color: var(--color-indigo-500);
+      /* Darker color for better contrast + subtle background */
+      color: var(--color-primary-800);
+      background-color: var(--color-gray-100);
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+      font-size: 0.875em;
+    }
+  }
+
+  /* Dark mode overrides for prose (matches tag pattern) */
+  .dark .prose {
+    & a {
+      /* Lighter color for dark mode, matching tags */
+      color: var(--color-primary-300);
+      text-decoration-color: var(--color-primary-400);
+
+      &:hover {
+        color: var(--color-primary-200);
+        text-decoration-color: var(--color-primary-300);
+      }
+
+      & code {
+        color: var(--color-primary-300);
+      }
+    }
+
+    & :where(code):not(pre code) {
+      /* Lighter inline code for dark mode */
+      color: var(--color-primary-200);
+      background-color: var(--color-gray-800);
     }
   }
 
   .prose-invert {
     & a {
-      color: var(--color-primary-500);
+      /* Match tag pattern: lighter in dark mode, use same ramp as light mode */
+      color: var(--color-primary-300);
+      text-decoration-color: var(--color-primary-400);
 
       &:hover {
-        color: var(--color-primary-400);
+        color: var(--color-primary-200);
+        text-decoration-color: var(--color-primary-300);
       }
 
       & code {
-        color: var(--color-primary-400);
+        color: var(--color-primary-300);
       }
     }
 
     & :where(h1, h2, h3, h4, h5, h6) {
       color: var(--color-gray-100);
+    }
+
+    & :where(code):not(pre code) {
+      /* Lighter inline code for dark mode, matching link pattern */
+      color: var(--color-primary-200);
+      background-color: var(--color-gray-800);
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+      font-size: 0.875em;
     }
   }
 

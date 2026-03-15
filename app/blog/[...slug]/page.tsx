@@ -1,13 +1,15 @@
+// Import CSS only when needed (these will be extracted and optimized by Next.js)
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
+// Use specific imports to enable better tree-shaking
 import { components } from '@/components/MDXComponents'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
 import { allBlogs, allAuthors } from 'contentlayer/generated'
 import type { Authors, Blog } from 'contentlayer/generated'
 import BlogPostLayout from '@/layouts/BlogPostLayout'
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
 
@@ -23,7 +25,12 @@ export async function generateMetadata(props: {
   const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
 
-  if (!post) return
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+      description: 'The requested blog post could not be found.',
+    }
+  }
 
   const authorList = post.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -44,24 +51,30 @@ export async function generateMetadata(props: {
     url: img && img.includes('http') ? img : siteMetadata.siteUrl + img,
   }))
 
+  // Ensure title is a string (handle multilingual content)
+  const pageTitle = typeof post.title === 'string' ? post.title : post.title?.en || 'Blog Post'
+  const pageDescription =
+    typeof post.summary === 'string' ? post.summary : post.summary?.en || siteMetadata.description
+
   return {
-    title: post.title,
-    description: post.summary,
+    title: pageTitle,
+    description: pageDescription,
     openGraph: {
-      title: post.title,
-      description: post.summary,
+      title: pageTitle,
+      description: pageDescription,
       siteName: siteMetadata.title,
       locale: 'en_US',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
+      url: `${siteMetadata.siteUrl}/blog/${slug}`,
       images: ogImages,
       authors: authors.length > 0 ? authors : [siteMetadata.author],
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.summary,
+      title: pageTitle,
+      description: pageDescription,
       images: imageList,
     },
   }

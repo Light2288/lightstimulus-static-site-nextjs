@@ -52,19 +52,18 @@
  * 
  * Modified for WCAG AA contrast compliance
  */
+
+/* Ensure pre elements have dark backgrounds for Night Owl theme */
+pre {
+  background-color: rgb(1, 22, 39) !important; /* Night Owl background */
+}
+
 .token.comment,
 .token.prolog,
 .token.cdata {
-  /* Darker gray for better contrast (4.5:1 minimum ratio) */
-  color: rgb(75, 85, 99); /* Tailwind gray-600 equivalent - accessible on dark backgrounds */
+  /* Lighter color for dark code block backgrounds */
+  color: rgb(153, 153, 153); /* Light gray - good contrast on dark backgrounds */
   font-style: italic;
-}
-
-/* Light theme override for comments on light backgrounds */
-:not(.dark) pre .token.comment,
-:not(.dark) pre .token.prolog,
-:not(.dark) pre .token.cdata {
-  color: rgb(55, 65, 81); /* Tailwind gray-700 - accessible on light backgrounds */
 }
 
 .token.punctuation {

@@ -35,7 +35,8 @@ export default function BlogPostLayout({ content, next, prev, children }: BlogPo
                 priority
                 fetchPriority="high"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                quality={90}
+                quality={85}
+                loading="eager"
               />
             </div>
           )}

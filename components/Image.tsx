@@ -10,6 +10,7 @@ interface ResponsiveImageProps extends ImageProps {
 /**
  * Enhanced Image component with manual responsive image support for static export
  * Generates srcset with WebP and fallback images for optimal performance
+ * For small images (< 200px), uses compressed original to avoid unnecessary variants
  */
 const Image = ({ src, alt, fetchpriority, ...rest }: ResponsiveImageProps) => {
   // Get the full path with basePath
@@ -18,6 +19,25 @@ const Image = ({ src, alt, fetchpriority, ...rest }: ResponsiveImageProps) => {
   // Extract image info
   const isStaticImage = src.startsWith('/static/images/')
   const ext = src.substring(src.lastIndexOf('.'))
+
+  // Check if this is a small image that doesn't need responsive variants
+  const displayWidth = typeof rest.width === 'number' ? rest.width : undefined
+  const displayHeight = typeof rest.height === 'number' ? rest.height : undefined
+  const isSmallImage =
+    (displayWidth !== undefined && displayWidth < 200) ||
+    (displayHeight !== undefined && displayHeight < 200)
+
+  // For small images, just use the compressed original without responsive variants
+  if (isSmallImage) {
+    return (
+      <NextImage
+        src={fullSrc}
+        alt={alt}
+        {...(fetchpriority && { fetchPriority: fetchpriority })}
+        {...rest}
+      />
+    )
+  }
 
   // For static images, generate responsive variants
   if (isStaticImage && (ext === '.jpg' || ext === '.jpeg' || ext === '.png')) {
@@ -50,13 +70,25 @@ const Image = ({ src, alt, fetchpriority, ...rest }: ResponsiveImageProps) => {
         />
 
         {/* Fallback img tag with fetchpriority support */}
-        <NextImage src={fullSrc} alt={alt} {...(fetchpriority && { fetchpriority })} {...rest} />
+        <NextImage
+          src={fullSrc}
+          alt={alt}
+          {...(fetchpriority && { fetchPriority: fetchpriority })}
+          {...rest}
+        />
       </picture>
     )
   }
 
   // For non-static images or other formats, use original behavior with fetchpriority support
-  return <NextImage src={fullSrc} alt={alt} {...(fetchpriority && { fetchpriority })} {...rest} />
+  return (
+    <NextImage
+      src={fullSrc}
+      alt={alt}
+      {...(fetchpriority && { fetchPriority: fetchpriority })}
+      {...rest}
+    />
+  )
 }
 
 export default Image

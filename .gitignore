@@ -20,16 +20,19 @@ public/sitemap.xml
 
 # production
 /build
-*.xml
 
 # rss feed
 /public/feed.xml
+public/tags/**/feed.xml
 
 # search
 /public/search.json
 
 # misc
 .DS_Store
+
+# IDE
+.idea/
 
 # debug
 *.log

@@ -76,7 +76,7 @@ export default function ProjectCardBase({
                 height={360}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
                 priority={priority}
-                fetchPriority={priority ? 'high' : 'auto'}
+                fetchpriority={priority ? 'high' : 'auto'}
                 className={clsx('w-full object-cover', small ? 'h-40' : 'h-48')}
               />
             </motion.div>

@@ -15,7 +15,7 @@ export function AboutContactBridge() {
       <div className="mt-4 text-center">
         <Link
           href="/contact"
-          className="inline-block text-sm font-medium text-[var(--color-primary-500)] hover:underline"
+          className="text-primary-600 hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200 inline-block text-sm font-medium hover:underline"
         >
           {t('about.contact_bridge.link')}
         </Link>

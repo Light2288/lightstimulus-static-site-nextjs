@@ -89,7 +89,11 @@ async function compressImage(filePath, relativePath) {
     totalSavings += originalSize - compressedSize
 
     // 2. Generate responsive variants (JPEG/PNG)
-    for (const width of RESPONSIVE_WIDTHS) {
+    // Always create small thumbnail sizes (144w, 200w) for badges/icons
+    const allWidths = [144, 200, ...RESPONSIVE_WIDTHS]
+    const uniqueWidths = [...new Set(allWidths)].sort((a, b) => a - b)
+
+    for (const width of uniqueWidths) {
       if (width >= metadata.width) continue // Skip if original is smaller
 
       const variantPath = path.join(responsiveDir, `${fileNameWithoutExt}-${width}w${ext}`)
@@ -116,11 +120,12 @@ async function compressImage(filePath, relativePath) {
       await variantSharp.toFile(variantPath)
     }
 
-    // 3. Generate WebP variants for all sizes
-    const webpSizes = RESPONSIVE_WIDTHS.filter((w) => w < metadata.width)
+    // 3. Generate WebP variants for all sizes (including thumbnails)
+    const webpSizes = [144, 200, ...RESPONSIVE_WIDTHS].filter((w) => w < metadata.width)
     webpSizes.push(Math.min(metadata.width, MAX_WIDTH)) // Add original size
+    const uniqueWebpSizes = [...new Set(webpSizes)].sort((a, b) => a - b)
 
-    for (const width of webpSizes) {
+    for (const width of uniqueWebpSizes) {
       const variantPath = path.join(responsiveDir, `${fileNameWithoutExt}-${width}w.webp`)
 
       await sharp(backupPath)
@@ -140,7 +145,9 @@ async function compressImage(filePath, relativePath) {
     console.log(
       `  ✓ ${formatBytes(originalSize)} → ${formatBytes(compressedSize)} (${savings}% smaller)`
     )
-    console.log(`  ✓ Generated ${webpSizes.length} WebP variants + responsive sizes`)
+    console.log(
+      `  ✓ Generated ${uniqueWebpSizes.length} WebP variants + responsive sizes (including 144w, 200w thumbnails)`
+    )
 
     return { processed: true, originalSize, compressedSize }
   } catch (error) {

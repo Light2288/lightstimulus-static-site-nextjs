@@ -36,8 +36,8 @@ export function CertificationsGrid({ items }: { items: Certification[] }) {
                 <Image
                   src={cert.image}
                   alt={cert.issuer}
-                  width={36}
-                  height={36}
+                  width={72}
+                  height={72}
                   className="mt-0.5 rounded"
                 />
               )}
@@ -55,7 +55,7 @@ export function CertificationsGrid({ items }: { items: Certification[] }) {
                 href={cert.url}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-auto pt-3 text-xs font-medium text-[var(--color-primary-500)] hover:underline"
+                className="text-primary-600 hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200 mt-auto pt-3 text-xs font-medium hover:underline"
               >
                 {t('about.certifications.view')}
               </a>

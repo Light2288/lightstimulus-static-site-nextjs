@@ -27,15 +27,33 @@ const Image = ({ src, alt, fetchpriority, ...rest }: ResponsiveImageProps) => {
     (displayWidth !== undefined && displayWidth < 200) ||
     (displayHeight !== undefined && displayHeight < 200)
 
-  // For small images, just use the compressed original without responsive variants
-  if (isSmallImage) {
+  // For small images, check if thumbnail versions exist (144w or 200w)
+  if (isSmallImage && isStaticImage && (ext === '.jpg' || ext === '.jpeg' || ext === '.png')) {
+    const responsiveDir = `${basePath}${src.substring(0, src.lastIndexOf('/'))}/responsive/${src.substring(src.lastIndexOf('/') + 1, src.lastIndexOf('.'))}`
+
+    // Use 200w for images displayed at 100-199px, 144w for smaller
+    const thumbnailSize =
+      (displayWidth && displayWidth >= 100) || (displayHeight && displayHeight >= 100) ? 200 : 144
+
+    // Build srcset for thumbnails
+    const webpSrcSet = `${responsiveDir}-144w.webp 144w, ${responsiveDir}-200w.webp 200w`
+    const fallbackSrcSet = `${responsiveDir}-144w${ext} 144w, ${responsiveDir}-200w${ext} 200w`
+
     return (
-      <NextImage
-        src={fullSrc}
-        alt={alt}
-        {...(fetchpriority && { fetchPriority: fetchpriority })}
-        {...rest}
-      />
+      <picture>
+        <source type="image/webp" srcSet={webpSrcSet} sizes={rest.sizes || `${thumbnailSize}px`} />
+        <source
+          type={`image/${ext === '.png' ? 'png' : 'jpeg'}`}
+          srcSet={fallbackSrcSet}
+          sizes={rest.sizes || `${thumbnailSize}px`}
+        />
+        <NextImage
+          src={fullSrc}
+          alt={alt}
+          {...(fetchpriority && { fetchPriority: fetchpriority })}
+          {...rest}
+        />
+      </picture>
     )
   }
 

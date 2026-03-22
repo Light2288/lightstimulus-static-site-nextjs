@@ -33,7 +33,7 @@ export function CVDownloadCard({ cv }: { cv?: CV }) {
         <a
           href={`${basePath}${cv.url}`}
           download
-          className="inline-flex items-center justify-center rounded-lg border border-[var(--color-primary-500)] px-5 py-2 text-sm font-medium whitespace-nowrap text-[var(--color-primary-500)] transition hover:bg-[var(--color-primary-500)] hover:text-white focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)]/40 focus-visible:outline-none"
+          className="border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 hover:bg-primary-600 dark:hover:bg-primary-400 focus-visible:ring-primary-500/40 inline-flex items-center justify-center rounded-lg border px-5 py-2 text-sm font-medium whitespace-nowrap transition hover:text-white focus-visible:ring-2 focus-visible:outline-none"
         >
           {t('about.cv.download')}
         </a>

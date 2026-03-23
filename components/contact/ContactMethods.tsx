@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'motion/react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import SocialIcon from '@/components/social-icons'
 
@@ -13,28 +12,21 @@ export function ContactMethods({ email, linkedin }: Props) {
   const { t } = useLanguage()
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.05, type: 'spring', stiffness: 180, damping: 26 }}
-      className="glass-bg mx-auto mt-12 max-w-xl rounded-xl border border-white/20 p-6 text-center shadow-md backdrop-blur dark:border-white/10"
-    >
-      <p className="text-text-secondary mb-6 text-sm dark:text-gray-300">
-        {t('contact.methods_intro')}
-      </p>
+    <section className="glass-bg mx-auto mt-12 max-w-xl translate-y-1 animate-[fadeInUp_0.4s_ease-out_0.1s_forwards] rounded-xl border border-white/20 p-6 text-center opacity-0 shadow-md backdrop-blur dark:border-white/10">
+      <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">{t('contact.methods_intro')}</p>
 
       <div className="flex flex-col items-center gap-4">
         {email && (
           <a
             href={`mailto:${email}`}
-            className="font-medium text-[var(--color-primary-500)] hover:underline"
+            className="text-primary-600 hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200 font-medium hover:underline"
           >
             {email}
           </a>
         )}
 
         {linkedin && (
-          <p className="text-text-secondary mt-4 flex items-center gap-2 text-sm">
+          <p className="mt-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
             <SocialIcon kind="linkedin" href={linkedin} />
 
             <span>
@@ -43,7 +35,7 @@ export function ContactMethods({ email, linkedin }: Props) {
                 href={linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-[var(--color-primary-500)] hover:underline"
+                className="text-primary-600 hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200 font-medium hover:underline"
               >
                 LinkedIn
               </a>
@@ -51,6 +43,6 @@ export function ContactMethods({ email, linkedin }: Props) {
           </p>
         )}
       </div>
-    </motion.section>
+    </section>
   )
 }

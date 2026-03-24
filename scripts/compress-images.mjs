@@ -10,6 +10,11 @@ const IMAGES_ROOT = path.join(PROJECT_ROOT, 'public', 'static', 'images')
 const JPEG_QUALITY = 82
 const PNG_QUALITY = 85
 const WEBP_QUALITY = 80
+
+// Higher quality for 800w variant (commonly used for retina @ 640px display)
+const JPEG_QUALITY_800W = 88
+const PNG_QUALITY_800W = 90
+const WEBP_QUALITY_800W = 85
 const MAX_WIDTH = 1000
 const MAX_HEIGHT = 1000
 
@@ -103,15 +108,18 @@ async function compressImage(filePath, relativePath) {
         withoutEnlargement: true,
       })
 
+      // Use higher quality for 800w variant (retina display at 640px)
+      const useHighQuality = width === 800
+
       if (ext === '.png') {
         variantSharp = variantSharp.png({
-          quality: PNG_QUALITY,
+          quality: useHighQuality ? PNG_QUALITY_800W : PNG_QUALITY,
           compressionLevel: 9,
           palette: true,
         })
       } else {
         variantSharp = variantSharp.jpeg({
-          quality: JPEG_QUALITY,
+          quality: useHighQuality ? JPEG_QUALITY_800W : JPEG_QUALITY,
           progressive: true,
           mozjpeg: true,
         })
@@ -128,13 +136,16 @@ async function compressImage(filePath, relativePath) {
     for (const width of uniqueWebpSizes) {
       const variantPath = path.join(responsiveDir, `${fileNameWithoutExt}-${width}w.webp`)
 
+      // Use higher quality for 800w variant (retina display at 640px)
+      const useHighQuality = width === 800
+
       await sharp(backupPath)
         .resize(width, null, {
           fit: 'inside',
           withoutEnlargement: true,
         })
         .webp({
-          quality: WEBP_QUALITY,
+          quality: useHighQuality ? WEBP_QUALITY_800W : WEBP_QUALITY,
           effort: 6,
         })
         .toFile(variantPath)

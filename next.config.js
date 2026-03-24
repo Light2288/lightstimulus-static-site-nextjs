@@ -87,6 +87,8 @@ module.exports = () => {
     experimental: {
       swcTraceProfiling: false,
       forceSwcTransforms: false,
+      // Explicitly disable legacy browser support
+      legacyBrowsers: false,
     },
 
     eslint: {
@@ -125,14 +127,42 @@ module.exports = () => {
           transpilePackages.oneOf.forEach((rule) => {
             if (rule.use && rule.use.loader === 'next-swc-loader') {
               if (!rule.use.options) rule.use.options = {}
+              // More aggressive modern browser targeting
               rule.use.options.env = {
                 targets: {
-                  chrome: '90',
-                  firefox: '91',
-                  safari: '14',
-                  edge: '90',
+                  chrome: '92', // Native support for Array.at, Object.hasOwn
+                  firefox: '92',
+                  safari: '15.4',
+                  edge: '92',
                 },
                 bugfixes: true,
+                // Disable all preset-env transforms not needed for modern browsers
+                exclude: ['transform-regenerator', 'transform-async-to-generator'],
+              }
+              // Force modern output without polyfills
+              rule.use.options.jsc = {
+                ...rule.use.options.jsc,
+                target: 'es2022',
+                loose: false,
+                externalHelpers: false,
+                keepClassNames: true,
+                parser: {
+                  ...rule.use.options.jsc?.parser,
+                  syntax: 'typescript',
+                  tsx: true,
+                  decorators: false,
+                  dynamicImport: true,
+                },
+                transform: {
+                  ...rule.use.options.jsc?.transform,
+                  optimizer: {
+                    globals: {
+                      vars: {
+                        __MODERN_BUILD__: 'true',
+                      },
+                    },
+                  },
+                },
               }
             }
           })

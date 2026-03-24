@@ -11,13 +11,13 @@ import { Metadata } from 'next'
 
 const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional', // Prevent layout shift from font loading
   weight: ['300', '400', '500', '700'],
   variable: '--font-sans',
 })
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional', // Prevent layout shift from font loading
   weight: ['300', '400', '500'],
   variable: '--font-mono',
 })
@@ -62,6 +62,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
+        {/* Preconnect to Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
         {/* Standard Favicons */}
         <link rel="icon" type="image/x-icon" href={`${basePath}/static/favicons/favicon.ico`} />
         <link

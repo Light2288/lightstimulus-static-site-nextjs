@@ -74,7 +74,7 @@ export default function ProjectCardBase({
                 src={coverImage}
                 width={600}
                 height={360}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px"
                 priority={priority}
                 fetchpriority={priority ? 'high' : 'auto'}
                 className={clsx('w-full object-cover', small ? 'h-40' : 'h-48')}

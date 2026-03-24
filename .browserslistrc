@@ -2,23 +2,23 @@
 # Target ONLY modern browsers with native ES2022+ support
 # This eliminates unnecessary polyfills and reduces bundle size
 
-# Modern desktop browsers (2021+)
-last 2 chrome versions
-last 2 firefox versions
-last 2 safari versions
-last 2 edge versions
+# Modern desktop browsers with native Array.at, Object.hasOwn support
+chrome >= 92
+firefox >= 92
+safari >= 15.4
+edge >= 92
 
 # Modern mobile browsers
-last 2 ios_saf versions
-last 2 android versions
+ios_saf >= 15.4
+android >= 92
 
 # Explicitly exclude old browsers
 not dead
 not IE 11
 not op_mini all
-not android < 90
-not samsung < 15
-not safari < 14
-not firefox < 91
-not chrome < 90
-not edge < 90
+not android < 92
+not samsung < 16
+not safari < 15.4
+not firefox < 92
+not chrome < 92
+not edge < 92

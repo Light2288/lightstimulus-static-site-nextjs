@@ -113,61 +113,15 @@ module.exports = () => {
         },
       ]
     },
-    webpack: (config, options) => {
+    // Explicitly transpile packages to modern ES (including dependencies)
+    transpilePackages: ['contentlayer2', 'next-contentlayer2', 'pliny'],
+
+    webpack: (config, _) => {
+      // SVG loader configuration
       config.module.rules.push({
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       })
-
-      // Configure SWC to target modern browsers (ES2022)
-      // This prevents polyfills for Array.at, Object.hasOwn, etc.
-      if (options.nextRuntime !== 'edge') {
-        const transpilePackages = config.module.rules.find((rule) => rule.oneOf)
-        if (transpilePackages) {
-          transpilePackages.oneOf.forEach((rule) => {
-            if (rule.use && rule.use.loader === 'next-swc-loader') {
-              if (!rule.use.options) rule.use.options = {}
-              // More aggressive modern browser targeting
-              rule.use.options.env = {
-                targets: {
-                  chrome: '92', // Native support for Array.at, Object.hasOwn
-                  firefox: '92',
-                  safari: '15.4',
-                  edge: '92',
-                },
-                bugfixes: true,
-                // Disable all preset-env transforms not needed for modern browsers
-                exclude: ['transform-regenerator', 'transform-async-to-generator'],
-              }
-              // Force modern output without polyfills
-              rule.use.options.jsc = {
-                ...rule.use.options.jsc,
-                target: 'es2022',
-                loose: false,
-                externalHelpers: false,
-                keepClassNames: true,
-                parser: {
-                  ...rule.use.options.jsc?.parser,
-                  syntax: 'typescript',
-                  tsx: true,
-                  decorators: false,
-                  dynamicImport: true,
-                },
-                transform: {
-                  ...rule.use.options.jsc?.transform,
-                  optimizer: {
-                    globals: {
-                      vars: {
-                        __MODERN_BUILD__: 'true',
-                      },
-                    },
-                  },
-                },
-              }
-            }
-          })
-        }
-      }
 
       return config
     },

@@ -33,13 +33,15 @@ export function CertificationsGrid({ items }: { items: Certification[] }) {
           >
             <div className="flex flex-1 items-start gap-3">
               {cert.image && (
-                <Image
-                  src={cert.image}
-                  alt={cert.issuer}
-                  width={72}
-                  height={72}
-                  className="mt-0.5 rounded"
-                />
+                <div className="h-[72px] w-[72px] flex-shrink-0">
+                  <Image
+                    src={cert.image}
+                    alt={cert.issuer}
+                    width={72}
+                    height={72}
+                    className="h-full w-full rounded object-cover"
+                  />
+                </div>
               )}
 
               <div className="flex flex-col">

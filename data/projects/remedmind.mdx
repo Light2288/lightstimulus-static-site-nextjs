@@ -1,0 +1,259 @@
+---
+title:
+  en: Remedmind
+  it: Remedmind
+
+summary:
+  en: A comprehensive iOS medication reminder with smart notifications, intake tracking, and CloudKit sync.
+  it: Un'app iOS completa per promemoria farmaci con notifiche intelligenti, tracciamento assunzioni e sincronizzazione CloudKit.
+
+date: 2022-11-28
+
+projectType: product
+status: completed
+
+coverImage: /static/images/projects/remedmind.png
+
+tags:
+  - id: ios
+    label:
+      en: iOS
+      it: iOS
+  - id: swiftui
+    label:
+      en: SwiftUI
+      it: SwiftUI
+  - id: health
+    label:
+      en: Health
+      it: Salute
+  - id: mobile
+    label:
+      en: Mobile
+      it: Mobile
+
+stack:
+  - Swift
+  - SwiftUI
+  - CoreData
+  - CloudKit
+  - UserNotifications
+
+links:
+  github: https://github.com/Light2288/remedmind
+  website: https://light2288.github.io/remedmind/
+---
+
+<Lang value="en">
+
+### Overview
+
+**Remedmind** is a comprehensive iOS medication reminder application designed to transform medication adherence into a seamless daily routine.
+Built entirely with SwiftUI and featuring CloudKit synchronization, the app addresses the critical healthcare challenge of medication management through intelligent scheduling, package tracking, and privacy-first design.
+
+Unlike generic reminder apps, Remedmind was purpose-built for medication management, offering features specifically tailored to the complexity of managing multiple medications, varying schedules, and supply tracking, all while maintaining complete user privacy through local-first data storage.
+
+### Motivation
+
+Medication adherence is a significant challenge in healthcare. Studies show that up to 50% of medications for chronic conditions are not taken as prescribed, often due to simple forgetfulness, confusing schedules, or running out of medication unexpectedly. Existing solutions were either too generic (calendar reminders that lack context) or too complex (enterprise medication management systems designed for clinical settings).
+
+Remedmind was conceived to bridge this gap by creating an app that:
+
+- **Understands medication context**: Support for 18 different medication types with appropriate visual icons and tracking mechanisms
+- **Adapts to user schedules**: Flexible scheduling with both automatic and custom notification modes
+- **Prevents supply issues**: Predictive package tracking that alerts users before medications run out
+- **Respects privacy**: Complete data ownership with optional CloudKit sync, no third-party servers, and zero data collection
+
+The goal was to create a tool that quietly supports health routines without adding complexity or compromising privacy.
+
+### System Architecture
+
+Remedmind is built on a modern, maintainable iOS architecture that prioritizes clean code organization and user experience:
+
+1. **SwiftUI Interface Layer**
+   The entire user interface is implemented with SwiftUI, leveraging environment objects for elegant state management and providing smooth, native animations. The app features custom UI components including an animated add button with pulsating effects, adaptive layouts that respond to content, and comprehensive settings screens for personalization.
+
+2. **CoreData Persistence**
+   Medication data is stored locally using CoreData with a carefully designed schema featuring two primary entities: `Reminder` (storing medication details, schedules, and notification preferences) and `DailyIntake` (tracking daily intake records). The model supports complex relationships and queries while maintaining referential integrity and data consistency.
+
+3. **CloudKit Integration**
+   Through `NSPersistentCloudKitContainer`, the app seamlessly syncs data across user devices while maintaining complete privacy. Users remain in full control of their data—no external servers are involved, and sync is entirely optional and user-controlled.
+
+4. **Intelligent Notification System**
+   A sophisticated notification engine schedules alerts up to 7 days in advance, automatically manages cleanup of outdated notifications, and calculates optimal notification times based on user preferences, medication schedules, and daily routines. The system handles both administration reminders and package exhaustion alerts.
+
+5. **Extension-Based Code Organization**
+   The codebase leverages over 20 Swift extensions to maintain clean separation of concerns, making the code highly maintainable, testable, and easy to extend. This architecture facilitates rapid feature development while preserving code quality.
+
+### Key Features
+
+**Flexible Scheduling Engine**
+The app supports daily, every-other-day, and weekly medication schedules with granular day selection. Users can configure multiple doses per day with independent notification times, and the system automatically handles treatment periods with optional end dates.
+
+**Predictive Package Management**
+One of Remedmind's standout features is its intelligent package tracking algorithm. The system analyzes medication schedules, dosages, and consumption patterns to predict when packages will be exhausted, up to 14 days in advance. This prevents the common problem of discovering an empty medication bottle at administration time, ensuring users can refill prescriptions proactively.
+
+**Dual Notification Modes**
+Users can choose between automatic mode, where notifications are intelligently distributed throughout the day based on dose frequency, or custom mode, where users define a preferred start time and the system calculates optimal intervals. This flexibility accommodates different lifestyles, work schedules, and medication requirements.
+
+**Visual Intake Tracking**
+The app provides clear, intuitive visual feedback on daily progress, displaying taken versus scheduled doses with progress indicators. Historical tracking is maintained automatically, and the system intelligently backfills missing records to maintain data continuity.
+
+**Comprehensive Customization**
+Four beautifully designed themes (Default, Dark Cyan, Princeton Orange, and Monochrome) and eight alternate app icons allow users to personalize their experience. The app supports system-wide appearance modes and persists all preferences using UserDefaults for consistency across sessions.
+
+**Localization Excellence**
+Full bilingual support for English and Italian includes proper date formatting, calendar localization respecting regional first-day-of-week conventions, and correct pluralization rules for medication types. The architecture makes adding additional languages straightforward.
+
+### Technical Excellence
+
+The project demonstrates several iOS development best practices:
+
+- **Protocol-Oriented Design**: Extensive use of Swift protocols and enums with associated values for type-safe, flexible code
+- **Computed Properties**: Clean, readable code with extensive use of computed properties for data transformation and presentation logic
+- **Custom View Modifiers**: Reusable view modifiers encapsulate common UI behaviors and styling patterns
+- **Calendar Intelligence**: Sophisticated calendar calculations with proper handling of localization, time zones, and cultural calendar conventions
+- **Memory Consciousness**: Careful use of weak references and value types to ensure efficient memory usage
+
+### Privacy & Security
+
+Remedmind takes privacy seriously, implementing a privacy-first approach throughout:
+
+- **Zero data collection**: The app collects absolutely no personal information or usage analytics
+- **No tracking**: No behavioral monitoring, no third-party SDKs, no advertising frameworks
+- **Local-first storage**: All data remains on the user's device by default
+- **Optional sync**: CloudKit synchronization is user-initiated and leverages Apple's secure, privacy-conscious infrastructure
+- **Complete transparency**: Users maintain full control and ownership of their health data
+
+### Development Philosophy
+
+The project reflects a thoughtful approach to software development:
+
+- **User-Centered Design**: Every feature addresses real user needs identified through research and feedback
+- **Code Quality**: Extensive use of Swift's type system, clear naming conventions, and comprehensive extensions
+- **Maintainability**: Clean architecture that facilitates long-term evolution and feature additions
+- **Accessibility**: Thoughtful UI design that works well with dynamic type and system accessibility features
+
+### Impact
+
+Since its release, Remedmind has helped users maintain consistent medication schedules through features that go beyond simple time-based reminders. The combination of package tracking, flexible scheduling, and uncompromising privacy has resonated with users who need reliable medication management without sacrificing control over their personal health data.
+
+The project demonstrates how thoughtful design, clean architecture, and respect for user privacy can come together to create a tool that genuinely improves daily life.
+
+### Future Directions
+
+Potential enhancements under consideration include:
+
+- iOS widgets for at-a-glance intake status from the home screen
+- Apple Watch companion app for quick intake logging and wrist-based notifications
+- HealthKit integration to export medication adherence data
+- Enhanced accessibility features including comprehensive VoiceOver support
+- Additional language localizations to serve more users globally
+
+Remedmind represents a complete, polished iOS application that successfully addresses a real-world healthcare challenge through technical excellence and thoughtful design.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**Remedmind** è un'applicazione iOS completa per promemoria farmaci progettata per trasformare l'aderenza terapeutica in una routine quotidiana fluida.
+Realizzata interamente con SwiftUI e dotata di sincronizzazione CloudKit, l'app affronta la sfida critica della gestione farmaci attraverso pianificazione intelligente, tracciamento confezioni e design privacy-first.
+
+A differenza delle app di promemoria generiche, Remedmind è stata creata specificamente per la gestione farmaci, offrendo funzionalità dedicate alla complessità di gestire più farmaci, programmi variabili e monitoraggio scorte, il tutto mantenendo la privacy completa attraverso archiviazione locale dei dati.
+
+### Motivazione
+
+L'aderenza terapeutica rappresenta una sfida significativa nel settore sanitario. Gli studi mostrano che fino al 50% dei farmaci per condizioni croniche non viene assunto come prescritto, spesso a causa di dimenticanze, programmi confusi o esaurimento imprevisto delle scorte. Le soluzioni esistenti erano o troppo generiche (promemoria del calendario senza contesto) o troppo complesse (sistemi aziendali per contesti clinici).
+
+Remedmind è stata concepita per colmare questo divario creando un'app che:
+
+- **Comprende il contesto farmacologico**: Supporto per 18 tipi diversi di farmaci con icone visive appropriate e meccanismi di tracciamento
+- **Si adatta ai programmi degli utenti**: Pianificazione flessibile con modalità di notifica automatica e personalizzata
+- **Previene problemi di scorte**: Tracciamento predittivo delle confezioni che avvisa prima dell'esaurimento
+- **Rispetta la privacy**: Completa proprietà dei dati con sincronizzazione CloudKit opzionale, nessun server terzo, zero raccolta dati
+
+L'obiettivo era creare uno strumento che supportasse silenziosamente le routine di salute senza aggiungere complessità o compromettere la privacy.
+
+### Architettura del Sistema
+
+Remedmind è costruita su un'architettura iOS moderna e manutenibile che privilegia organizzazione del codice ed esperienza utente:
+
+1. **Livello di Interfaccia SwiftUI**
+   L'intera interfaccia è implementata con SwiftUI, sfruttando environment objects per una gestione elegante dello stato e fornendo animazioni native fluide. L'app presenta componenti UI personalizzati tra cui un pulsante di aggiunta animato con effetti pulsanti, layout adattivi e schermate di impostazioni complete per la personalizzazione.
+
+2. **Persistenza CoreData**
+   I dati dei farmaci sono memorizzati localmente tramite CoreData con uno schema progettato attentamente: due entità principali `Reminder` (dettagli farmaco, programmi, preferenze notifiche) e `DailyIntake` (registrazioni giornaliere). Il modello supporta relazioni e query complesse mantenendo integrità referenziale e consistenza.
+
+3. **Integrazione CloudKit**
+   Attraverso `NSPersistentCloudKitContainer`, l'app sincronizza i dati tra i dispositivi mantenendo completa privacy. Gli utenti mantengono pieno controllo—nessun server esterno, sincronizzazione opzionale e controllata dall'utente.
+
+4. **Sistema di Notifiche Intelligenti**
+   Un sofisticato motore di notifiche pianifica avvisi fino a 7 giorni in anticipo, gestisce automaticamente la pulizia delle notifiche obsolete e calcola tempi ottimali basandosi su preferenze utente, programmi farmacologici e routine quotidiane. Il sistema gestisce sia promemoria di assunzione sia avvisi di esaurimento confezione.
+
+5. **Organizzazione del Codice Basata su Estensioni**
+   La codebase sfrutta oltre 20 estensioni Swift per mantenere netta separazione delle responsabilità, rendendo il codice altamente manutenibile, testabile e facile da estendere. Questa architettura facilita lo sviluppo rapido preservando la qualità del codice.
+
+### Caratteristiche Principali
+
+**Motore di Pianificazione Flessibile**
+L'app supporta programmi giornalieri, a giorni alterni e settimanali con selezione granulare dei giorni. Gli utenti possono configurare dosi multiple al giorno con tempi di notifica indipendenti, e il sistema gestisce automaticamente periodi di trattamento con date di fine opzionali.
+
+**Gestione Predittiva delle Confezioni**
+Una delle caratteristiche distintive di Remedmind è l'algoritmo intelligente di tracciamento confezioni. Il sistema analizza programmi, dosaggi e pattern di consumo per prevedere l'esaurimento delle confezioni, fino a 14 giorni in anticipo. Questo previene il problema comune di scoprire una confezione vuota al momento dell'assunzione, garantendo rifornimenti proattivi.
+
+**Modalità Doppie di Notifica**
+Gli utenti possono scegliere tra modalità automatica, dove le notifiche sono distribuite intelligentemente durante il giorno, o modalità personalizzata, dove definiscono un orario preferito e il sistema calcola intervalli ottimali. Questa flessibilità si adatta a diversi stili di vita e requisiti farmacologici.
+
+**Tracciamento Visivo delle Assunzioni**
+L'app fornisce feedback visivo chiaro e intuitivo sui progressi giornalieri, mostrando dosi assunte rispetto a quelle programmate con indicatori di progresso. Il tracciamento storico è mantenuto automaticamente e il sistema riempie intelligentemente i record mancanti.
+
+### Eccellenza Tecnica
+
+Il progetto dimostra diverse best practices nello sviluppo iOS:
+
+- **Design Orientato ai Protocolli**: Uso estensivo di protocolli Swift ed enum con valori associati per codice type-safe e flessibile
+- **Proprietà Calcolate**: Codice pulito e leggibile con ampio uso di computed properties per trasformazione dati e logica di presentazione
+- **View Modifiers Personalizzati**: View modifiers riutilizzabili che incapsulano comportamenti UI comuni e pattern di stile
+- **Intelligenza Calendario**: Calcoli sofisticati del calendario con corretta gestione di localizzazione, fusi orari e convenzioni culturali
+- **Gestione Consapevole della Memoria**: Uso attento di weak references e value types per garantire un utilizzo efficiente della memoria
+
+### Privacy e Sicurezza
+
+Remedmind prende sul serio la privacy, implementando un approccio privacy-first:
+
+- **Zero raccolta dati**: L'app non raccoglie alcuna informazione personale o dato di utilizzo
+- **Nessun tracciamento**: Nessun monitoraggio comportamentale, nessun SDK di terze parti, nessun framework pubblicitario
+- **Archiviazione locale**: Tutti i dati rimangono sul dispositivo dell'utente per impostazione predefinita
+- **Sincronizzazione opzionale**: La sincronizzazione CloudKit è avviata dall'utente e sfrutta l'infrastruttura sicura e privacy-conscious di Apple
+- **Trasparenza completa**: Gli utenti mantengono pieno controllo e proprietà dei propri dati sanitari
+
+### Filosofia di Sviluppo
+
+Il progetto riflette un approccio ponderato allo sviluppo software:
+
+- **Design User-Centered**: Ogni funzionalità risponde a esigenze reali degli utenti identificate attraverso ricerca e feedback
+- **Qualità del Codice**: Uso estensivo del sistema di tipi Swift, convenzioni di naming chiare ed estensioni complete
+- **Manutenibilità**: Architettura pulita che facilita l'evoluzione a lungo termine e l'aggiunta di funzionalità
+- **Accessibilità**: Design UI attento che funziona bene con dynamic type e funzionalità di accessibilità del sistema
+
+### Impatto
+
+Dal suo rilascio, Remedmind ha aiutato gli utenti a mantenere programmi terapeutici consistenti attraverso funzionalità che vanno oltre i semplici promemoria temporali. La combinazione di tracciamento confezioni, pianificazione flessibile e privacy senza compromessi ha incontrato il favore di utenti che necessitano di una gestione affidabile dei farmaci senza sacrificare il controllo sui propri dati sanitari personali.
+
+Il progetto dimostra come design attento, architettura pulita e rispetto della privacy possano convergere per creare uno strumento che migliora concretamente la vita quotidiana.
+
+### Sviluppi Futuri
+
+Tra i potenziali miglioramenti in considerazione:
+
+- Widget iOS per visualizzare lo stato delle assunzioni dalla home screen
+- App companion per Apple Watch per registrazione rapida e notifiche al polso
+- Integrazione HealthKit per esportare i dati di aderenza terapeutica
+- Funzionalità di accessibilità potenziate con supporto completo VoiceOver
+- Localizzazioni linguistiche aggiuntive per servire più utenti globalmente
+
+Remedmind rappresenta un'applicazione iOS completa e rifinita che affronta con successo una sfida sanitaria reale attraverso eccellenza tecnica e design ponderato.
+
+</Lang>

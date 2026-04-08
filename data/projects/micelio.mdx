@@ -1,0 +1,295 @@
+---
+title:
+  en: Micelio
+  it: Micelio
+
+summary:
+  en: An intelligent iOS mushroom identification and tracking app with ML recognition, location-based discovery, and weather-powered hunting forecasts.
+  it: Un'app iOS intelligente per identificazione e tracciamento funghi con riconoscimento ML, scoperta basata su posizione e previsioni meteo.
+
+date: 2023-10-02
+
+projectType: product
+status: completed
+
+coverImage: /static/images/projects/micelio.png
+
+tags:
+  - id: ios
+    label:
+      en: iOS
+      it: iOS
+  - id: swiftui
+    label:
+      en: SwiftUI
+      it: SwiftUI
+  - id: machine-learning
+    label:
+      en: Machine Learning
+      it: Machine Learning
+  - id: nature
+    label:
+      en: Nature
+      it: Natura
+  - id: mobile
+    label:
+      en: Mobile
+      it: Mobile
+
+stack:
+  - Swift
+  - SwiftUI
+  - Core ML
+  - CoreData
+  - MapKit
+  - CoreLocation
+  - UserNotifications
+
+links:
+  github: https://github.com/Light2288/micelio
+  website: https://light2288.github.io/micelio/
+---
+
+<Lang value="en">
+
+### Overview
+
+**Micelio** (Italian for "mycelium") is a comprehensive iOS mushroom identification and tracking application that transforms mushroom foraging into a data-driven, educational experience. Built entirely with SwiftUI and featuring custom-trained Core ML models, the app addresses the complex challenge of safe mushroom identification through on-device machine learning, intelligent location tracking, and weather-based forecasting.
+
+Unlike generic nature apps, Micelio was purpose-built for mycology enthusiasts, offering features specifically tailored to the complexity of mushroom identification, seasonal tracking, and safe foraging practices, all while maintaining complete user privacy through local-first processing and storage.
+
+### Motivation
+
+Mushroom foraging is a rewarding but challenging activity that requires extensive knowledge, careful identification, and awareness of optimal conditions. Misidentification can be dangerous—even deadly—making reliable resources essential. Existing solutions were either too basic (simple field guides without context) or too complex (academic databases not designed for field use).
+
+Micelio was conceived to bridge this gap by creating an app that:
+
+- **Enables safe identification**: Custom ML model trained on European mushroom species with confidence-based filtering
+- **Tracks discoveries**: GPS-tagged findings with photos, notes, and personal mushroom diaries
+- **Predicts optimal conditions**: Weather-based calendar that forecasts favorable mushroom hunting days
+- **Educates users**: Comprehensive catalog of 45+ species with detailed edibility, habitat, and seasonal information
+- **Respects privacy**: Complete data ownership with local-only processing, no cloud services, and zero data collection
+
+The goal was to create a tool that empowers both novice and experienced foragers while maintaining the highest safety and privacy standards.
+
+### System Architecture
+
+Micelio is built on a sophisticated, maintainable iOS architecture that prioritizes performance, user experience, and data privacy:
+
+1. **SwiftUI Interface Layer**
+   The entire user interface leverages SwiftUI's declarative paradigm, featuring a tab-based navigation system with four main sections: interactive map, ML recognition, comprehensive catalog, and weather calendar. Custom view modifiers and styles ensure consistent, polished UI throughout the app.
+
+2. **Core ML Recognition Pipeline**
+   The heart of Micelio is its custom-trained mushroom classifier (`MicelioMushroomClassifier_v6`), optimized for on-device inference. The pipeline includes image preprocessing, prediction confidence filtering, and intelligent matching against the catalog database. A backup MobileNetV2 model provides fallback recognition capabilities.
+
+3. **CoreData Persistence**
+   User-generated data is stored locally using CoreData with two primary entities: `MushroomMapAnnotation` (storing location, date, and mushroom information) and `MushroomMapAnnotationPhoto` (managing multiple photos per finding). The schema maintains referential integrity while enabling efficient queries and batch operations.
+
+4. **Intelligent Location Services**
+   A sophisticated location manager handles real-time tracking, geofencing, and region monitoring. The system creates circular regions around saved mushroom locations, triggering notifications when users return to previously successful spots, turning past discoveries into future opportunities.
+
+5. **Weather-Based Forecasting**
+   The MiCalendar feature integrates weather data (temperature, humidity, precipitation, moon phases) with a configurable rule-based evaluation system. The algorithm classifies days as Excellent, Good, Fair, or Poor for mushroom hunting based on scientifically-informed criteria, helping users plan expeditions effectively.
+
+6. **Extension-Based Code Organization**
+   The codebase leverages over 20 Swift extensions to maintain pristine separation of concerns, covering array operations, date handling, coordinate transformations, and view modifiers. This architecture facilitates rapid feature development while preserving code quality and testability.
+
+### Key Features
+
+**Custom ML-Powered Recognition**
+Micelio's standout feature is its custom-trained Core ML model capable of identifying European mushroom species directly on the device. The recognition system processes images through multiple stages—preprocessing, classification, confidence filtering—and matches results against the curated catalog, presenting users with ranked predictions and complete species information. The entire process happens locally, ensuring privacy and enabling offline functionality.
+
+**Interactive Mushroom Map**
+The map interface transforms mushroom foraging into a personal discovery journal. Users can mark findings with GPS precision, attach multiple photos, add detailed notes, and build a comprehensive database of their foraging history. Color-coded annotations provide at-a-glance information about species edibility, making past successes easily identifiable for future reference.
+
+**Smart Geofencing Notifications**
+Leveraging iOS geofencing capabilities, Micelio creates intelligent circular regions around saved mushroom locations. When users enter these areas, the app sends contextual notifications reminding them of previous findings, including the species name and discovery date. This feature transforms the entire landscape into a personalized mushroom memory map.
+
+**Comprehensive Species Catalog**
+The app includes detailed information on 45+ European mushroom species, each with 10 high-quality photographs, scientific and common names, comprehensive descriptions, edibility classifications, habitat preferences, seasonal availability, and interesting trivia. Advanced filtering and grouping capabilities allow users to organize mushrooms by edibility, environment, or season.
+
+**Weather-Based MiCalendar**
+The innovative calendar feature evaluates upcoming days for mushroom hunting potential using a sophisticated rule-based system. Factors like recent precipitation, temperature ranges, humidity levels, and even lunar phases are analyzed to predict favorable conditions. Users can save favorite locations, and the system provides location-specific forecasts with detailed reasoning for each day's classification.
+
+**Rich Educational Content**
+Every mushroom in the catalog includes multiple information sections: general description, habitat and environment details, edibility information with safety notes, and fascinating trivia. This transforms Micelio from a simple identification tool into a comprehensive educational resource for mycology enthusiasts.
+
+### Technical Excellence
+
+The project demonstrates numerous iOS development best practices:
+
+- **Protocol-Oriented Design**: Extensive use of Swift protocols and enums for type-safe, flexible code architecture
+- **Computed Properties**: Clean, expressive code with computed properties handling complex data transformations
+- **Custom View Modifiers**: Reusable view modifiers encapsulating common styling and behavior patterns
+- **Memory Efficiency**: Careful memory management with appropriate use of value types and weak references
+- **CoreLocation Mastery**: Advanced geofencing, region monitoring, and background location updates
+- **Robust ML Integration**: Sophisticated image processing pipeline with confidence thresholding and error handling
+- **Calendar Intelligence**: Complex calendar calculations with proper timezone and localization handling
+
+### Privacy & Security
+
+Micelio takes privacy seriously, implementing a privacy-first approach throughout:
+
+- **Zero data collection**: The app collects absolutely no personal information, usage analytics, or behavioral data
+- **No tracking**: No third-party SDKs, no advertising frameworks, no user tracking of any kind
+- **Local-first processing**: All ML recognition happens on-device; images never leave the user's phone
+- **Local-only storage**: All mushroom findings, photos, and preferences remain exclusively on the device
+- **Offline capable**: Core functionality works without internet connection, ensuring privacy and availability
+- **Complete transparency**: Users maintain full control and ownership of their foraging data
+
+### Development Philosophy
+
+The project reflects a thoughtful, user-centered approach to software development:
+
+- **Safety First**: Comprehensive edibility information and safety warnings prioritize user wellbeing
+- **Code Quality**: Extensive use of Swift's type system, clear naming conventions, and modular architecture
+- **Maintainability**: Clean structure facilitating long-term evolution and easy addition of new species
+- **Educational Focus**: Every feature designed to teach users about mushrooms and safe foraging practices
+- **Innovation**: Unique combination of ML recognition, location intelligence, and weather forecasting
+
+### Impact
+
+Micelio represents a new category of nature apps—combining artificial intelligence, location services, and environmental data to create a truly intelligent foraging companion. By making mushroom identification more accessible while maintaining uncompromising safety and privacy standards, the app empowers users to explore mycology with confidence.
+
+The innovative weather calendar feature demonstrates how computational intelligence can predict natural phenomena, turning abstract environmental data into actionable foraging advice. The geofencing system creates a living map of personal discoveries, ensuring that every successful spot becomes a permanent part of the user's foraging knowledge.
+
+Most importantly, the comprehensive catalog and educational content help users develop genuine mycological expertise rather than simple pattern recognition, fostering deeper appreciation for fungal ecology and biodiversity.
+
+### Future Directions
+
+Potential enhancements under consideration include:
+
+- Expanded species database covering additional geographic regions
+- Community features for sharing safe, verified mushroom spots (with privacy controls)
+- Integration with additional weather services for enhanced forecasting
+- Apple Watch companion app for quick field logging
+- Advanced ML model supporting more species and better accuracy
+- Spore print analysis tools and additional identification aids
+- Multi-language support for international foraging communities
+- HealthKit integration for tracking wild food consumption
+
+Micelio represents a complete, polished iOS application that successfully merges machine learning, location intelligence, and mycological education into a privacy-respecting tool that genuinely enhances the mushroom foraging experience.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**Micelio** è un'applicazione iOS completa per l'identificazione e il tracciamento funghi che trasforma la ricerca micologica in un'esperienza educativa basata sui dati. Realizzata interamente con SwiftUI e dotata di modelli Core ML personalizzati, l'app affronta la complessa sfida dell'identificazione sicura dei funghi attraverso machine learning on-device, tracciamento intelligente della posizione e previsioni basate sul meteo.
+
+A differenza delle app generiche sulla natura, Micelio è stata creata specificamente per gli appassionati di micologia, offrendo funzionalità dedicate alla complessità dell'identificazione fungina, il tracciamento stagionale e pratiche di raccolta sicure, mantenendo completa privacy attraverso elaborazione e archiviazione locale.
+
+### Motivazione
+
+La ricerca di funghi è un'attività gratificante ma impegnativa che richiede conoscenze approfondite, identificazione accurata e consapevolezza delle condizioni ottimali. L'identificazione errata può essere pericolosa—persino mortale—rendendo essenziali risorse affidabili. Le soluzioni esistenti erano o troppo basiche (semplici guide da campo senza contesto) o troppo complesse (database accademici non progettati per l'uso sul campo).
+
+Micelio è stata concepita per colmare questo divario creando un'app che:
+
+- **Abilita identificazione sicura**: Modello ML personalizzato addestrato su specie fungine europee con filtraggio basato sulla confidenza
+- **Traccia le scoperte**: Ritrovamenti geo-localizzati con foto, note e diari micologici personali
+- **Predice condizioni ottimali**: Calendario meteorologico che prevede giorni favorevoli per la raccolta
+- **Educa gli utenti**: Catalogo completo di oltre 45 specie con dettagli su commestibilità, habitat e stagionalità
+- **Rispetta la privacy**: Completa proprietà dei dati con elaborazione locale, nessun servizio cloud e zero raccolta dati
+
+L'obiettivo era creare uno strumento che potenziasse sia cercatori novizi che esperti, mantenendo i più alti standard di sicurezza e privacy.
+
+### Architettura del Sistema
+
+Micelio è costruita su un'architettura iOS sofisticata e manutenibile che privilegia prestazioni, esperienza utente e privacy:
+
+1. **Livello di Interfaccia SwiftUI**
+   L'intera interfaccia sfrutta il paradigma dichiarativo di SwiftUI, con navigazione a tab e quattro sezioni principali: mappa interattiva, riconoscimento ML, catalogo completo e calendario meteorologico. View modifiers e stili personalizzati garantiscono un'interfaccia coerente e rifinita.
+
+2. **Pipeline di Riconoscimento Core ML**
+   Il cuore di Micelio è il classificatore fungino personalizzato (`MicelioMushroomClassifier_v6`), ottimizzato per inferenza on-device. La pipeline include preprocessing delle immagini, filtraggio della confidenza di predizione e matching intelligente con il database del catalogo. Un modello MobileNetV2 fornisce capacità di riconoscimento alternative.
+
+3. **Persistenza CoreData**
+   I dati generati dall'utente sono memorizzati localmente tramite CoreData con due entità principali: `MushroomMapAnnotation` (posizione, data, informazioni funghi) e `MushroomMapAnnotationPhoto` (gestione foto multiple). Lo schema mantiene integrità referenziale abilitando query e operazioni batch efficienti.
+
+4. **Servizi di Localizzazione Intelligenti**
+   Un location manager sofisticato gestisce tracciamento real-time, geofencing e monitoraggio regionale. Il sistema crea regioni circolari attorno alle posizioni salvate, attivando notifiche quando l'utente ritorna in luoghi precedentemente fortunati, trasformando scoperte passate in opportunità future.
+
+5. **Previsioni Basate sul Meteo**
+   La funzionalità MiCalendar integra dati meteorologici (temperatura, umidità, precipitazioni, fasi lunari) con un sistema di valutazione configurabile basato su regole. L'algoritmo classifica i giorni come Eccellenti, Buoni, Discreti o Scarsi per la raccolta funghi, aiutando a pianificare efficacemente le spedizioni.
+
+6. **Organizzazione Codice Basata su Estensioni**
+   La codebase sfrutta oltre 20 estensioni Swift per mantenere perfetta separazione delle responsabilità, co
+
+### Caratteristiche Principali
+
+**Riconoscimento ML Personalizzato**
+La caratteristica distintiva di Micelio è il suo modello Core ML personalizzato capace di identificare specie fungine europee direttamente sul dispositivo. Il sistema di riconoscimento processa le immagini attraverso molteplici stadi—preprocessing, classificazione, filtraggio della confidenza—e confronta i risultati con il catalogo curato, presentando predizioni classificate e informazioni complete sulle specie. L'intero processo avviene localmente, garantendo privacy e funzionalità offline.
+
+**Mappa Interattiva dei Funghi**
+L'interfaccia mappa trasforma la ricerca fungina in un diario personale di scoperte. Gli utenti possono marcare ritrovamenti con precisione GPS, allegare foto multiple, aggiungere note dettagliate e costruire un database completo della propria storia di raccolta. Le annotazioni con codice colore forniscono informazioni immediate sulla commestibilità delle specie, rendendo i successi passati facilmente identificabili per riferimenti futuri.
+
+**Notifiche Geofencing Intelligenti**
+Sfruttando le capacità di geofencing iOS, Micelio crea regioni circolari intelligenti attorno alle posizioni fungine salvate. Quando gli utenti entrano in queste aree, l'app invia notifiche contestuali ricordando ritrovamenti precedenti, includendo nome della specie e data di scoperta. Questa funzionalità trasforma l'intero paesaggio in una mappa personalizzata della memoria micologica.
+
+**Catalogo Specie Completo**
+L'app include informazioni dettagliate su oltre 45 specie fungine europee, ciascuna con 10 fotografie di alta qualità, nomi scientifici e comuni, descrizioni complete, classificazioni di commestibilità, preferenze di habitat, disponibilità stagionale e curiosità interessanti. Capacità avanzate di filtraggio e raggruppamento permettono di organizzare i funghi per commestibilità, ambiente o stagione.
+
+**MiCalendar Basato sul Meteo**
+L'innovativa funzionalità calendario valuta i giorni futuri per il potenziale di raccolta funghi utilizzando un sofisticato sistema basato su regole. Fattori come precipitazioni recenti, range di temperatura, livelli di umidità e persino fasi lunari vengono analizzati per predire condizioni favorevoli. Gli utenti possono salvare località preferite, e il sistema fornisce previsioni specifiche per località con ragionamento dettagliato per la classificazione di ogni giorno.
+
+**Contenuto Educativo Ricco**
+Ogni fungo nel catalogo include molteplici sezioni informative: descrizione generale, dettagli su habitat e ambiente, informazioni sulla commestibilità con note di sicurezza e curiosità affascinanti. Questo trasforma Micelio da semplice strumento di identificazione a risorsa educativa completa per appassionati di micologia.
+
+### Eccellenza Tecnica
+
+Il progetto dimostra numerose best practices nello sviluppo iOS:
+
+- **Design Orientato ai Protocolli**: Uso estensivo di protocolli Swift ed enum per architettura di codice type-safe e flessibile
+- **Proprietà Calcolate**: Codice pulito ed espressivo con computed properties che gestiscono trasformazioni di dati complesse
+- **View Modifiers Personalizzati**: View modifiers riutilizzabili che incapsulano pattern comuni di stile e comportamento
+- **Efficienza di Memoria**: Gestione attenta della memoria con uso appropriato di value types e weak references
+- **Maestria CoreLocation**: Geofencing avanzato, monitoraggio regionale e aggiornamenti di posizione in background
+- **Integrazione ML Robusta**: Pipeline sofisticata di elaborazione immagini con thresholding di confidenza e gestione errori
+- **Intelligenza Calendario**: Calcoli complessi del calendario con corretta gestione di timezone e localizzazione
+
+### Privacy e Sicurezza
+
+Micelio prende sul serio la privacy, implementando un approccio privacy-first:
+
+- **Zero raccolta dati**: L'app non raccoglie assolutamente informazioni personali, analytics o dati comportamentali
+- **Nessun tracciamento**: Nessun SDK di terze parti, nessun framework pubblicitario, nessun tracciamento utente di alcun tipo
+- **Elaborazione locale**: Tutto il riconoscimento ML avviene sul dispositivo; le immagini non lasciano mai il telefono
+- **Archiviazione locale**: Tutti i ritrovamenti fungini, foto e preferenze rimangono esclusivamente sul dispositivo
+- **Funzionalità offline**: Le funzionalità principali operano senza connessione internet, garantendo privacy e disponibilità
+- **Trasparenza completa**: Gli utenti mantengono pieno controllo e proprietà dei propri dati di raccolta
+
+### Filosofia di Sviluppo
+
+Il progetto riflette un approccio ponderato e user-centered allo sviluppo software:
+
+- **Sicurezza Prima di Tutto**: Informazioni complete sulla commestibilità e avvisi di sicurezza prioritizzano il benessere dell'utente
+- **Qualità del Codice**: Uso estensivo del sistema di tipi Swift, convenzioni di naming chiare e architettura modulare
+- **Manutenibilità**: Struttura pulita che facilita evoluzione a lungo termine e facile aggiunta di nuove specie
+- **Focus Educativo**: Ogni funzionalità progettata per insegnare agli utenti i funghi e pratiche di raccolta sicure
+- **Innovazione**: Combinazione unica di riconoscimento ML, intelligenza di localizzazione e previsioni meteorologiche
+
+### Impatto
+
+Micelio rappresenta una nuova categoria di app sulla natura—combinando intelligenza artificiale, servizi di localizzazione e dati ambientali per creare un vero compagno intelligente per la raccolta. Rendendo l'identificazione fungina più accessibile mantenendo standard di sicurezza e privacy senza compromessi, l'app potenzia gli utenti nell'esplorare la micologia con confidenza.
+
+L'innovativa funzionalità calendario meteorologico dimostra come l'intelligenza computazionale possa predire fenomeni naturali, trasformando dati ambientali astratti in consigli pratici per la raccolta. Il sistema di geofencing crea una mappa vivente di scoperte personali, assicurando che ogni posto fortunato diventi parte permanente della conoscenza micologica dell'utente.
+
+Ancora più importante, il catalogo completo e i contenuti educativi aiutano gli utenti a sviluppare genuina competenza micologica piuttosto che semplice riconoscimento di pattern, promuovendo un apprezzamento più profondo per l'ecologia fungina e la biodiversità.
+
+### Sviluppi Futuri
+
+Tra i potenziali miglioramenti in considerazione:
+
+- Database specie espanso coprendo regioni geografiche aggiuntive
+- Funzionalità community per condividere spot fungini sicuri e verificati (con controlli privacy)
+- Integrazione con servizi meteorologici aggiuntivi per previsioni migliorate
+- App companion per Apple Watch per registrazione rapida sul campo
+- Modello ML avanzato supportando più specie e maggiore accuratezza
+- Strumenti di analisi sporata e aiuti di identificazione aggiuntivi
+- Supporto multi-lingua per comunità internazionali di raccoglitori
+- Integrazione HealthKit per tracciare consumo di cibi selvatici
+
+Micelio rappresenta un'applicazione iOS completa e rifinita che unisce con successo machine learning, intelligenza di localizzazione ed educazione micologica in uno strumento rispettoso della privacy che migliora genuinamente l'esperienza di raccolta funghi.
+
+</Lang>

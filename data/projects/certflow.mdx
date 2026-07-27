@@ -1,0 +1,313 @@
+---
+title:
+  en: CertFlow
+  it: CertFlow
+
+summary:
+  en: An AI-augmented certification study platform built with Next.js that pairs a curated question bank with pluggable AI providers to deliver an exam simulator, an AI tutor, topic deep dives, and progress tracking across multiple certifications.
+  it: Una piattaforma di studio per certificazioni potenziata dall'AI realizzata con Next.js che unisce una banca dati di domande curate a provider AI intercambiabili per offrire un simulatore d'esame, un tutor AI, approfondimenti sugli argomenti e il tracciamento dei progressi su più certificazioni.
+
+date: 2026-07-22
+
+projectType: product
+status: completed
+
+coverImage: /static/images/projects/certflow.png
+
+tags:
+  - id: nextjs
+    label:
+      en: Next.js
+      it: Next.js
+  - id: typescript
+    label:
+      en: TypeScript
+      it: TypeScript
+  - id: artificial-intelligence
+    label:
+      en: Artificial Intelligence
+      it: Intelligenza Artificiale
+  - id: education
+    label:
+      en: Education
+      it: Formazione
+  - id: certification
+    label:
+      en: Certification
+      it: Certificazione
+  - id: web-development
+    label:
+      en: Web Development
+      it: Sviluppo Web
+
+stack:
+  - Next.js 16
+  - React 19
+  - TypeScript
+  - Tailwind CSS 4
+  - Vitest
+  - React Markdown
+  - OpenAI SDK
+  - Anthropic SDK
+  - Google Generative AI
+  - Ollama
+
+links:
+  github: https://github.com/Light2288/certflow
+---
+
+<Lang value="en">
+
+### Overview
+
+**CertFlow** is an AI-augmented certification study platform built with Next.js. It combines a curated question bank with pluggable AI providers to offer an exam simulator, an AI tutor, topic deep dives, and progress tracking across multiple certifications — all running entirely in the browser with no backend required for content.
+
+Unlike generic quiz apps, CertFlow was architected so that certifications are pure data, AI access flows through a single provider-agnostic interface, and user configuration (including API keys) never leaves the browser. The result is a flexible, privacy-respecting study tool that works out of the box with an offline Mock provider and scales up to real large-language-model providers when you supply your own keys.
+
+### Motivation
+
+Preparing for a technical certification means grinding through practice questions, understanding _why_ answers are right or wrong, and identifying weak spots before exam day. Existing tools fell short:
+
+- **Static question dumps** offer no explanation, no adaptivity, and no way to go deeper on a shaky topic
+- **Subscription platforms** lock content behind paywalls and send your study data to their servers
+- **Single-provider AI tools** tie you to one vendor's key, pricing, and availability
+- **Backend-heavy apps** require infrastructure just to serve what is essentially static content
+
+CertFlow was conceived to bridge these gaps by creating a platform that:
+
+- **Explains, not just scores**: Every question carries a correct-answer rationale and per-option "why others are wrong" notes
+- **Goes deeper on demand**: Any topic can be expanded into an AI-generated deep dive with worked examples and exam tips
+- **Stays vendor-neutral**: A pluggable provider interface supports Mock, OpenAI, Anthropic, Google Gemini, Ollama, and any custom OpenAI-compatible endpoint
+- **Keeps data local**: Content is static JSON and provider settings live only in the browser's `localStorage`
+- **Works offline first**: The built-in Mock provider requires no API key, making the app fully functional out of the box
+
+The goal was a study companion that is genuinely useful, honestly explanatory, and respectful of both the user's wallet and their data.
+
+### System Architecture
+
+CertFlow is built on a modern, content-as-data Next.js architecture that keeps AI access abstract and state management simple:
+
+1. **Next.js App with React 19**
+   The platform is built on Next.js 16 with React 19 and TypeScript, styled with Tailwind CSS 4. It renders a multi-feature single-page study experience with a global footer on every page.
+
+2. **Static Content as Data**
+   All certification content is static JSON served from `public/data/certifications/` — there is no database and no backend required for content. Each certification lives in its own id-keyed folder containing `config.json` (metadata + exam details), `topics.json` (topics and subtopics), and `questions.json` (the curated question bank), tied together by a top-level `index.json` manifest. Canonical TypeScript definitions for every shape live in `lib/types/certification.ts`.
+
+3. **Pluggable AI Provider Interface**
+   AI access goes through a single provider-agnostic `AIProvider` interface behind an `AIService`. Supported providers include **Mock** (offline demo, no key), **OpenAI**, **Anthropic**, **Google (Gemini)**, **Ollama** (local models via a server-side `/api/chat` route), and **Custom** (any OpenAI-compatible endpoint with a base URL). Swapping providers requires no changes to feature code.
+
+4. **Browser-Local Configuration**
+   Provider choice, API key, model, and other options are configured in the app's Settings page and persisted to `localStorage` — nothing is sent to a CertFlow server. Settings survive reloads within the same browser.
+
+5. **Hook and Context State Management**
+   Application state is managed with React hooks and Context (via a `SettingsProvider`) rather than a heavyweight store, keeping the data flow explicit and easy to reason about.
+
+6. **Data-Only Multi-Certification Model**
+   Adding a certification means creating a new folder under `public/data/certifications/<id>/` with its three JSON files and registering it in the manifest — no code changes required. The app ships with Snowflake SnowPro Core, AWS Certified Developer – Associate, and AWS Certified Data Engineer – Associate.
+
+### Key Features
+
+**Exam Simulator**
+Configurable practice quizzes let users choose question count, difficulty, and topic filter, then work through them with per-question review, detailed explanations, and pass/fail scoring aligned to the certification's real score range.
+
+**AI Tutor**
+A provider-backed chat assistant, grounded in the selected certification, answers questions and clarifies concepts conversationally — using whichever AI provider the user has configured.
+
+**Topic Map & Deep Dive**
+Users can browse a certification's exam topics and subtopics and expand any topic into an AI-generated deep dive covering an overview, worked examples, real-world context, and exam tips — turning a syllabus outline into on-demand study material.
+
+**AI Question Generation & Validation**
+Beyond the curated bank, CertFlow can generate additional practice questions on demand and score them for clarity, topic alignment, and correctness, so generated content is quality-checked before it reaches the learner.
+
+**Progress Tracking**
+Per-topic performance is tracked over time with weakness detection, helping users focus their study effort where it matters most rather than re-covering material they already know.
+
+**Multi-Certification Support**
+Because certifications are defined purely as data, users can switch between them freely. The app ships with Snowflake SnowPro Core, AWS Certified Developer – Associate, and AWS Certified Data Engineer – Associate, and new certifications drop in as JSON.
+
+**Multiple AI Providers**
+A single Settings screen lets users pick Mock, OpenAI, Anthropic, Google Gemini, Ollama, or a custom OpenAI-compatible endpoint, enter a key where required, and choose a model — with the Mock provider ensuring the app is fully usable offline and for demos.
+
+**Global Footer**
+Every page carries a footer with a "Buy me a coffee" donation link, project and license links, an AI-content disclaimer, and the current app version — keeping attribution and transparency consistent throughout.
+
+### Technical Excellence
+
+The project demonstrates several web development best practices:
+
+- **Provider Abstraction**: A single `AIProvider` interface behind `AIService` isolates every AI vendor behind one contract, so features never depend on a specific provider
+- **Content/Code Separation**: Certifications are static JSON with canonical TypeScript types, keeping content authoring independent of application logic
+- **TypeScript Throughout**: Canonical type definitions in `lib/types` describe every content and settings shape for compile-time safety
+- **Backend-Free Content**: Static files under `public/data/` mean no database or server is needed to serve or update the question bank
+- **Local-Only Settings**: Provider configuration and keys persist to `localStorage`, never to a CertFlow server
+- **Deterministic, Offline Testing**: The Vitest suite (with React Testing Library and happy-dom) tests AI-dependent code against the Mock provider so tests never hit a real network
+
+### Privacy & Data Ownership
+
+CertFlow is designed so that users retain control of their data:
+
+- **No content backend**: Certification content is served as static files; there is no server-side database to query or leak
+- **Keys stay in the browser**: API keys and provider settings are stored only in `localStorage` and are never transmitted to a CertFlow server
+- **Bring-your-own provider**: Users supply their own API keys and talk directly to their chosen AI vendor
+- **Offline-capable by default**: The Mock provider requires no key and no network, so the app is fully functional without sending anything anywhere
+- **Transparent AI content**: A footer disclaimer makes clear when content is AI-generated
+
+### Development Philosophy
+
+The project reflects a pragmatic, user-respecting approach to software development:
+
+- **Content as Data**: Treating certifications as static JSON keeps the platform flexible and easy to extend
+- **Vendor Neutrality**: The pluggable provider model avoids lock-in and lets users choose cost, quality, and privacy trade-offs
+- **Offline First**: The Mock provider guarantees the app works with zero configuration
+- **Explanation over Rote**: Rich per-question rationales prioritize genuine understanding over score-chasing
+- **Testability**: Mock-provider testing keeps the AI-dependent code fast, deterministic, and network-free
+- **Transparency**: Clear AI-content disclaimers and open licensing keep the tool honest with its users
+
+### Impact
+
+CertFlow reframes certification prep as an explanatory, adaptive experience rather than a static question dump. By pairing a curated, well-explained question bank with on-demand AI deep dives and question generation, it helps learners understand _why_ answers are correct and where their weak spots lie — the part that actually moves the needle on exam day.
+
+Its architecture is equally significant: because certifications are pure data and AI access is fully abstracted, the platform is cheap to extend, easy to test, and respectful of user privacy. Learners bring their own AI keys, keep their data in their own browser, and can start immediately with the offline Mock provider — a combination rarely found in commercial study platforms.
+
+### Future Directions
+
+Potential enhancements under consideration include:
+
+- Additional bundled certifications across more vendors and domains
+- Spaced-repetition scheduling driven by the existing progress-tracking data
+- Richer analytics dashboards for long-term study trends
+- Import/export of progress and custom question sets
+- Expanded provider support and model auto-discovery
+- Enhanced accessibility and internationalization of the interface
+
+CertFlow represents a complete, polished study platform that successfully merges a curated question bank, pluggable AI, and a privacy-respecting, backend-free architecture into a tool that genuinely helps people pass their certifications.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**CertFlow** è una piattaforma di studio per certificazioni potenziata dall'AI realizzata con Next.js. Unisce una banca dati di domande curate a provider AI intercambiabili per offrire un simulatore d'esame, un tutor AI, approfondimenti sugli argomenti e il tracciamento dei progressi su più certificazioni — il tutto eseguito interamente nel browser senza alcun backend richiesto per i contenuti.
+
+A differenza delle generiche app di quiz, CertFlow è stata architettata affinché le certificazioni siano puri dati, l'accesso all'AI passi attraverso una singola interfaccia agnostica rispetto al provider e la configurazione utente (incluse le chiavi API) non lasci mai il browser. Il risultato è uno strumento di studio flessibile e rispettoso della privacy che funziona immediatamente con un provider Mock offline e scala fino a veri provider di modelli linguistici quando fornisci le tue chiavi.
+
+### Motivazione
+
+Prepararsi a una certificazione tecnica significa macinare domande di pratica, capire _perché_ le risposte sono giuste o sbagliate e individuare i punti deboli prima del giorno dell'esame. Gli strumenti esistenti risultavano insufficienti:
+
+- **Le raccolte statiche di domande** non offrono spiegazioni, adattività né modo di approfondire un argomento incerto
+- **Le piattaforme in abbonamento** bloccano i contenuti dietro un paywall e inviano i tuoi dati di studio ai loro server
+- **Gli strumenti AI a singolo provider** ti legano alla chiave, al prezzo e alla disponibilità di un solo vendor
+- **Le app pesanti sul backend** richiedono infrastruttura solo per servire contenuti sostanzialmente statici
+
+CertFlow è stata concepita per colmare queste lacune creando una piattaforma che:
+
+- **Spiega, non si limita a valutare**: Ogni domanda porta con sé una motivazione della risposta corretta e note "perché le altre sono sbagliate" per ciascuna opzione
+- **Approfondisce su richiesta**: Qualsiasi argomento può essere espanso in un approfondimento generato dall'AI con esempi svolti e consigli d'esame
+- **Rimane neutrale rispetto ai vendor**: Un'interfaccia provider intercambiabile supporta Mock, OpenAI, Anthropic, Google Gemini, Ollama e qualsiasi endpoint personalizzato compatibile con OpenAI
+- **Mantiene i dati locali**: I contenuti sono JSON statico e le impostazioni dei provider vivono solo nel `localStorage` del browser
+- **Funziona prima di tutto offline**: Il provider Mock integrato non richiede chiavi API, rendendo l'app pienamente funzionante immediatamente
+
+L'obiettivo era un compagno di studio genuinamente utile, onestamente esplicativo e rispettoso sia del portafoglio dell'utente sia dei suoi dati.
+
+### Architettura del Sistema
+
+CertFlow è costruita su un'architettura Next.js moderna, con i contenuti come dati, che mantiene astratto l'accesso all'AI e semplice la gestione dello stato:
+
+1. **App Next.js con React 19**
+   La piattaforma è costruita su Next.js 16 con React 19 e TypeScript, stilizzata con Tailwind CSS 4. Rende un'esperienza di studio single-page multi-funzionalità con un footer globale su ogni pagina.
+
+2. **Contenuti Statici come Dati**
+   Tutti i contenuti delle certificazioni sono JSON statico servito da `public/data/certifications/` — non c'è database né backend richiesto per i contenuti. Ogni certificazione vive nella propria cartella con chiave per id, contenente `config.json` (metadati + dettagli d'esame), `topics.json` (argomenti e sotto-argomenti) e `questions.json` (la banca dati curata delle domande), legati insieme da un manifest `index.json` di primo livello. Le definizioni TypeScript canoniche per ogni forma vivono in `lib/types/certification.ts`.
+
+3. **Interfaccia Provider AI Intercambiabile**
+   L'accesso all'AI passa attraverso una singola interfaccia `AIProvider` agnostica rispetto al provider dietro un `AIService`. I provider supportati includono **Mock** (demo offline, senza chiave), **OpenAI**, **Anthropic**, **Google (Gemini)**, **Ollama** (modelli locali tramite una route lato server `/api/chat`) e **Custom** (qualsiasi endpoint compatibile con OpenAI con un base URL). Cambiare provider non richiede modifiche al codice delle funzionalità.
+
+4. **Configurazione Locale al Browser**
+   Scelta del provider, chiave API, modello e altre opzioni sono configurati nella pagina Impostazioni dell'app e persistiti nel `localStorage` — nulla viene inviato a un server CertFlow. Le impostazioni sopravvivono ai ricaricamenti nello stesso browser.
+
+5. **Gestione dello Stato con Hook e Context**
+   Lo stato dell'applicazione è gestito con React hook e Context (tramite un `SettingsProvider`) anziché uno store pesante, mantenendo il flusso dei dati esplicito e facile da comprendere.
+
+6. **Modello Multi-Certificazione basato solo su Dati**
+   Aggiungere una certificazione significa creare una nuova cartella sotto `public/data/certifications/<id>/` con i suoi tre file JSON e registrarla nel manifest — nessuna modifica al codice richiesta. L'app include Snowflake SnowPro Core, AWS Certified Developer – Associate e AWS Certified Data Engineer – Associate.
+
+### Caratteristiche Principali
+
+**Simulatore d'Esame**
+Quiz di pratica configurabili permettono agli utenti di scegliere numero di domande, difficoltà e filtro per argomento, per poi affrontarli con revisione per domanda, spiegazioni dettagliate e punteggio promosso/bocciato allineato al reale intervallo di punteggio della certificazione.
+
+**Tutor AI**
+Un assistente chat basato su provider, ancorato alla certificazione selezionata, risponde alle domande e chiarisce i concetti in modo conversazionale — usando qualunque provider AI l'utente abbia configurato.
+
+**Mappa degli Argomenti e Approfondimento**
+Gli utenti possono esplorare gli argomenti e i sotto-argomenti d'esame di una certificazione ed espandere qualsiasi argomento in un approfondimento generato dall'AI che copre una panoramica, esempi svolti, contesto reale e consigli d'esame — trasformando lo schema di un programma in materiale di studio su richiesta.
+
+**Generazione e Validazione delle Domande con AI**
+Oltre alla banca dati curata, CertFlow può generare domande di pratica aggiuntive su richiesta e valutarle per chiarezza, allineamento all'argomento e correttezza, così che il contenuto generato sia controllato prima di raggiungere lo studente.
+
+**Tracciamento dei Progressi**
+Le prestazioni per argomento sono tracciate nel tempo con rilevamento dei punti deboli, aiutando gli utenti a concentrare lo sforzo di studio dove conta di più anziché ricoprire materiale che già conoscono.
+
+**Supporto Multi-Certificazione**
+Poiché le certificazioni sono definite puramente come dati, gli utenti possono passare liberamente dall'una all'altra. L'app include Snowflake SnowPro Core, AWS Certified Developer – Associate e AWS Certified Data Engineer – Associate, e nuove certificazioni si aggiungono come JSON.
+
+**Provider AI Multipli**
+Un'unica schermata Impostazioni permette agli utenti di scegliere Mock, OpenAI, Anthropic, Google Gemini, Ollama o un endpoint personalizzato compatibile con OpenAI, inserire una chiave dove richiesta e scegliere un modello — con il provider Mock che garantisce che l'app sia pienamente utilizzabile offline e per le demo.
+
+**Footer Globale**
+Ogni pagina porta un footer con un link di donazione "Buy me a coffee", link al progetto e alla licenza, un disclaimer sui contenuti AI e la versione corrente dell'app — mantenendo attribuzione e trasparenza coerenti ovunque.
+
+### Eccellenza Tecnica
+
+Il progetto dimostra diverse best practice nello sviluppo web:
+
+- **Astrazione del Provider**: Una singola interfaccia `AIProvider` dietro `AIService` isola ogni vendor AI dietro un unico contratto, così le funzionalità non dipendono mai da un provider specifico
+- **Separazione Contenuti/Codice**: Le certificazioni sono JSON statico con tipi TypeScript canonici, mantenendo l'authoring dei contenuti indipendente dalla logica applicativa
+- **TypeScript Ovunque**: Le definizioni di tipo canoniche in `lib/types` descrivono ogni forma di contenuto e impostazioni per la sicurezza a compile-time
+- **Contenuti senza Backend**: I file statici sotto `public/data/` significano che non serve alcun database o server per servire o aggiornare la banca dati delle domande
+- **Impostazioni solo Locali**: La configurazione dei provider e le chiavi persistono nel `localStorage`, mai su un server CertFlow
+- **Test Deterministici e Offline**: La suite Vitest (con React Testing Library e happy-dom) testa il codice dipendente dall'AI contro il provider Mock così i test non raggiungono mai una rete reale
+
+### Privacy e Proprietà dei Dati
+
+CertFlow è progettata affinché gli utenti mantengano il controllo dei propri dati:
+
+- **Nessun backend per i contenuti**: I contenuti delle certificazioni sono serviti come file statici; non c'è un database lato server da interrogare o da cui trapelare dati
+- **Le chiavi restano nel browser**: Le chiavi API e le impostazioni dei provider sono memorizzate solo nel `localStorage` e non sono mai trasmesse a un server CertFlow
+- **Porta il tuo provider**: Gli utenti forniscono le proprie chiavi API e comunicano direttamente con il vendor AI scelto
+- **Capace di funzionare offline per impostazione predefinita**: Il provider Mock non richiede chiavi né rete, così l'app è pienamente funzionante senza inviare nulla a nessuno
+- **Contenuti AI trasparenti**: Un disclaimer nel footer chiarisce quando il contenuto è generato dall'AI
+
+### Filosofia di Sviluppo
+
+Il progetto riflette un approccio pragmatico e rispettoso dell'utente allo sviluppo software:
+
+- **Contenuti come Dati**: Trattare le certificazioni come JSON statico mantiene la piattaforma flessibile e facile da estendere
+- **Neutralità rispetto ai Vendor**: Il modello a provider intercambiabile evita il lock-in e lascia agli utenti la scelta dei compromessi tra costo, qualità e privacy
+- **Offline Prima di Tutto**: Il provider Mock garantisce che l'app funzioni con configurazione zero
+- **Spiegazione anziché Memorizzazione**: Ricche motivazioni per domanda privilegiano la comprensione genuina rispetto alla rincorsa del punteggio
+- **Testabilità**: Il test con provider Mock mantiene il codice dipendente dall'AI veloce, deterministico e senza rete
+- **Trasparenza**: Chiari disclaimer sui contenuti AI e licenza aperta mantengono lo strumento onesto con i suoi utenti
+
+### Impatto
+
+CertFlow reinquadra la preparazione alle certificazioni come un'esperienza esplicativa e adattiva anziché una statica raccolta di domande. Abbinando una banca dati curata e ben spiegata ad approfondimenti AI su richiesta e alla generazione di domande, aiuta gli studenti a capire _perché_ le risposte sono corrette e dove si trovano i loro punti deboli — la parte che fa davvero la differenza il giorno dell'esame.
+
+La sua architettura è altrettanto significativa: poiché le certificazioni sono puri dati e l'accesso all'AI è pienamente astratto, la piattaforma è economica da estendere, facile da testare e rispettosa della privacy dell'utente. Gli studenti portano le proprie chiavi AI, mantengono i dati nel proprio browser e possono iniziare immediatamente con il provider Mock offline — una combinazione raramente presente nelle piattaforme di studio commerciali.
+
+### Sviluppi Futuri
+
+Tra i potenziali miglioramenti in considerazione:
+
+- Certificazioni integrate aggiuntive su più vendor e domini
+- Pianificazione a ripetizione dilazionata guidata dai dati di tracciamento dei progressi esistenti
+- Dashboard analitiche più ricche per le tendenze di studio a lungo termine
+- Import/export dei progressi e di set di domande personalizzati
+- Supporto provider ampliato e auto-scoperta dei modelli
+- Accessibilità potenziata e internazionalizzazione dell'interfaccia
+
+CertFlow rappresenta una piattaforma di studio completa e rifinita che unisce con successo una banca dati curata di domande, AI intercambiabile e un'architettura senza backend rispettosa della privacy in uno strumento che aiuta genuinamente le persone a superare le proprie certificazioni.
+
+</Lang>

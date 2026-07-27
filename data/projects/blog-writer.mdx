@@ -1,0 +1,302 @@
+---
+title:
+  en: Blog-Writer
+  it: Blog-Writer
+
+summary:
+  en: A self-contained opencode automation project that turns recent work across your other projects into bilingual (English + Italian) MDX blog articles, observing sources read-only and publishing only on explicit command.
+  it: Un progetto di automazione opencode autonomo che trasforma il lavoro recente sui tuoi altri progetti in articoli di blog MDX bilingue (inglese + italiano), osservando le fonti in sola lettura e pubblicando solo su comando esplicito.
+
+date: 2026-07-27
+
+projectType: product
+status: completed
+
+coverImage: /static/images/projects/blog-writer.png
+
+tags:
+  - id: opencode
+    label:
+      en: opencode
+      it: opencode
+  - id: ai-agents
+    label:
+      en: AI Agents
+      it: Agenti AI
+  - id: automation
+    label:
+      en: Automation
+      it: Automazione
+  - id: content-generation
+    label:
+      en: Content Generation
+      it: Generazione Contenuti
+  - id: bilingual
+    label:
+      en: Bilingual
+      it: Bilingue
+  - id: blog
+    label:
+      en: Blog
+      it: Blog
+
+stack:
+  - opencode
+  - Git
+  - SQLite
+  - MDX
+  - Bash
+  - Next.js
+  - Tailwind CSS
+
+links:
+  github: https://github.com/Light2288/blog-writer
+---
+
+<Lang value="en">
+
+### Overview
+
+**Blog-Writer** is a self-contained [opencode](https://opencode.ai) project that turns recent work — spread across several other projects — into bilingual (English + Italian) blog articles for a Tailwind/Next.js MDX blog. Its defining principle is restraint: it **only observes** the projects it writes about and never modifies them. Two manually-invoked agents live inside the project, and every capability they have is bounded by an explicit, auditable permission model.
+
+Unlike generic "AI writing assistant" tooling, Blog-Writer is purpose-built around a real content pipeline: it mines your own git history and opencode session transcripts for genuine, recently-completed work, proposes scored candidate topics, drafts an article with you in the loop, and publishes only when you explicitly say so. It is a disciplined authoring companion rather than an autonomous content generator.
+
+### Motivation
+
+Developers accumulate a steady stream of interesting work — bug hunts, architecture decisions, tricky refactors — but the gap between "did the work" and "wrote about it" is where most blog posts die. Existing solutions fell short:
+
+- **Generic AI writers** invent plausible-sounding content untethered from what you actually did
+- **Manual blogging** requires remembering, reconstructing, and translating work weeks after the fact
+- **Automation tools** often demand broad, uncomfortable access to source repositories and secrets
+- **Single-language workflows** make maintaining synchronized bilingual content tedious and error-prone
+
+Blog-Writer was conceived to bridge these gaps by creating a system that:
+
+- **Grounds articles in real evidence**: Topics are surfaced from actual git commits and opencode session transcripts, correlated by timestamp, never invented
+- **Keeps the human in control**: Nothing is drafted, published, or committed without an explicit instruction
+- **Observes without touching**: Source projects are read-only inputs; the tool never edits, commits, or pushes to them
+- **Produces bilingual output natively**: English and Italian are first-class from the start, assembled into a single MDX file
+- **Respects privacy and safety**: A strict permission boundary denies destructive commands and blocks well-known secret stores
+
+The goal was a tool that quietly lowers the activation energy for writing about your work — without ever putting your repositories, secrets, or published output at risk.
+
+### System Architecture
+
+Blog-Writer is built as an opencode project with a deliberately small surface area, organized around two agents, a directory-based workflow, and a declarative permission boundary:
+
+1. **Two Manually-Invoked Agents**
+   The project ships with `topic-extractor` (a read-only analyst) and `blog-writer` (a drafting and publishing agent). There is no automation or scheduling — each agent is invoked deliberately by the user from inside the project. This keeps the human firmly in the loop at every stage.
+
+2. **Evidence-Gathering Pipeline**
+   The `topic-extractor` reads git commit history and opencode session transcripts directly from the session database using `sqlite3 -readonly`, filtering on the `time_updated` column. It correlates commits and transcripts by timestamp to reconstruct what actually happened during a given window, and redacts obvious secrets before anything reaches a candidate file.
+
+3. **Directory-Based Workflow**
+   Content flows through a clear filesystem pipeline: `inputs/` holds candidate-topic files (`topics-YYYY-MM-DD.md`) plus a `published-topics.md` ledger; `drafts/` holds in-progress articles marked `draft: true`; and `published/` holds finished articles moved there only on explicit command. Each stage is inspectable and version-controllable.
+
+4. **Scoring and De-duplication**
+   Each candidate topic is scored across five dimensions — Reader appeal, Technical depth, Storytelling, Uniqueness, and Publishability — and ordered by an Overall score. Topics you have **already published** (matched by a stable `topic_key` via the `published-topics.md` ledger and published frontmatter) are skipped, so re-running the extractor never resurfaces finished work. Drafts do not count — only published articles.
+
+5. **Optional Allowlist**
+   A `tracked-projects.txt` file acts as an optional allowlist: when present and non-empty, only the listed project directories are considered; when absent or comment-only, the extractor auto-discovers candidate projects from the opencode database and confirms the list with you before extracting. This makes it trivial to exclude sensitive projects.
+
+6. **Declarative Permission Boundary**
+   The entire safety model lives in `.opencode/opencode.json`. Both agents may read anywhere (to inspect sources and the database), but edits are tightly scoped per agent, and destructive commands are denied outright. Permission rules are resolved by last-matching-rule-wins ordering, with a catch-all placed first and narrow rules after it.
+
+### Key Features
+
+**Read-Only Topic Extraction**
+The `topic-extractor` is a pure analyst. Ask it to _"extract topics from last week"_ and it determines which projects to consider, reads git history and opencode transcripts via `sqlite3 -readonly`, correlates them by timestamp, redacts obvious secrets, scores the candidates, and writes a DRAFT topics file named by the run date (so same-week re-runs don't collide) — recording the ISO week, window, and a generation timestamp inside. On your approval it flips `Status: DRAFT` to `Status: FINAL`. It never writes an article itself.
+
+**Human-in-the-Loop Drafting**
+The `blog-writer` agent reads your `CONVENTIONS.md` (your writing voice and style), drafts the **English body first**, and iterates with you until it's right. Only then does it translate to Italian and assemble a single bilingual `drafts/<slug>.mdx` with `draft: true` frontmatter and a stable `topic_key`. Every step is collaborative and reversible.
+
+**Explicit-Command Publishing**
+Publishing is never implicit. On your explicit _"publish &lt;slug&gt;"_ command, the `blog-writer` flips `draft: false`, moves the file to `published/<slug>.mdx`, and records the `topic_key` in `inputs/published-topics.md` so the extractor won't resurface it. It never edits source projects and never commits or pushes.
+
+**Observe-Only Guarantee**
+The most important feature is a non-feature: Blog-Writer cannot modify the projects it writes about. They are strictly read-only inputs. This guarantee is enforced structurally through the permission boundary, not merely by convention.
+
+**Enforced Permission Model**
+Both agents may read anywhere and may run `git *` and `sqlite3 * -readonly *`, but `git push`, `git commit --amend`, and `rm -rf` are **denied**. The `topic-extractor` may edit only within `inputs/**`; the `blog-writer` may edit only within `drafts/**`, `inputs/**`, and `published/**`. An `external_directory` policy allows reading under the home directory and the opencode DB directory while denying well-known secret stores (`~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config`, and any `.env`).
+
+**Repeatable Acceptance Testing**
+A single end-to-end acceptance procedure maps every acceptance criterion to a concrete check, distinguishing automated mechanical verifiers from the manual agent-conversation script. The whole mechanical suite runs from the project root via `bash tests/run_all.sh`, with individual verifiers for scaffolding, topic extraction, conventions, drafting, system-wide checks, permission denial, and deterministic redaction. The permission and destructive-command scenarios can additionally be proven against the live runtime as an opt-in check.
+
+### Technical Excellence
+
+The project demonstrates several thoughtful engineering practices:
+
+- **Least-Privilege Design**: Every agent capability is the minimum required; broad reads are allowed, but writes and destructive commands are tightly constrained
+- **Deterministic Verification**: Redaction and flagging logic are covered by deterministic tests, so safety behavior is provable rather than assumed
+- **Read-Only Data Access**: The opencode session database is always opened with `sqlite3 -readonly`, guaranteeing the analysis pipeline can never mutate source data
+- **Idempotent Re-runs**: The `topic_key` ledger makes re-running the extractor safe — finished work is never resurfaced
+- **Timestamp Correlation**: Commits and session transcripts are joined by time to reconstruct an accurate picture of a work window
+- **Configuration Discipline**: The permission config's rule ordering is documented and intentional, acknowledging that opencode resolves patterns by last-match-wins
+
+### Privacy & Security
+
+Blog-Writer treats safety as a first-class architectural concern:
+
+- **No source modification**: Projects being written about are read-only; the tool cannot edit, commit, or push to them
+- **No destructive commands**: `git push`, `git commit --amend`, and `rm -rf` are denied at the permission layer
+- **Secret-store denial**: `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config`, and any `.env` files are explicitly off-limits
+- **Read-only database access**: The opencode session DB is only ever opened with `sqlite3 -readonly`
+- **Secret redaction**: Obvious secrets are redacted before candidate content is written
+- **Scoped writes**: Each agent can only write within the specific directories its role requires
+- **No automation**: Nothing runs on a schedule; every action is a deliberate, human-initiated invocation
+
+### Development Philosophy
+
+The project reflects a disciplined, safety-first approach to agentic tooling:
+
+- **Restraint by Default**: The tool does as little as possible to sources — observing, never touching
+- **Human in the Loop**: Drafting and publishing always require explicit human instruction
+- **Evidence over Invention**: Articles are grounded in real git and session history, not fabricated
+- **Provable Safety**: Permission boundaries and redaction are tested, not merely asserted
+- **Transparency**: Every stage produces inspectable, version-controllable artifacts on disk
+- **Bilingualism as Standard**: English and Italian are produced together, keeping translations synchronized
+
+### Impact
+
+Blog-Writer demonstrates how agentic automation can be genuinely useful without being reckless. By grounding topics in real work, keeping the human in control of every draft and publish, and enforcing a strict observe-only permission boundary, it turns the tedious "I should write about that" impulse into a low-friction, repeatable pipeline — while guaranteeing that the projects being written about are never put at risk.
+
+The scoring-and-ledger design means the tool respects your time: it surfaces only fresh, unpublished topics and orders them by genuine editorial value. The bilingual-by-default output removes the translation tax that usually discourages maintaining a dual-language blog. And because the whole safety model is declarative and tested, the tool can be trusted to run against real repositories and a real session database without anxiety.
+
+### Future Directions
+
+Potential enhancements under consideration include:
+
+- Additional scoring dimensions and configurable weightings tuned to personal editorial taste
+- Richer redaction heuristics and per-project redaction rules
+- Support for additional target languages beyond English and Italian
+- Optional integration with more source signals (issue trackers, PR discussions)
+- A summary dashboard of published topics and coverage gaps across projects
+- Draft revision history and side-by-side bilingual review tooling
+
+Blog-Writer represents a complete, safety-conscious agentic tool that successfully merges evidence-based topic discovery, human-in-the-loop authoring, and native bilingual output into a workflow that respects both your time and your repositories.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**Blog-Writer** è un progetto [opencode](https://opencode.ai) autonomo che trasforma il lavoro recente — distribuito su diversi altri progetti — in articoli di blog bilingue (inglese + italiano) per un blog MDX Tailwind/Next.js. Il suo principio distintivo è la moderazione: **osserva soltanto** i progetti di cui scrive e non li modifica mai. All'interno del progetto vivono due agenti a invocazione manuale, e ogni capacità che possiedono è delimitata da un modello di permessi esplicito e verificabile.
+
+A differenza dei generici "assistenti di scrittura AI", Blog-Writer è costruito appositamente attorno a una vera pipeline di contenuti: estrae dalla tua cronologia git e dalle trascrizioni delle sessioni opencode il lavoro reale e recentemente completato, propone argomenti candidati con punteggio, redige un articolo con te nel processo e pubblica solo quando lo dici esplicitamente. È un compagno di scrittura disciplinato piuttosto che un generatore di contenuti autonomo.
+
+### Motivazione
+
+Gli sviluppatori accumulano un flusso costante di lavoro interessante — caccia ai bug, decisioni architetturali, refactoring complessi — ma il divario tra "aver fatto il lavoro" e "averne scritto" è dove muoiono la maggior parte dei post. Le soluzioni esistenti risultavano insufficienti:
+
+- **Gli scrittori AI generici** inventano contenuti plausibili ma slegati da ciò che hai realmente fatto
+- **Il blogging manuale** richiede di ricordare, ricostruire e tradurre il lavoro settimane dopo
+- **Gli strumenti di automazione** spesso richiedono accessi ampi e scomodi a repository e segreti
+- **I workflow monolingue** rendono tediosa e soggetta a errori la manutenzione di contenuti bilingue sincronizzati
+
+Blog-Writer è stato concepito per colmare queste lacune creando un sistema che:
+
+- **Radica gli articoli in prove reali**: Gli argomenti emergono da commit git reali e trascrizioni di sessioni opencode, correlati per timestamp, mai inventati
+- **Mantiene il controllo umano**: Nulla viene redatto, pubblicato o committato senza un'istruzione esplicita
+- **Osserva senza toccare**: I progetti sorgente sono input in sola lettura; lo strumento non li modifica, committa o pusha mai
+- **Produce output bilingue nativamente**: Inglese e italiano sono di prima classe fin dall'inizio, assemblati in un unico file MDX
+- **Rispetta privacy e sicurezza**: Un rigido confine di permessi nega i comandi distruttivi e blocca i noti archivi di segreti
+
+L'obiettivo era uno strumento che abbassasse silenziosamente l'energia di attivazione per scrivere del proprio lavoro — senza mai mettere a rischio repository, segreti o contenuti pubblicati.
+
+### Architettura del Sistema
+
+Blog-Writer è costruito come progetto opencode con una superficie deliberatamente ridotta, organizzato attorno a due agenti, un workflow basato su directory e un confine di permessi dichiarativo:
+
+1. **Due Agenti a Invocazione Manuale**
+   Il progetto include `topic-extractor` (un analista in sola lettura) e `blog-writer` (un agente di redazione e pubblicazione). Non c'è automazione né scheduling — ogni agente viene invocato deliberatamente dall'utente dall'interno del progetto. Questo mantiene l'essere umano saldamente nel processo in ogni fase.
+
+2. **Pipeline di Raccolta Prove**
+   Il `topic-extractor` legge la cronologia dei commit git e le trascrizioni delle sessioni opencode direttamente dal database delle sessioni usando `sqlite3 -readonly`, filtrando sulla colonna `time_updated`. Correla commit e trascrizioni per timestamp per ricostruire ciò che è realmente accaduto in una data finestra temporale, e redige i segreti evidenti prima che qualsiasi cosa raggiunga un file candidato.
+
+3. **Workflow Basato su Directory**
+   I contenuti fluiscono attraverso una chiara pipeline sul filesystem: `inputs/` contiene i file di argomenti candidati (`topics-YYYY-MM-DD.md`) più un registro `published-topics.md`; `drafts/` contiene articoli in lavorazione marcati `draft: true`; e `published/` contiene articoli finiti spostati lì solo su comando esplicito. Ogni fase è ispezionabile e versionabile.
+
+4. **Punteggio e De-duplicazione**
+   Ogni argomento candidato viene valutato su cinque dimensioni — Attrattiva per il lettore, Profondità tecnica, Narrazione, Unicità e Pubblicabilità — e ordinato per un punteggio complessivo. Gli argomenti che hai **già pubblicato** (individuati tramite una `topic_key` stabile attraverso il registro `published-topics.md` e il frontmatter pubblicato) vengono saltati, così rieseguire l'estrattore non ripropone mai lavoro finito. Le bozze non contano — solo gli articoli pubblicati.
+
+5. **Allowlist Opzionale**
+   Un file `tracked-projects.txt` funge da allowlist opzionale: quando presente e non vuoto, vengono considerate solo le directory di progetto elencate; quando assente o composto solo da commenti, l'estrattore scopre automaticamente i progetti candidati dal database opencode e conferma la lista con te prima di estrarre. Questo rende banale escludere progetti sensibili.
+
+6. **Confine di Permessi Dichiarativo**
+   L'intero modello di sicurezza vive in `.opencode/opencode.json`. Entrambi gli agenti possono leggere ovunque (per ispezionare le fonti e il database), ma le modifiche sono strettamente delimitate per agente, e i comandi distruttivi sono negati del tutto. Le regole di permesso sono risolte con l'ordinamento "vince l'ultima regola corrispondente", con un catch-all posto per primo e le regole specifiche dopo.
+
+### Caratteristiche Principali
+
+**Estrazione di Argomenti in Sola Lettura**
+Il `topic-extractor` è un puro analista. Chiedigli di _"estrarre argomenti dalla settimana scorsa"_ e determina quali progetti considerare, legge la cronologia git e le trascrizioni opencode via `sqlite3 -readonly`, le correla per timestamp, redige i segreti evidenti, valuta i candidati e scrive un file di argomenti in stato DRAFT nominato per la data di esecuzione (così le riesecuzioni nella stessa settimana non collidono) — registrando al suo interno la settimana ISO, la finestra e un timestamp di generazione. Con la tua approvazione passa da `Status: DRAFT` a `Status: FINAL`. Non scrive mai un articolo da solo.
+
+**Redazione con l'Umano nel Processo**
+L'agente `blog-writer` legge il tuo `CONVENTIONS.md` (la tua voce e il tuo stile di scrittura), redige prima il **corpo in inglese** e itera con te finché non è perfetto. Solo allora traduce in italiano e assembla un unico `drafts/<slug>.mdx` bilingue con frontmatter `draft: true` e una `topic_key` stabile. Ogni passo è collaborativo e reversibile.
+
+**Pubblicazione su Comando Esplicito**
+La pubblicazione non è mai implicita. Sul tuo comando esplicito _"publish &lt;slug&gt;"_, il `blog-writer` cambia `draft: false`, sposta il file in `published/<slug>.mdx` e registra la `topic_key` in `inputs/published-topics.md` così l'estrattore non lo riproporrà. Non modifica mai i progetti sorgente e non committa né pusha mai.
+
+**Garanzia di Sola Osservazione**
+La caratteristica più importante è una non-caratteristica: Blog-Writer non può modificare i progetti di cui scrive. Sono rigorosamente input in sola lettura. Questa garanzia è imposta strutturalmente tramite il confine di permessi, non solo per convenzione.
+
+**Modello di Permessi Imposto**
+Entrambi gli agenti possono leggere ovunque ed eseguire `git *` e `sqlite3 * -readonly *`, ma `git push`, `git commit --amend` e `rm -rf` sono **negati**. Il `topic-extractor` può modificare solo entro `inputs/**`; il `blog-writer` può modificare solo entro `drafts/**`, `inputs/**` e `published/**`. Una policy `external_directory` consente la lettura sotto la home e la directory del DB opencode, negando i noti archivi di segreti (`~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config` e qualsiasi `.env`).
+
+**Test di Accettazione Ripetibili**
+Un'unica procedura di accettazione end-to-end mappa ogni criterio di accettazione a un controllo concreto, distinguendo i verificatori meccanici automatizzati dallo script manuale di conversazione con gli agenti. L'intera suite meccanica si esegue dalla radice del progetto con `bash tests/run_all.sh`, con verificatori individuali per scaffolding, estrazione argomenti, convenzioni, redazione, controlli a livello di sistema, negazione dei permessi e redazione deterministica. Gli scenari di permessi e comandi distruttivi possono inoltre essere provati contro il runtime live come controllo opt-in.
+
+### Eccellenza Tecnica
+
+Il progetto dimostra diverse pratiche ingegneristiche ponderate:
+
+- **Design a Privilegio Minimo**: Ogni capacità degli agenti è il minimo necessario; le letture ampie sono consentite, ma scritture e comandi distruttivi sono strettamente vincolati
+- **Verifica Deterministica**: La logica di redazione e flagging è coperta da test deterministici, così il comportamento di sicurezza è dimostrabile anziché presunto
+- **Accesso ai Dati in Sola Lettura**: Il database delle sessioni opencode è sempre aperto con `sqlite3 -readonly`, garantendo che la pipeline di analisi non possa mai mutare i dati sorgente
+- **Riesecuzioni Idempotenti**: Il registro delle `topic_key` rende sicura la riesecuzione dell'estrattore — il lavoro finito non viene mai riproposto
+- **Correlazione per Timestamp**: Commit e trascrizioni di sessione sono uniti per tempo per ricostruire un quadro accurato di una finestra di lavoro
+- **Disciplina di Configurazione**: L'ordinamento delle regole nella config dei permessi è documentato e intenzionale, riconoscendo che opencode risolve i pattern con "vince l'ultima corrispondenza"
+
+### Privacy e Sicurezza
+
+Blog-Writer tratta la sicurezza come una preoccupazione architetturale di prima classe:
+
+- **Nessuna modifica alle fonti**: I progetti di cui si scrive sono in sola lettura; lo strumento non può modificarli, committarli o pusharli
+- **Nessun comando distruttivo**: `git push`, `git commit --amend` e `rm -rf` sono negati a livello di permessi
+- **Negazione degli archivi di segreti**: `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config` e qualsiasi file `.env` sono esplicitamente off-limits
+- **Accesso al database in sola lettura**: Il DB delle sessioni opencode è aperto solo con `sqlite3 -readonly`
+- **Redazione dei segreti**: I segreti evidenti sono redatti prima che il contenuto candidato venga scritto
+- **Scritture delimitate**: Ogni agente può scrivere solo entro le directory specifiche richieste dal suo ruolo
+- **Nessuna automazione**: Nulla gira su schedule; ogni azione è un'invocazione deliberata avviata dall'umano
+
+### Filosofia di Sviluppo
+
+Il progetto riflette un approccio disciplinato e orientato alla sicurezza per il tooling agentico:
+
+- **Moderazione per Impostazione Predefinita**: Lo strumento fa il meno possibile alle fonti — osservando, mai toccando
+- **Umano nel Processo**: Redazione e pubblicazione richiedono sempre un'istruzione umana esplicita
+- **Prove anziché Invenzione**: Gli articoli sono radicati nella cronologia git e di sessione reale, non fabbricati
+- **Sicurezza Dimostrabile**: Confini di permessi e redazione sono testati, non solo asseriti
+- **Trasparenza**: Ogni fase produce artefatti ispezionabili e versionabili su disco
+- **Bilinguismo come Standard**: Inglese e italiano sono prodotti insieme, mantenendo sincronizzate le traduzioni
+
+### Impatto
+
+Blog-Writer dimostra come l'automazione agentica possa essere genuinamente utile senza essere avventata. Radicando gli argomenti nel lavoro reale, mantenendo l'umano al controllo di ogni bozza e pubblicazione e imponendo un rigido confine di permessi in sola osservazione, trasforma il tedioso impulso "dovrei scriverne" in una pipeline a bassa frizione e ripetibile — garantendo al contempo che i progetti di cui si scrive non siano mai messi a rischio.
+
+Il design a punteggio-e-registro fa sì che lo strumento rispetti il tuo tempo: propone solo argomenti freschi e non pubblicati e li ordina per genuino valore editoriale. L'output bilingue di default rimuove la tassa di traduzione che di solito scoraggia il mantenimento di un blog in doppia lingua. E poiché l'intero modello di sicurezza è dichiarativo e testato, lo strumento può essere fidato per girare contro repository reali e un database di sessioni reale senza ansia.
+
+### Sviluppi Futuri
+
+Tra i potenziali miglioramenti in considerazione:
+
+- Dimensioni di punteggio aggiuntive e pesi configurabili calibrati sul gusto editoriale personale
+- Euristiche di redazione più ricche e regole di redazione per progetto
+- Supporto per lingue di destinazione aggiuntive oltre a inglese e italiano
+- Integrazione opzionale con più segnali sorgente (issue tracker, discussioni delle PR)
+- Una dashboard riassuntiva degli argomenti pubblicati e delle lacune di copertura tra progetti
+- Cronologia delle revisioni delle bozze e strumento di revisione bilingue affiancata
+
+Blog-Writer rappresenta uno strumento agentico completo e attento alla sicurezza che unisce con successo la scoperta di argomenti basata su prove, l'authoring con l'umano nel processo e l'output bilingue nativo in un workflow che rispetta sia il tuo tempo sia i tuoi repository.
+
+</Lang>

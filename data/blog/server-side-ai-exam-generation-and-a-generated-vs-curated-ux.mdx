@@ -1,0 +1,260 @@
+---
+title:
+  en: Teaching my quiz app to make up its own questions
+  it: Ho insegnato alla mia app di quiz a inventarsi le domande
+
+summary:
+  en: >
+    I let an AI generate exam questions in my certification-practice app, then
+    realized the hard part was not generating them but being honest about which
+    ones were real.
+  it: >
+    Ho lasciato che una AI generasse le domande d'esame nella mia app per
+    esercitarsi alle certificazioni, e ho scoperto che la parte difficile non era
+    generarle, ma essere onesto su quali fossero davvero attendibili.
+
+date: 2026-07-27
+lastmod: 2026-07-27
+
+topic_key: server-side-ai-exam-generation-and-a-generated-vs-curated-ux
+
+tags:
+  - id: certflow
+    label:
+      en: certflow
+      it: certflow
+  - id: ai
+    label:
+      en: AI
+      it: AI
+  - id: nextjs
+    label:
+      en: Next.js
+      it: Next.js
+  - id: ux
+    label:
+      en: UX
+      it: UX
+
+draft: false
+images: []
+---
+
+<Lang value="en">
+
+I have a side project called [certflow](https://github.com/Light2288/certflow),
+a little app for practicing certification exams. It has a pool of curated
+questions I wrote and reviewed by hand, which is exactly as fun as it sounds. So
+naturally, at some point, I had the idea every developer eventually has when
+faced with tedious manual work: what if the computer did it for me?
+
+The plan was to let an AI generate extra exam questions on demand. The plan
+worked. The interesting part, the part I did not see coming, was everything that
+happened _after_ it worked.
+
+## The easy 80%: making questions appear
+
+Wiring up generation was the quick bit. certflow already had an AI layer for its
+tutor feature, so producing questions was mostly a matter of asking nicely and
+parsing the result into the same shape as my hand-written ones. A generator
+takes the exam's topics, asks the model for a batch, and hands back objects that
+look exactly like pool questions.
+
+Crucially, the generation runs **server-side**, through an API route, not in the
+browser. This is one of those decisions that feels like bureaucratic
+box-ticking until the one time it saves you. Question generation needs
+credentials and a model endpoint, and the browser is the last place on earth you
+want either of those. So the flow is simple: the client asks the server for
+questions, the server talks to the model, and the client never sees anything it
+should not.
+
+certflow supports a configurable AI backend (I run it against different
+providers depending on the day and my mood), so the settings page grew a small
+**Advanced Options** panel: temperature, max tokens, and a base URL. That last
+field is the quietly useful one, because it lets me point the same code at a
+local model or a hosted one without touching a line of source.
+
+```ts:lib/types/ai-settings.ts
+export interface AISettings {
+  temperature: number  // 0–1, how adventurous the model gets
+  maxTokens: number
+  baseUrl: string      // point it at whatever speaks the same protocol
+}
+```
+
+At this point I had a quiz that could invent an endless supply of questions.
+Victory. Except.
+
+## The hard 20%: not lying to the user
+
+Here is the thing about a machine that generates plausible exam questions: it
+generates _plausible_ exam questions. Plausible is not the same as correct. A
+model can produce a question that looks impeccable, uses all the right
+vocabulary, has four tidy answers, and is quietly, confidently wrong. It is the
+overconfident colleague of software: never in doubt, occasionally right.
+
+My hand-curated questions carry a different kind of trust. I checked those. If a
+user is grinding through a practice exam the night before the real thing, the
+difference between "a human vetted this" and "a language model was feeling
+creative" is not a footnote. It is the whole point.
+
+So the real feature was never "generate questions." It was **be honest about
+where each question came from.** Every question now carries its provenance, and
+the live question card wears it openly:
+
+```ts:lib/quiz/question.ts
+type QuestionSource = "curated" | "ai-generated"
+// the UI shows a small badge; nobody has to guess
+```
+
+A small badge, almost nothing to build. But it changes the contract with the
+user from "trust this quiz" to "here is exactly what you are looking at, decide
+for yourself." I would rather show the seams than paper over them.
+
+## Letting the user hold the dial
+
+Once provenance was visible, the natural next step was to stop deciding the mix
+for everyone. The generator had always supported a pool-to-generated ratio, but
+the value was hardcoded to 0.3 and buried in the code like a light switch
+installed inside a wall. Not useful to anyone who actually lives there.
+
+So I pulled it out into the open as a target percentage. Someone who trusts only
+the vetted questions can sit at 100% curated. Someone who has exhausted the pool
+and just wants volume before an exam can crank up the generated share. The
+important bit is the graceful fallback: if the pool cannot fill its quota, or
+the generator comes back empty-handed, the app fills the gap with whatever it
+does have instead of presenting the user with a proud, empty exam.
+
+That last sentence took far longer to get right than the badge, the settings
+panel, and the ratio slider combined. Fallbacks are where the honest work hides.
+
+## What the exercise actually taught me
+
+I set out to add a feature called "AI question generation." What I actually built
+was a set of small honesties: run the model where its secrets are safe, label
+what it produces, let the user decide how much of it to trust, and never pretend
+the app has questions it does not.
+
+The generating was the afternoon. The not-lying was the week. And that ratio,
+now that I write it down, feels like it applies to a great deal more than one
+quiz app.
+
+certflow, badges and fallbacks and all, lives at
+[github.com/Light2288/certflow](https://github.com/Light2288/certflow) for the
+curious.
+
+</Lang>
+
+<Lang value="it">
+
+Ho un side project che si chiama
+[certflow](https://github.com/Light2288/certflow), una piccola app per
+esercitarsi agli esami di certificazione. Ha un pool di domande curate che ho
+scritto e revisionato a mano, un'attività divertente esattamente quanto sembra.
+Così, com'era prevedibile, a un certo punto mi è venuta l'idea che prima o poi
+viene a ogni sviluppatore davanti a un lavoro manuale e tedioso: e se lo facesse
+il computer al posto mio?
+
+Il piano era lasciare che una AI generasse domande d'esame extra, a richiesta. Il
+piano ha funzionato. La parte interessante, quella che non avevo previsto, è
+stata tutto quello che è successo _dopo_ che ha funzionato.
+
+## L'80% facile: far comparire le domande
+
+Mettere in piedi la generazione è stata la parte veloce. certflow aveva già un
+layer di AI per la funzione tutor, quindi produrre domande è stato in gran parte
+questione di chiedere gentilmente e fare il parsing del risultato nella stessa
+forma delle domande scritte a mano. Un generator prende gli argomenti dell'esame,
+chiede un lotto al modello e restituisce oggetti identici alle domande del pool.
+
+Fatto non trascurabile: la generazione gira **server-side**, attraverso una API
+route, non nel browser. È una di quelle decisioni che sembrano burocrazia da
+timbro sulla pratica finché non arriva l'unica volta in cui ti salva. Generare le
+domande richiede credenziali e un endpoint del modello, e il browser è l'ultimo
+posto sulla faccia della terra in cui vuoi vedere una di queste due cose. Il
+flusso quindi è semplice: il client chiede le domande al server, il server parla
+con il modello, e il client non vede mai niente che non dovrebbe vedere.
+
+certflow supporta un backend AI configurabile (lo faccio girare su provider
+diversi a seconda del giorno e dell'umore), così la pagina delle impostazioni si
+è arricchita di un piccolo pannello **Advanced Options**: temperature, max tokens
+e una base URL. È quest'ultimo campo quello silenziosamente utile, perché mi
+permette di puntare lo stesso codice a un modello locale o a uno ospitato senza
+toccare una riga di sorgente.
+
+```ts:lib/types/ai-settings.ts
+export interface AISettings {
+  temperature: number  // 0–1, how adventurous the model gets
+  maxTokens: number
+  baseUrl: string      // point it at whatever speaks the same protocol
+}
+```
+
+A questo punto avevo un quiz capace di inventare una scorta infinita di domande.
+Vittoria. Peccato che.
+
+## Il 20% difficile: non mentire all'utente
+
+Il fatto è questo, con una macchina che genera domande d'esame plausibili: genera
+domande d'esame _plausibili_. E plausibile non è sinonimo di corretto. Un modello
+può sfornarti una domanda dall'aspetto impeccabile, con tutto il vocabolario
+giusto e quattro risposte in bell'ordine, e che è serenamente, fiduciosamente
+sbagliata. È il collega sicuro di sé fatto software: non è mai in dubbio, e ogni
+tanto è persino nel giusto.
+
+Le mie domande curate a mano si portano dietro un altro tipo di fiducia. Quelle
+le ho controllate. Se qualcuno si sta massacrando su un esame di prova la sera
+prima di quello vero, la differenza tra "questa l'ha validata un essere umano" e
+"un language model si sentiva creativo" non è una postilla in fondo alla pagina.
+È tutto il punto della faccenda.
+
+Quindi la vera feature non è mai stata "generare le domande". Era **essere onesti
+su da dove arriva ciascuna domanda.** Adesso ogni domanda si porta dietro la sua
+provenienza, e la question card la mostra apertamente, senza fare la timida:
+
+```ts:lib/quiz/question.ts
+type QuestionSource = "curated" | "ai-generated"
+// the UI shows a small badge; nobody has to guess
+```
+
+Un piccolo badge, praticamente niente da costruire. Ma cambia il patto con
+l'utente: da "fidati di questo quiz" a "ecco esattamente cosa hai davanti,
+regolati di conseguenza". Preferisco mostrare le cuciture piuttosto che
+nasconderle sotto il tappeto.
+
+## Lasciare il controllo in mano all'utente
+
+Una volta resa visibile la provenienza, il passo naturale successivo era smettere
+di decidere io il mix per tutti. Il generator aveva sempre supportato un rapporto
+pool/generato, ma il valore era hardcoded a 0.3 e sepolto nel codice come un
+interruttore della luce murato dentro la parete di casa. Utile a nessuno di
+quelli che ci abitano davvero.
+
+Così l'ho tirato fuori allo scoperto come percentuale desiderata. Chi si fida
+solo delle domande validate può restare al 100% curated. Chi ha prosciugato il
+pool e vuole solo volume prima di un esame può alzare la quota generata. La parte
+importante è il fallback fatto con grazia: se il pool non riesce a coprire la sua
+quota, o il generator torna a mani vuote, l'app colma la lacuna con quello che ha
+invece di presentare all'utente un esame fiero e vuoto.
+
+Quest'ultima frase ha richiesto molto più tempo per venire giusta del badge, del
+pannello delle impostazioni e dello slider del rapporto messi insieme. È nei
+fallback che si nasconde il lavoro onesto.
+
+## Cosa mi ha insegnato davvero l'esercizio
+
+Ero partito per aggiungere una feature chiamata "generazione di domande con la
+AI". Quello che ho costruito davvero è una serie di piccole onestà: fai girare il
+modello dove i suoi secrets sono al sicuro, etichetta quello che produce, lascia
+che sia l'utente a decidere quanto fidarsi, e non far mai finta che l'app abbia
+domande che non ha.
+
+La generazione mi ha portato via un pomeriggio. Il non mentire, un'intera
+settimana. E quel rapporto, adesso che lo metto nero su bianco, mi sa che vale per
+parecchie altre cose oltre a una app di quiz.
+
+certflow, badge, fallback e tutto il resto, sta su
+[github.com/Light2288/certflow](https://github.com/Light2288/certflow), per i
+curiosi.
+
+</Lang>

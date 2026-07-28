@@ -1,0 +1,423 @@
+---
+title:
+  en: I built two robots that refuse to write my blog for me
+  it: Ho costruito due robot che si rifiutano di scrivere il blog al posto mio
+
+summary:
+  en: >
+    I built two opencode agents to run my blog, one to mine my work for ideas
+    and one to write them up, then spent most of the week teaching them,
+    patiently, everything they were forbidden to touch.
+  it: >
+    Ho costruito due agenti opencode per gestire il blog, uno che scava tra i
+    miei lavori a caccia di idee e uno che le scrive, e poi ho passato quasi
+    tutta la settimana a insegnargli, con santa pazienza, tutto quello che non
+    devono toccare.
+
+date: 2026-07-23
+lastmod: 2026-07-23
+
+topic_key: building-a-two-agent-blog-writer-system-in-opencode
+
+tags:
+  - id: opencode
+    label:
+      en: opencode
+      it: opencode
+  - id: ai-agents
+    label:
+      en: AI Agents
+      it: Agenti AI
+  - id: retrospective
+    label:
+      en: Retrospective
+      it: Retrospettiva
+  - id: automation
+    label:
+      en: Automation
+      it: Automazione
+
+draft: false
+images: []
+---
+
+<Lang value="en">
+
+I write code across a handful of projects, and every so often I think: _this
+would make a decent blog post_. Then the thought dies quietly, somewhere between
+"later" and "I've forgotten what I even did." So I did the only reasonable thing
+a developer does when faced with a discipline problem. Instead of fixing my
+habits, I built a tool. Two of them, actually: two agents in
+[opencode](https://opencode.ai), one that digs through my recent work and
+proposes what to write about, and one that actually writes it.
+
+This is the story of that build. Spoiler: most of the effort went not into
+teaching the agents what to do, but into teaching them what they must _never_
+do.
+
+## Why two agents instead of one
+
+The temptation was to build a single all-knowing agent: "read my week, write my
+blog." I resisted, and I'm glad I did, because the two jobs are genuinely
+different animals.
+
+The first job is analysis: figure out _what_ is worth writing about. It reads git
+history and my past coding sessions, correlates them, and produces a shortlist.
+It should never touch prose. The second job is creative writing in my voice,
+turning one of those ideas into an article, and it should never go rummaging
+through databases. So I split them:
+
+- **topic-extractor**: a read-only analyst. It surfaces candidate topics from
+  recent activity and writes them to a file. It never writes an article, even
+  if I ask it to.
+- **blog-writer**: the writer. It takes one topic and drafts a bilingual
+  article, iterating with me. It never goes near the source projects except to
+  read them.
+
+Two agents, two narrow jobs, two very different sets of things they're forbidden
+from doing. That separation turned out to be the whole point.
+
+## Teaching an agent to observe without touching
+
+The topic-extractor's raw material is my own history: git commits, plus the
+transcripts of my past opencode sessions, which live in a local SQLite database.
+Which means its actual job is to go dumpster-diving through everything I did last
+week and come back holding something up hopefully, like a raccoon that has found
+half a sandwich. Some weeks the sandwich is a genuinely good idea. Some weeks
+it's three commits titled "fix", "fix again" and "ok now really fix", and a
+session where I argued with a type error for forty minutes and lost.
+
+The commits are easy: `git log` in a date window. The sessions were more
+interesting. They sit in `~/.local/share/opencode/opencode.db`, and I very much
+did not want an "analyst" that could accidentally rewrite my own history like a
+time traveller with commitment issues. So every single database call is made
+with `sqlite3 -readonly`. Not "usually." Not "unless the file looks locked."
+Always. The agent is instructed to surface a clear error rather than ever fall
+back to write access.
+
+Then it correlates: commits and sessions that happened close together in time,
+in the same project, probably belong to the same story. From that it writes a
+DRAFT list of candidate topics, each with a working title, a note on why it's
+interesting, its sources, and (a later addition) a little scorecard.
+
+There was one unglamorous but essential step in the middle: **redaction**. Coding
+sessions are exactly the kind of place a stray API key or bearer token likes to
+hang out, quietly, waiting for its moment. Before anything gets written to disk,
+the session text runs through a small filter that swaps secret-looking strings
+for a redaction marker and raises a flag:
+
+```bash
+$ printf 'Authorization: Bearer <a-very-secret-token>' | python3 redact.py
+Authorization: Bearer [REDACTED:bearer]
+# stderr: FLAG
+```
+
+Any topic built from flagged material gets a visible warning, so I can decide in
+review whether it's safe. It's conservative and a little paranoid, which for
+anything touching secrets is precisely the correct amount of paranoid.
+
+## The DRAFT-first ritual
+
+Both agents follow the same rule, and it's the rule I'd keep if I could keep
+only one: **write the file first, then ask.**
+
+The agent produces its output, a topics list or an article, as a file on disk,
+explicitly marked as a draft. Only _then_ does it turn to me with a short
+question: _does this look right?_ It never dumps the whole thing into the chat
+for approval.
+
+There's a boring technical reason and a good design reason. The boring reason:
+stuffing a few kilobytes of markdown into an interactive prompt can terminate
+the request outright, which is a spectacular way to lose work. The good reason:
+the file on disk is the single source of truth. I review the artefact, not a
+summary of the artefact, which is the difference between reading a contract and
+having a stranger describe it to you over the phone from a moving train. The
+draft marker (`Status: DRAFT` for topic lists, `draft: true` in the frontmatter
+for articles) flips to final only when I explicitly say so. The agent never
+promotes its own homework.
+
+## The part where I mostly wrote rules about saying "no"
+
+Here's the confession. I set out to build two helpful writing assistants. I
+spent most of my time building two extremely well-behaved ones. The guardrails
+ended up being the real product.
+
+The strongest guardrail is a permission boundary that opencode enforces at the
+runtime level, not just in a prompt the agent can be sweet-talked into ignoring.
+Each agent can _read_ widely, because it has to, but its ability to _write_ is
+fenced into specific folders:
+
+```json:.opencode/opencode.json
+"edit": {
+  "*": "deny",
+  "**": "deny",
+  "inputs/**": "allow"
+}
+```
+
+That's the topic-extractor: deny everything, then allow exactly one folder. The
+blog-writer gets three (`drafts/`, `inputs/`, `published/`) and not a byte more.
+The catch-all denials come _first_ and the narrow allow comes _last_, because
+the last matching rule wins. Get that ordering backwards and your careful fence
+becomes a decorative gate standing alone in a field, fooling nobody.
+
+The same treatment applies to the shell:
+
+```json:.opencode/opencode.json
+"bash": {
+  "*": "ask",
+  "git *": "allow",
+  "sqlite3 -readonly *": "allow",
+  "mv drafts/* published/*": "allow",
+  "git push*": "deny",
+  "git commit --amend*": "deny",
+  "rm -rf*": "deny"
+}
+```
+
+`git` and read-only `sqlite3` are allowed, anything else asks first. The
+blog-writer may run exactly one `mv` to publish a finished article, and the
+genuinely alarming commands (`git push`, `git commit --amend`, `rm -rf`) are
+flatly denied. An agent that can `rm -rf` on your behalf is not an assistant.
+It's a liability with good intentions and root access.
+
+On top of the runtime fence, each agent carries **anti-hijack rules** in its own
+prompt, a belt to go with the braces. If I get lazy and tell the topic-extractor
+"oh just write the article yourself," it declines and points me at the
+blog-writer. If I tell the blog-writer to fix a bug in one of my source
+projects, or to commit, or to push, it refuses and offers to get back to
+writing. They are, by design, magnificently unhelpful in all the ways I want
+them to be unhelpful.
+
+## Building it in five steps, each one tested
+
+I didn't write all this in one heroic sitting. It went in five deliberate
+stages: the project scaffold and permissions first, then the topic-extractor,
+then my writing conventions, then the blog-writer, and finally an end-to-end
+acceptance pass tying it together.
+
+Each stage came with a small suite of mechanical checks: does the permission
+config actually deny `rm -rf`, does the redaction filter actually flag a fake
+token, does the writer refuse when my conventions file is still an empty
+template. Unglamorous tests, the software equivalent of smoke detectors. Silent
+and ignorable right up until the one evening they earn their entire existence.
+
+## What I'd tell myself before starting
+
+The thing that surprised me is how much of "building an agent" is really just
+deciding the shape of the box it lives in. Extracting topics and writing prose
+were the easy afternoon. The rest of the week went into scoped writes, read-only
+database access, the DRAFT-first ritual, the redaction pass, and the stubborn
+little "no" rules that keep each agent in its lane.
+
+I started out wanting to automate my blog and ended up mostly automating my own
+restraint. I'm fine with that. And there's a decent test of whether it worked
+sitting right in front of you: this article was the first thing the machine and
+I made together. You can judge the tone. I'm just relieved nothing got
+`rm -rf`'d along the way.
+
+The whole thing, agents and skills and the paranoid permission config, lives at
+[github.com/Light2288/blog-writer](https://github.com/Light2288/blog-writer) if
+you want to poke at it or judge my commit messages.
+
+</Lang>
+
+<Lang value="it">
+
+Scrivo codice per una manciata di progetti e, ogni tanto, mi sorprendo a
+pensare: _questa sarebbe una discreta idea per un post_. Poi il pensiero si
+spegne mestamente, da qualche parte tra il "poi lo faccio" e il "non ricordo
+nemmeno più cosa avevo combinato". Così ho fatto l'unica cosa dignitosa che uno
+sviluppatore riesce a fare davanti a un problema di disciplina: invece di
+correggere le mie abitudini, mi sono costruito un attrezzo. Anzi, due: due agent
+in [opencode](https://opencode.ai), uno che scava tra i miei lavori recenti e mi
+propone di cosa scrivere, e uno che poi scrive per davvero.
+
+Questa è la storia di come li ho tirati su. Vi anticipo il finale, come nei
+gialli fatti male: la fatica non è stata insegnargli cosa fare, ma insegnargli
+cosa non devono fare _mai_.
+
+## Perché due agent invece di uno
+
+La tentazione era costruire un unico agent onnisciente: "leggi la mia settimana,
+scrivimi il blog". Ho resistito, e ho fatto benissimo, perché i due lavori sono
+due bestie completamente diverse.
+
+Il primo agent fa analisi: capire _di cosa_ valga la pena scrivere. Legge la
+history di git e le mie vecchie sessioni di coding, le mette in relazione e
+sforna una rosa di candidati. Non deve mai toccare la prosa. Il secondo agent fa
+scrittura creativa, nel mio stile, e trasforma una di quelle idee in un
+articolo: non deve mai mettersi a frugare nei database. Quindi li ho separati:
+
+- **topic-extractor**: un analista in sola lettura. Fa emergere i temi candidati
+  dall'attività recente e li scrive in un file. Non scrive mai un articolo,
+  neanche se lo supplico.
+- **blog-writer**: lo scrittore. Prende un tema e ne scrive una bozza bilingue,
+  un passo alla volta, insieme a me. Non mette mai il naso nei progetti di
+  partenza, se non per leggerli.
+
+Due agent, due lavori dai confini strettissimi, due elenchi molto diversi di
+cose che gli è severamente vietato fare. Ed è esattamente lì, in quella
+separazione, che sta tutto il punto.
+
+## Insegnare a un agent a osservare senza toccare
+
+La materia prima del topic-extractor è la mia stessa history: i commit di git più
+le trascrizioni delle mie vecchie sessioni opencode, che se ne stanno in un
+database SQLite locale. Il che vuol dire che il suo vero mestiere è andare a
+rovistare nel cassonetto di tutto quello che ho fatto la settimana prima e
+tornare mostrandomi qualcosa con aria speranzosa, come un procione che ha
+recuperato mezzo panino da un bidone. Certe settimane il panino è un'idea
+genuinamente buona. Certe altre sono tre commit intitolati "fix", "fix again" e
+"ok now really fix", più una sessione in cui ho discusso animatamente con un
+errore di type per quaranta minuti, uscendone sconfitto.
+
+I commit sono roba facile: `git log` su una finestra temporale. Le sessioni sono
+più delicate. Se ne stanno in `~/.local/share/opencode/opencode.db`, e non
+volevo assolutamente un "analista" capace di riscrivermi la storia per sbaglio,
+con la disinvoltura di chi cancella una lavagna altrui convinto che fosse la
+propria. Perciò ogni singola chiamata al database usa `sqlite3 -readonly`. Non
+"quasi sempre". Non "salvo quando il file sembra occupato". Sempre. All'agent è
+imposto di sollevare un errore chiaro piuttosto che ripiegare, per qualunque
+motivo al mondo, sull'accesso in scrittura.
+
+Poi mette in relazione le cose: commit e sessioni avvenuti a poca distanza di
+tempo, nello stesso progetto, con ogni probabilità raccontano la stessa storia.
+Da lì scrive una lista in stato DRAFT di temi candidati, ognuno con un titolo di
+lavoro, due righe sul perché sia interessante, le sue fonti e (aggiunta
+successiva) una piccola pagella.
+
+C'è stato un passaggio poco glorioso ma essenziale nel mezzo: la redazione dei
+**secrets**. Le sessioni di coding sono precisamente il genere di posto in cui
+una API key o un bearer token smarriti amano annidarsi, in silenzio, aspettando
+il momento buono per rovinarti la giornata. Prima che qualcosa finisca su disco,
+il testo della sessione passa per un piccolo filtro che sostituisce le stringhe
+dall'aria sospetta con un marcatore e alza una bandierina:
+
+```bash
+$ printf 'Authorization: Bearer <a-very-secret-token>' | python3 redact.py
+Authorization: Bearer [REDACTED:bearer]
+# stderr: FLAG
+```
+
+Ogni tema costruito su materiale segnalato si porta dietro un avviso ben
+visibile, così in fase di revisione decido io se è sicuro. È un approccio
+prudente e che sottintende un filo di paranoia, che per qualsiasi cosa abbia a
+che fare con dei secrets, è esattamente la giusta dose di paranoia.
+
+## Il rito del DRAFT prima di tutto
+
+Entrambi gli agent seguono la stessa regola, ed è quella che terrei se dovessi
+tenerne una sola: **prima scrivi il file, poi chiedi.**
+
+L'agent produce il suo risultato, una lista di temi o un articolo, come file su
+disco, marcato esplicitamente come bozza. Solo _a quel punto_ si volta verso di
+me con una domanda breve: _va bene così?_ Non mi rovescia mai l'intero malloppo
+nella chat per farselo approvare.
+
+C'è una ragione tecnica noiosa, e una ragione di design più interessante. Quella
+noiosa: infilare qualche kilobyte di markdown dentro un prompt interattivo può
+far terminare la richiesta di botto, che è un modo spettacolare di buttare via il
+lavoro. Quella interessante: il file su disco è l'unica fonte di verità. Io
+faccio una revisione del manufatto, non del riassunto del manufatto, che è la
+stessa differenza tra leggere un contratto di persona e farselo raccontare al
+telefono da uno sconosciuto che ha imparato da poco la tua lingua mentre viaggia
+su un treno in un tratto con diverse gallerie. Il marcatore di bozza
+(`Status: DRAFT` per le liste di temi, `draft: true` nel frontmatter per gli
+articoli) passa a definitivo solo quando lo dico io, esplicitamente. L'agent non
+si autopromuove mai i compiti.
+
+## La parte in cui ho scritto soprattutto regole per dire "no"
+
+Ed ecco la confessione. Ero partito per costruire due assistenti di scrittura
+utili. Ho passato la stragrande maggioranza del tempo a costruirne due
+mostruosamente beneducati. I guardrails sono finiti per essere il vero prodotto.
+
+Il guardrail più robusto è un sistema di permessi che opencode fa rispettare a
+livello di runtime, e non affidato a un semplice prompt, che l'agent si può far
+convincere a ignorare con un minimo di insistenza. Ogni agent può _leggere_ in
+lungo e in largo, perché gli serve, ma la sua capacità di _scrivere_ è limitata a
+cartelle precise:
+
+```json:.opencode/opencode.json
+"edit": {
+  "*": "deny",
+  "**": "deny",
+  "inputs/**": "allow"
+}
+```
+
+Questo è il topic-extractor: nega tutto, poi concede esattamente una cartella. Il
+blog-writer ne ottiene tre (`drafts/`, `inputs/`, `published/`) e non un byte di
+più. Le negazioni generali vengono _prima_ e il permesso ristretto viene _dopo_,
+perché vince l'ultima regola che combacia. Inverti quell'ordine e il tuo recinto
+scrupolosissimo si trasforma in una porta blindata montata su una parete di
+cartongesso: solida, autorevole, e del tutto inutile appena qualcuno gira
+l'angolo.
+
+Lo stesso trattamento vale per la shell:
+
+```json:.opencode/opencode.json
+"bash": {
+  "*": "ask",
+  "git *": "allow",
+  "sqlite3 -readonly *": "allow",
+  "mv drafts/* published/*": "allow",
+  "git push*": "deny",
+  "git commit --amend*": "deny",
+  "rm -rf*": "deny"
+}
+```
+
+`git` e `sqlite3` in sola lettura sono consentiti, per tutto il resto prima
+chiedi. Il blog-writer può eseguire esattamente un `mv` per pubblicare un
+articolo finito, e i comandi davvero rischiosi (`git push`, `git commit --amend`,
+`rm -rf`) sono negati senza appello. Un agent che può fare `rm -rf` per conto tuo
+non è un assistente. È un disastro annunciato, con le migliori intenzioni e i
+permessi di root.
+
+Sopra il recinto del runtime, ogni agent si porta dietro delle **regole
+anti-dirottamento** scritte nel proprio prompt: due sicure invece di una. Se mi
+lascio prendere dalla pigrizia e dico al topic-extractor "ma sì, scrivitelo tu
+l'articolo", lui declina educatamente e mi rispedisce dal blog-writer. Se dico al
+blog-writer di sistemare un bug in uno dei progetti di partenza, o di fare un
+commit, o un push, rifiuta e si offre gentilmente di tornare a scrivere. Sono,
+per come li ho progettati, magnificamente inutili in tutti i modi in cui voglio
+che lo siano.
+
+## Costruito in cinque passi, ognuno testato
+
+Non ho scritto tutto questo in un'unica, eroica seduta notturna. È andata in
+cinque tappe ben scandite: prima l'impalcatura del progetto e i permessi, poi il
+topic-extractor, poi le mie convenzioni di scrittura, poi il blog-writer, e
+infine un giro di collaudo end-to-end a tenere insieme la baracca.
+
+Ogni tappa si portava dietro una piccola batteria di controlli meccanici: la
+configurazione dei permessi nega per davvero `rm -rf`? Il filtro di redazione
+segnala per davvero un token finto? Lo scrittore si rifiuta per davvero quando il
+file di convenzioni è ancora un template vuoto? Test tutt'altro che affascinanti,
+l'equivalente software dei rilevatori di fumo. Silenziosi e perfettamente
+ignorabili fino alla sera in cui, una volta sola, si guadagnano di colpo tutta la
+loro esistenza.
+
+## Cosa direi a me stesso prima di cominciare
+
+La cosa che mi ha sorpreso è quanta parte della costruzione di un agent sia in
+realtà solo decidere la forma della scatola in cui vive. Estrarre i temi e
+scrivere la prosa sono state la parte facile, sbrigata in un pomeriggio. Il resto
+della settimana se n'è andato in scritture ristrette, accesso al database in sola
+lettura, il rito del DRAFT prima di tutto, il passaggio di redazione e le
+testarde regoline del "no" che tengono ogni agent nella propria corsia.
+
+Ero partito per automatizzare il blog e ho finito per automatizzare soprattutto
+la mia autodisciplina. E va bene così. Del resto, una prova discreta del fatto
+che abbia funzionato è proprio qui davanti: questo articolo è la prima cosa che
+io e la macchina abbiamo fatto insieme. Sul tono, giudizio sospeso. Io sono solo
+enormemente sollevato che, lungo la strada, non sia finito niente sotto un
+`rm -rf`.
+
+Il tutto, agent, skill e la paranoica configurazione dei permessi, sta su
+[github.com/Light2288/blog-writer](https://github.com/Light2288/blog-writer),
+per chi avesse voglia di curiosare.
+
+</Lang>

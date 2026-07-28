@@ -19,7 +19,14 @@
     },
     "certifications": {
       "title": "Certificazioni e competenze",
-      "view": "Vedi certificazione →"
+      "view": "Vedi certificazione →",
+      "groupBy": "Raggruppa per",
+      "byYear": "Anno",
+      "byIssuer": "Emittente",
+      "other": "Altro",
+      "expires": "Scade",
+      "expired": "Scaduto",
+      "noExpiration": "Senza scadenza"
     },
     "cv": {
       "title": "Curriculum Vitae",

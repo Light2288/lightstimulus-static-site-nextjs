@@ -28,6 +28,10 @@ public/tags/**/feed.xml
 # search
 /public/search.json
 
+# generated tag data
+/app/blog-tag-data.json
+/app/project-tag-data.json
+
 # misc
 .DS_Store
 

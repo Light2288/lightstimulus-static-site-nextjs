@@ -184,6 +184,8 @@ export const Authors = defineDocumentType(() => ({
           title: { type: 'string', required: true },
           issuer: { type: 'string', required: true },
           year: { type: 'number', required: true },
+          issueDate: { type: 'string' },
+          expiryDate: { type: 'string' },
           image: { type: 'string' },
           url: { type: 'string' },
         },

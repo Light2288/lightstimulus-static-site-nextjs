@@ -19,7 +19,14 @@
     },
     "certifications": {
       "title": "Certifications & Credentials",
-      "view": "View credential →"
+      "view": "View credential →",
+      "groupBy": "Group by",
+      "byYear": "Year",
+      "byIssuer": "Issuer",
+      "other": "Other",
+      "expires": "Expires",
+      "expired": "Expired",
+      "noExpiration": "No expiration"
     },
     "cv": {
       "title": "Curriculum Vitae",

@@ -45,6 +45,17 @@ export default function Taglines() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: FADE_DURATION, ease: easeOut } }}
             exit={{ opacity: 0, transition: { duration: FADE_DURATION, ease: easeIn } }}
+            style={{
+              // Force the gradient-clipped text onto a single, stable
+              // compositing layer BEFORE the per-glyph transforms run.
+              // Without this, Chrome momentarily paints the whole clipped
+              // background (all glyphs) at a transformed child's origin,
+              // showing a "stacked glyphs" flash at the start of the animation.
+              // Safari is unaffected, but the hint is harmless there.
+              transform: 'translateZ(0)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+            }}
             className="bg-gradient-to-r from-[var(--color-primary-400)] via-[var(--color-primary-500)] to-[var(--color-primary-300)] bg-clip-text text-center font-mono text-xl font-medium text-transparent drop-shadow-[0_0_6px_rgba(0,0,0,0.15)] md:text-2xl dark:drop-shadow-[0_0_6px_rgba(255,255,255,0.15)]"
           >
             <div className="flex flex-wrap justify-center gap-x-2">

@@ -19,45 +19,26 @@
                 <feMergeNode in="SourceGraphic" />
             </feMerge>
         </filter>
-
-        <linearGradient id="dropGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="var(--color-accent-secondary)" stop-opacity="1" />
-            <stop offset="100%" stop-color="var(--color-accent-secondary-lightest)" stop-opacity="1" />
-        </linearGradient>
     </defs>
 
-    <!-- Tail -->
+    <!-- Body strokes (greenish) -->
     <path
-            id="tail"
             fill="none"
-            stroke="var(--color-accent-secondary)"
-            stroke-linecap="round"
-            stroke-width="25"
-            d="M512.5,916.5 L512.5,124.5"
-            opacity="1"
+            stroke="var(--color-accent-primary)"
+            stroke-width="30"
+            stroke-miterlimit="10"
+            filter="url(#glow)"
+            d="M519.81,698.97l-95.04-44.09c-59.33,10.37-118.65,20.75-177.38,34.74c-38.91,77.43-77.83,154.87-107.43,228.65C27.63,771.14,4.68,560.89,82.64,393s241.85-286.03,427.12-287.26 M507.18,699.29l92.05-44.42c59.33,10.37,118.65,20.75,177.38,34.74c38.91,77.43,77.83,154.87,107.43,228.65C996.37,771.14,1019.32,560.89,941.36,393S695.02,106.96,509.75,105.73"
     />
 
-    <!-- Left Shell -->
-    <path
-            id="left-shell"
-            fill="none"
+    <!-- Orange circle -->
+    <circle
+            cx="512"
+            cy="400.08"
+            r="132.05"
+            fill="var(--color-accent-secondary)"
             stroke="var(--color-accent-secondary)"
-            stroke-width="25"
-            stroke-linecap="round"
-            stroke-miterlimit="10"
-            opacity="1"
-            d="m512,119c-66.85.02-133.7,21.32-185.41,63.87-103.35,85.05-135,245.76-70.24,366.38,6.13-12.8,24.69-48.75,49.03-69.54,26.5-22.64,65.83-31.36,64.39-28.68l.52.35c.17.17.34.34-.17,3.53-.06,15.54,9.26,50.17,19.82,61.48,24.1,25.84,51.86,31.3,64.62,48.45"
-    />
-
-    <!-- Right Shell -->
-    <path
-            id="right-shell"
-            fill="none"
-            stroke="var(--color-accent-secondary)"
-            stroke-width="25"
-            stroke-linecap="round"
-            stroke-miterlimit="10"
-            opacity="1"
-            d="m512,119c66.85.02,133.7,21.32,185.41,63.87,103.35,85.05,135,245.76,70.24,366.38-6.13-12.8-24.69-48.75-49.03-69.54-26.5-22.64-65.83-31.36-64.39-28.68l-.52.35c-.17.17-.34.34.17,3.53.06,15.54-9.26,50.17-19.82,61.48-24.1,25.84-51.86,31.3-64.62,48.45"
+            stroke-width="6"
+            filter="url(#glow)"
     />
 </svg>

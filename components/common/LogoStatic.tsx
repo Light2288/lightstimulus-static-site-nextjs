@@ -4,7 +4,7 @@ import LogoSVG from '@/data/logo.svg'
 
 export default function LogoStatic() {
   return (
-    <div className="flex items-center gap-x-0">
+    <div className="flex items-center gap-x-2 md:gap-x-3">
       {/* Logo SVG */}
       <div className="h-12 w-12 flex-shrink-0 md:h-16 md:w-16">
         <LogoSVG />

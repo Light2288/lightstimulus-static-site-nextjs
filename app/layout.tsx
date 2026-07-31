@@ -91,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link
           rel="mask-icon"
           href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
-          color="#ffb347" // your orange brand color
+          color="#f07c23" // brand orange (matches new logo)
         />
 
         {/* Windows Tiles (optional, because you have the file) */}
@@ -101,7 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         {/* Theme color for Chrome/Android */}
-        <meta name="theme-color" content="#ffb347" />
+        <meta name="theme-color" content="#f07c23" />
       </head>
       <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
         {/* Skip to main content link for keyboard navigation */}

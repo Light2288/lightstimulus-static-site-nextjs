@@ -7,17 +7,43 @@ import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoa
 
 gsap.registerPlugin(MotionPathPlugin, DrawSVGPlugin)
 
-// Animation timing constants (in seconds)
-const TAIL_DRAW_DURATION = 1
-const SHELL_DRAW_DURATION = 1.2
-const PULSE_FADE_IN_DURATION = 0.4
-const PULSE_FADE_OUT_DURATION = 1.0
+/* ---------------------------------------------------------------------------
+   Timing budget (seconds)
+
+   The logo animation is tuned to finish in the SAME window as the text
+   animation (see TextAnimation.tsx). The text's awaited chain is:
+
+     fade-in (~1.28) + split (0.68) + expansion (~0.82)  = ~2.78  (pre-glow)
+     + glow-in (0.55) + glow-out (1.35)                  = final glow finale
+
+   The logo's pre-pulse sequence therefore budgets ~2.79s (so its final pulse
+   starts together with the text's glow), stage 2 (upper body) is kept snappy,
+   and the pulse fade-out is a touch longer than the text's for a soft,
+   well-aligned finish.
+
+   Pre-pulse budget (each value adds sequentially):
+     stage 1: TAIL_LOWER (0.82) + ENLARGE (0.34) + BODY_FADE (0.34)  = 1.50
+     stage 2: TAIL_UPPER (0.68) + ENLARGE_2 (0.27) + BODY_FADE (0.34) = 1.29
+     total                                                           = 2.79
+--------------------------------------------------------------------------- */
+
+// Pre-pulse staged sequence (sums to ~2.79s to match the text pre-glow phase)
+const TAIL_LOWER_DURATION = 0.82 // trace bottom → middle circle
+const DOT_ENLARGE_DURATION = 0.34 // small dot grows to the target circle size
+const BODY_FADE_DURATION = 0.34 // body part fades in as the dot reaches full size
+const TAIL_UPPER_DURATION = 0.68 // trace middle circle → top circle (faster stage 2)
+const DOT_ENLARGE_DURATION_2 = 0.27 // second enlarge (top circle) — faster
+
+// Final pulse (fade-in matches text; fade-out a touch longer for a soft finish)
+const PULSE_FADE_IN_DURATION = 0.55
+const PULSE_FADE_OUT_DURATION = 1.45
 const PULSE_OPACITY_PEAK = 0.6
 const FINAL_GLOW_OPACITY = 0.2
 
-// SVG droplet dimensions
-const DROPLET_RX = 35
-const DROPLET_RY = 20
+// Traveling drop (small dot) dimensions
+const DROPLET_R_SMALL = 10 // starting small dot radius
+const CIRCLE_MIDDLE_R = 22.75 // matches #circle-middle
+const CIRCLE_TOP_R = 56.7 // matches #circle-top
 
 export default function LogoAnimation() {
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -27,14 +53,19 @@ export default function LogoAnimation() {
     const svg = svgRef.current
 
     // Elements
-    const tail = svg.querySelector('#tail') as SVGPathElement
-    const leftShell = svg.querySelector('#left-shell') as SVGPathElement
-    const rightShell = svg.querySelector('#right-shell') as SVGPathElement
+    const tailLower = svg.querySelector('#tail-lower') as SVGPathElement
+    const tailUpper = svg.querySelector('#tail-upper') as SVGPathElement
+    const bodyLower = svg.querySelector('#body-lower') as SVGPathElement
+    const bodyUpper = svg.querySelector('#body-upper') as SVGPathElement
+    const circleMiddle = svg.querySelector('#circle-middle') as SVGCircleElement
+    const circleTop = svg.querySelector('#circle-top') as SVGCircleElement
     const pulseGlowGroup = svg.querySelector('#pulseGlowGroup') as SVGGElement
 
+    const allDrawn = [tailLower, tailUpper, bodyLower, bodyUpper, circleMiddle, circleTop]
+
     /* =======================================================================
-       CASE 1 — Animation should NOT run
-       We immediately set everything to final, fully visible state
+       CASE 1 — Animation should NOT run (internal SPA navigation)
+       Snap everything to the final, fully visible state with resting glow.
     ======================================================================= */
     const shouldAnimate = detectRefreshOrFirstLoad('logo_mount_ts')
 
@@ -45,58 +76,51 @@ export default function LogoAnimation() {
         el.style.visibility = 'hidden'
       })
 
-      gsap.set([tail, leftShell, rightShell], {
+      gsap.set([tailLower, tailUpper], {
         opacity: 1,
         drawSVG: '0% 100%',
         filter: 'url(#glow)',
       })
+      gsap.set([bodyLower, bodyUpper, circleMiddle, circleTop], {
+        opacity: 1,
+        filter: 'url(#glow)',
+      })
 
       // Soft final glow
-      gsap.set(pulseGlowGroup, {
-        opacity: FINAL_GLOW_OPACITY,
-      })
+      gsap.set(pulseGlowGroup, { opacity: FINAL_GLOW_OPACITY })
       return
     }
 
     /* =======================================================================
-       CASE 2 — FIRST LOAD → Run full animation
+       CASE 2 — FIRST LOAD / REFRESH → Run full staged animation
     ======================================================================= */
 
-    // Utility function for moving droplets along the paths
-    function createDrop() {
+    // Create a small traveling drop (reused pattern from the original logo)
+    function createDrop(radius: number) {
       const drop = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
-      drop.setAttribute('rx', String(DROPLET_RX))
-      drop.setAttribute('ry', String(DROPLET_RY))
+      drop.setAttribute('rx', String(radius))
+      drop.setAttribute('ry', String(radius))
       drop.setAttribute('fill', 'url(#dropGradient)')
       drop.setAttribute('filter', 'url(#glow)')
       svg.appendChild(drop)
       return drop
     }
 
-    // Create drops
-    const tailDrop = createDrop()
-    const leftDrop = createDrop()
-    const rightDrop = createDrop()
-
-    // Initialization
-    gsap.set([tail, leftShell, rightShell], {
-      opacity: 1,
+    // Initialization: constant subtle glow on the tail; bodies/circles hidden.
+    gsap.set([tailLower, tailUpper], { opacity: 1, filter: 'url(#glow)' })
+    gsap.set([bodyLower, bodyUpper, circleMiddle, circleTop], {
+      opacity: 0,
       filter: 'url(#glow)',
     })
-    gsap.set([leftDrop, rightDrop], { autoAlpha: 0 })
 
-    // Position drops at path start
-    gsap.set(tailDrop, {
-      motionPath: { path: tail, align: tail, alignOrigin: [0.5, 0.5], start: 0 },
+    const dropLower = createDrop(DROPLET_R_SMALL)
+    const dropUpper = createDrop(DROPLET_R_SMALL)
+    gsap.set(dropUpper, { autoAlpha: 0 })
+
+    // Position the first drop at the START of tail-lower (bottom of the tail).
+    gsap.set(dropLower, {
+      motionPath: { path: tailLower, align: tailLower, alignOrigin: [0.5, 0.5], start: 0 },
       autoAlpha: 1,
-    })
-    gsap.set(leftDrop, {
-      motionPath: { path: leftShell, align: leftShell, alignOrigin: [0.5, 0.5], start: 0 },
-      autoAlpha: 0,
-    })
-    gsap.set(rightDrop, {
-      motionPath: { path: rightShell, align: rightShell, alignOrigin: [0.5, 0.5], start: 0 },
-      autoAlpha: 0,
     })
 
     /* ===========================
@@ -104,81 +128,89 @@ export default function LogoAnimation() {
     ============================ */
     const tl = gsap.timeline({ defaults: { ease: 'none' } })
 
-    // 1. Tail
-    tl.fromTo(tail, { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: TAIL_DRAW_DURATION }, 0)
+    /* --- Stage 1: trace bottom → middle circle -------------------------- */
+    tl.fromTo(
+      tailLower,
+      { drawSVG: '0% 0%' },
+      { drawSVG: '0% 100%', duration: TAIL_LOWER_DURATION },
+      0
+    )
     tl.to(
-      tailDrop,
+      dropLower,
       {
-        duration: TAIL_DRAW_DURATION,
+        duration: TAIL_LOWER_DURATION,
         motionPath: {
-          path: tail,
-          align: tail,
+          path: tailLower,
+          align: tailLower,
           alignOrigin: [0.5, 0.5],
           start: 0,
           end: 1,
-          autoRotate: true,
-        },
-        onComplete: () => {
-          gsap.set(tailDrop, { autoAlpha: 0 })
+          autoRotate: false,
         },
       },
       0
     )
 
-    // 2. Shells
-    tl.addLabel('shellsStart', '+=0')
-    tl.set([leftDrop, rightDrop], { autoAlpha: 1 }, 'shellsStart')
-
+    // Dot enlarges to the middle circle size; lower body fades in when it
+    // reaches full size.
+    tl.to(dropLower, {
+      attr: { rx: CIRCLE_MIDDLE_R, ry: CIRCLE_MIDDLE_R },
+      duration: DOT_ENLARGE_DURATION,
+    })
+    tl.set(circleMiddle, { opacity: 1 })
+    tl.set(dropLower, { autoAlpha: 0 })
     tl.fromTo(
-      [leftShell, rightShell],
+      bodyLower,
+      { opacity: 0 },
+      { opacity: 1, duration: BODY_FADE_DURATION },
+      '<' // start exactly when the dot reaches full size
+    )
+
+    /* --- Stage 2: trace middle circle → top circle ---------------------- */
+    tl.addLabel('stage2')
+    tl.set(dropUpper, {
+      motionPath: { path: tailUpper, align: tailUpper, alignOrigin: [0.5, 0.5], start: 0 },
+      attr: { rx: DROPLET_R_SMALL, ry: DROPLET_R_SMALL },
+      autoAlpha: 1,
+    })
+    tl.fromTo(
+      tailUpper,
       { drawSVG: '0% 0%' },
-      { drawSVG: '0% 100%', duration: SHELL_DRAW_DURATION },
-      'shellsStart'
+      { drawSVG: '0% 100%', duration: TAIL_UPPER_DURATION },
+      'stage2'
     )
-
-    let shellsDone = 0
-    const onShellDone = () => {
-      shellsDone++
-      if (shellsDone === 2) gsap.set([leftDrop, rightDrop], { autoAlpha: 0 })
-    }
-
     tl.to(
-      leftDrop,
+      dropUpper,
       {
-        duration: SHELL_DRAW_DURATION,
+        duration: TAIL_UPPER_DURATION,
         motionPath: {
-          path: leftShell,
-          align: leftShell,
+          path: tailUpper,
+          align: tailUpper,
           alignOrigin: [0.5, 0.5],
           start: 0,
           end: 1,
+          autoRotate: false,
         },
-        onComplete: onShellDone,
       },
-      'shellsStart'
+      'stage2'
     )
 
-    tl.to(
-      rightDrop,
-      {
-        duration: SHELL_DRAW_DURATION,
-        motionPath: {
-          path: rightShell,
-          align: rightShell,
-          alignOrigin: [0.5, 0.5],
-          start: 0,
-          end: 1,
-        },
-        onComplete: onShellDone,
-      },
-      'shellsStart'
-    )
+    // Dot enlarges to the top circle size; upper body fades in when it
+    // reaches full size.
+    tl.to(dropUpper, {
+      attr: { rx: CIRCLE_TOP_R, ry: CIRCLE_TOP_R },
+      duration: DOT_ENLARGE_DURATION_2,
+    })
+    tl.set(circleTop, { opacity: 1 })
+    tl.set(dropUpper, { autoAlpha: 0 })
+    tl.fromTo(bodyUpper, { opacity: 0 }, { opacity: 1, duration: BODY_FADE_DURATION }, '<')
 
-    // 3. Final pulse
+    /* --- Stage 3: final pulse glow -------------------------------------- */
     tl.call(() => {
       pulseGlowGroup.innerHTML = ''
-      ;[tail, leftShell, rightShell].forEach((p) => {
-        const copy = p.cloneNode(true)
+      allDrawn.forEach((el) => {
+        const copy = el.cloneNode(true) as SVGElement
+        copy.setAttribute('opacity', '1')
         pulseGlowGroup.appendChild(copy)
       })
 
@@ -189,7 +221,10 @@ export default function LogoAnimation() {
           opacity: PULSE_OPACITY_PEAK,
           duration: PULSE_FADE_IN_DURATION,
           onComplete: () => {
-            gsap.to(pulseGlowGroup, { opacity: 0, duration: PULSE_FADE_OUT_DURATION })
+            gsap.to(pulseGlowGroup, {
+              opacity: FINAL_GLOW_OPACITY,
+              duration: PULSE_FADE_OUT_DURATION,
+            })
           },
         }
       )
@@ -207,7 +242,6 @@ export default function LogoAnimation() {
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
-      {/* SVG stays exactly the same as your original */}
       {/* ---------- SVG START ---------- */}
       <svg
         ref={svgRef}
@@ -243,39 +277,78 @@ export default function LogoAnimation() {
           </linearGradient>
         </defs>
 
-        {/* Tail */}
+        {/* Lower body (greenish) — mid-section wings around the middle circle */}
         <path
-          id="tail"
+          id="body-lower"
+          fill="none"
+          stroke="var(--color-accent-primary)"
+          strokeWidth="12"
+          strokeMiterlimit="10"
+          opacity="0"
+          d="M513.29,643.59h-34.47c0,0-17.19,28.96-25.79,43.44c-38.33-49-76.39-98.05-114.46-147.1
+            c16.26-36.6,22.67-47.34,42.18-86.18c29.45-7.02,59.2-12.22,88.95-17.42l42.46,19.72 M511.28,643.59h33.9
+            c0,0,17.19,28.96,25.79,43.44c38.33-49,76.39-98.05,114.46-147.1c-16.26-36.6-22.67-47.34-42.18-86.18
+            c-29.45-7.02-59.2-12.22-88.95-17.42l-42.46,19.72"
+        />
+
+        {/* Upper body (greenish) — large head shell */}
+        <path
+          id="body-upper"
+          fill="none"
+          stroke="var(--color-accent-primary)"
+          strokeWidth="12"
+          strokeMiterlimit="10"
+          opacity="0"
+          d="M512,418.82l-52.52-25.35c-35.72,6.25-71.44,12.49-106.79,20.92c-23.43,46.62-46.86,93.24-64.68,137.67
+            c-67.63-88.58-81.45-215.17-34.51-316.25S399.1,63.59,510.65,62.85 M512,419.71l52.52-26.24c35.72,6.25,71.44,12.49,106.79,20.92
+            c23.43,46.62,46.86,93.24,64.68,137.67c67.63-88.58,81.45-215.17,34.51-316.25C723.57,134.72,622.19,63.59,510.65,62.85"
+        />
+
+        {/* Tail — lower segment (bottom → middle circle). Defined bottom-up so
+            DrawSVG and MotionPath both progress upward. */}
+        <path
+          id="tail-lower"
           fill="none"
           stroke="var(--color-accent-secondary)"
           strokeLinecap="round"
-          strokeWidth="25"
-          d="M512.5,916.5 L512.5,124.5"
+          strokeWidth="12"
+          opacity="0"
+          d="M511.87,961.15 L512.13,552.05"
+        />
+
+        {/* Tail — upper segment (middle circle → top circle). Defined bottom-up. */}
+        <path
+          id="tail-upper"
+          fill="none"
+          stroke="var(--color-accent-secondary)"
+          strokeLinecap="round"
+          strokeWidth="12"
+          opacity="0"
+          d="M512,552.05 L512,246.08"
+        />
+
+        {/* Middle circle (smaller dot) */}
+        <circle
+          id="circle-middle"
+          cx="512"
+          cy="545.89"
+          r="22.75"
+          fill="var(--color-accent-secondary)"
+          stroke="var(--color-accent-secondary)"
+          strokeWidth="6"
           opacity="0"
         />
 
-        {/* Left Shell */}
-        <path
-          id="left-shell"
-          fill="none"
+        {/* Top circle (bigger dot) */}
+        <circle
+          id="circle-top"
+          cx="512"
+          cy="246.08"
+          r="56.7"
+          fill="var(--color-accent-secondary)"
           stroke="var(--color-accent-secondary)"
-          strokeWidth="25"
-          strokeLinecap="round"
-          strokeMiterlimit="10"
+          strokeWidth="6"
           opacity="0"
-          d="m512,119c-66.85.02-133.7,21.32-185.41,63.87-103.35,85.05-135,245.76-70.24,366.38,6.13-12.8,24.69-48.75,49.03-69.54,26.5-22.64,65.83-31.36,64.39-28.68l.52.35c.17.17.34.34-.17,3.53-.06,15.54,9.26,50.17,19.82,61.48,24.1,25.84,51.86,31.3,64.62,48.45"
-        />
-
-        {/* Right Shell */}
-        <path
-          id="right-shell"
-          fill="none"
-          stroke="var(--color-accent-secondary)"
-          strokeWidth="25"
-          strokeLinecap="round"
-          strokeMiterlimit="10"
-          opacity="0"
-          d="m512,119c66.85.02,133.7,21.32,185.41,63.87,103.35,85.05,135,245.76,70.24,366.38-6.13-12.8-24.69-48.75-49.03-69.54-26.5-22.64-65.83-31.36-64.39-28.68l-.52.35c-.17.17-.34.34.17,3.53.06,15.54-9.26,50.17-19.82,61.48-24.1,25.84-51.86,31.3-64.62,48.45"
         />
 
         <g id="pulseGlowGroup" filter="url(#glow)" opacity="0" />

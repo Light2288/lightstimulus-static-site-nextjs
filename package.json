@@ -11,7 +11,8 @@
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "lint:fix": "eslint . --ext .ts,.tsx --fix && prettier --write .",
     "prepare": "husky",
-    "compress-images": "node scripts/compress-images.mjs"
+    "compress-images": "node scripts/compress-images.mjs",
+    "generate-favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",
@@ -71,6 +72,7 @@
     "husky": "^9.0.0",
     "image-size": "^2.0.2",
     "lint-staged": "^13.0.0",
+    "png-to-ico": "^2.1.8",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "sharp": "^0.33.5",

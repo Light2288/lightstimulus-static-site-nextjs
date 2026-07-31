@@ -1,6 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_15_copy" data-name="Layer 15 copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 733.38 1004.86">
-  <path id="left-shell" d="m366.69,8c-82.89.02-165.78,26.44-229.9,79.2C8.64,192.65-30.6,391.93,49.7,541.49c7.6-15.87,30.61-60.45,60.8-86.23,32.86-28.07,81.63-38.89,79.84-35.56l.64.43c.21.21.42.42-.21,4.38-.07,19.27,11.48,62.21,24.58,76.23,29.88,32.04,64.3,38.81,80.13,60.08" fill="none" stroke="#ffb347" stroke-linecap="round" stroke-miterlimit="10" stroke-width="16"/>
-  <path id="right-shell" d="m366.69,8c82.89.02,165.78,26.44,229.9,79.2,128.15,105.46,167.39,304.73,87.09,454.29-7.6-15.87-30.61-60.45-60.8-86.23-32.86-28.07-81.63-38.89-79.84-35.56l-.64.43c-.21.21-.42.42.21,4.38.07,19.27-11.48,62.21-24.58,76.23-29.88,32.04-64.3,38.81-80.13,60.08" fill="none" stroke="#ffb347" stroke-linecap="round" stroke-miterlimit="10" stroke-width="16"/>
-  <line id="tail" x1="367.31" y1="14.82" x2="367.31" y2="996.86" fill="none" stroke="#ffb347" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="16"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_2_copy_19" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="1024px" height="1024px" viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;"
+	 xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#2E8B83;stroke-width:12;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#F07C23;stroke-width:12;stroke-miterlimit:10;}
+	.st2{fill:#F07C23;stroke:#F07C23;stroke-width:6;stroke-miterlimit:10;}
+</style>
+<path class="st0" d="M513.29,643.59h-34.47c0,0-17.19,28.96-25.79,43.44c-38.33-49-76.39-98.05-114.46-147.1
+	c16.26-36.6,22.67-47.34,42.18-86.18c29.45-7.02,59.2-12.22,88.95-17.42l42.46,19.72 M511.28,643.59h33.9
+	c0,0,17.19,28.96,25.79,43.44c38.33-49,76.39-98.05,114.46-147.1c-16.26-36.6-22.67-47.34-42.18-86.18
+	c-29.45-7.02-59.2-12.22-88.95-17.42l-42.46,19.72"/>
+<path class="st0" d="M512,418.82l-52.52-25.35c-35.72,6.25-71.44,12.49-106.79,20.92c-23.43,46.62-46.86,93.24-64.68,137.67
+	c-67.63-88.58-81.45-215.17-34.51-316.25S399.1,63.59,510.65,62.85 M512,419.71l52.52-26.24c35.72,6.25,71.44,12.49,106.79,20.92
+	c23.43,46.62,46.86,93.24,64.68,137.67c67.63-88.58,81.45-215.17,34.51-316.25C723.57,134.72,622.19,63.59,510.65,62.85"/>
+<line class="st1" x1="512" y1="246.08" x2="512" y2="552.05"/>
+<line class="st1" x1="512.13" y1="552.05" x2="511.87" y2="961.15"/>
+<circle class="st2" cx="512" cy="246.08" r="56.7"/>
+<circle class="st2" cx="512" cy="545.89" r="22.75"/>
 </svg>

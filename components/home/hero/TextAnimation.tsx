@@ -5,14 +5,14 @@ import { motion, stagger, useAnimate } from 'motion/react'
 import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoad'
 
 // Animation timing constants (in seconds)
-const FADE_IN_DURATION = 0.5
-const FADE_IN_STAGGER = 0.08
-const SPLIT_DURATION = 0.5
-const EXPANSION_DURATION = 0.5
-const EXPANSION_STAGGER = 0.05
-const COLOR_CHANGE_DURATION = 0.6
-const GLOW_FADE_IN_DURATION = 0.4
-const GLOW_FADE_OUT_DURATION = 1.0
+const FADE_IN_DURATION = 0.68
+const FADE_IN_STAGGER = 0.1
+const SPLIT_DURATION = 0.68
+const EXPANSION_DURATION = 0.68
+const EXPANSION_STAGGER = 0.07
+const COLOR_CHANGE_DURATION = 0.8
+const GLOW_FADE_IN_DURATION = 0.55
+const GLOW_FADE_OUT_DURATION = 1.35
 
 // Layout constants
 const MOBILE_BREAKPOINT = 1239 // pixels

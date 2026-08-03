@@ -313,7 +313,7 @@ export default function LogoAnimation() {
           strokeLinecap="round"
           strokeWidth="12"
           opacity="0"
-          d="M511.87,961.15 L512.13,552.05"
+          d="M511.74,957.89 L512,545.89"
         />
 
         {/* Tail — upper segment (middle circle → top circle). Defined bottom-up. */}
@@ -324,7 +324,7 @@ export default function LogoAnimation() {
           strokeLinecap="round"
           strokeWidth="12"
           opacity="0"
-          d="M512,552.05 L512,246.08"
+          d="M512,545.89 L512,246.08"
         />
 
         {/* Middle circle (smaller dot) */}

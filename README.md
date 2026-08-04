@@ -85,7 +85,6 @@ This isn't just a blog—it's a living portfolio that showcases both the journey
 
 ### 📧 **Community Features**
 
-- **Newsletter Integration**: Buttondown email subscription
 - **Contact Form**: Netlify Forms for direct communication
 - **Social Links**: Connect across multiple platforms
 - **RSS Feed**: Stay updated with new content
@@ -150,8 +149,7 @@ lightstimulus-static-site-nextjs/
 │   ├── about/                   # About page
 │   ├── blog/                    # Blog listing and posts
 │   ├── contact/                 # Contact page
-│   ├── projects/                # Projects showcase
-│   └── api/                     # API routes (newsletter)
+│   └── projects/                # Projects showcase
 ├── components/                   # React components
 │   ├── common/                  # Shared components (Header, Footer, etc.)
 │   ├── home/                    # Homepage components

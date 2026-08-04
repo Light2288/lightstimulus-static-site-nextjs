@@ -85,7 +85,10 @@ export function ContactForm() {
     })
 
     try {
-      const res = await fetch('/', {
+      // Netlify Forms + Next.js: the POST target must be the static HTML file
+      // that Netlify parses at deploy time (public/__forms.html), NOT "/".
+      // See https://opennext.js.org/netlify/forms
+      const res = await fetch('/__forms.html', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: body.toString(),
@@ -118,8 +121,6 @@ export function ContactForm() {
         <form
           name={FORM_NAME}
           method="POST"
-          data-netlify="true"
-          data-netlify-honeypot="bot-field"
           noValidate
           onSubmit={handleSubmit}
           className="flex flex-col gap-4"

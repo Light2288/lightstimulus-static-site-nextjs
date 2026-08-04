@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Netlify Form Detection</title>
+  </head>
+  <body>
+    <!--
+      Static form used solely for Netlify's build-time form detection.
+      The site is a Next.js static export with a client-rendered React form
+      (components/contact/ContactForm.tsx), which Netlify cannot parse at
+      deploy time. This static HTML form registers the "contact" form so the
+      React form's AJAX POST is accepted. Field names must match the React
+      form and the AJAX body exactly.
+    -->
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+      <input name="bot-field" />
+    </form>
+  </body>
+</html>

@@ -50,8 +50,28 @@
   "contact": {
     "title": "Get in touch",
     "intro": "I’m always open to thoughtful conversations around technology, systems, and ideas in progress.\n\nIf you’re working on complex challenges, exploring new directions, or simply want to exchange perspectives, feel free to reach out.",
-    "methods_intro": "The easiest way to contact me is by email.",
-    "linkedin_hint": "You can also reach me on "
+    "methods_intro": "Prefer not to use the form? You can also reach me directly by email.",
+    "linkedin_hint": "You can also reach me on ",
+    "form": {
+      "heading": "Send me a message",
+      "name_label": "Name",
+      "name_placeholder": "Your name",
+      "email_label": "Email",
+      "email_placeholder": "you@example.com",
+      "message_label": "Message",
+      "message_placeholder": "What would you like to talk about?",
+      "submit": "Send message",
+      "submitting": "Sending…",
+      "success": "Thanks for reaching out — your message has been sent. I’ll get back to you soon.",
+      "error": "Something went wrong while sending your message. Please try again.",
+      "errors": {
+        "name_required": "Please enter your name.",
+        "email_required": "Please enter your email address.",
+        "email_invalid": "Please enter a valid email address.",
+        "message_required": "Please enter a message.",
+        "message_too_short": "Your message should be at least 10 characters."
+      }
+    }
   },
   "hero": {
     "taglines": {

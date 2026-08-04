@@ -69,8 +69,28 @@
   "contact": {
     "title": "Scrivimi",
     "intro": "Sono sempre disponibile a confrontarmi su tecnologia, sistemi e idee in evoluzione.\n\nSe stai lavorando su problemi complessi, esplorando nuove direzioni o semplicemente vuoi scambiare punti di vista, non esitare a contattarmi.",
-    "methods_intro": "Il modo più semplice per contattarmi è via email.",
-    "linkedin_hint": "Puoi anche trovarmi su "
+    "methods_intro": "Preferisci non usare il modulo? Puoi anche contattarmi direttamente via email.",
+    "linkedin_hint": "Puoi anche trovarmi su ",
+    "form": {
+      "heading": "Scrivimi un messaggio",
+      "name_label": "Nome",
+      "name_placeholder": "Il tuo nome",
+      "email_label": "Email",
+      "email_placeholder": "tu@esempio.com",
+      "message_label": "Messaggio",
+      "message_placeholder": "Di cosa vorresti parlare?",
+      "submit": "Invia messaggio",
+      "submitting": "Invio in corso…",
+      "success": "Grazie per avermi scritto — il tuo messaggio è stato inviato. Ti risponderò al più presto.",
+      "error": "Qualcosa è andato storto durante l’invio del messaggio. Riprova.",
+      "errors": {
+        "name_required": "Inserisci il tuo nome.",
+        "email_required": "Inserisci il tuo indirizzo email.",
+        "email_invalid": "Inserisci un indirizzo email valido.",
+        "message_required": "Inserisci un messaggio.",
+        "message_too_short": "Il messaggio deve contenere almeno 10 caratteri."
+      }
+    }
   },
   "home": {
     "projects": {

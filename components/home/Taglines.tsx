@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { easeOut, easeIn } from 'motion'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -17,8 +17,12 @@ export default function Taglines() {
   const [index, setIndex] = useState(0)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const [showText, setShowText] = useState(true)
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
+    // Reduced motion: never start the cycling interval; show one static tagline.
+    if (shouldReduceMotion) return
+
     if (intervalRef.current) clearInterval(intervalRef.current)
 
     const id = setInterval(() => {
@@ -31,7 +35,7 @@ export default function Taglines() {
 
     intervalRef.current = id
     return () => clearInterval(id)
-  }, [taglines.length])
+  }, [taglines.length, shouldReduceMotion])
 
   const active = taglines[index]
   // Total characters drives the wipe duration so the typewriter reveals at a
@@ -58,10 +62,16 @@ export default function Taglines() {
                 flash). */}
             <motion.div
               className="bg-gradient-to-r from-[var(--color-primary-400)] via-[var(--color-primary-500)] to-[var(--color-primary-300)] bg-clip-text text-transparent"
-              initial={{ clipPath: 'inset(0 100% 0 0)' }}
+              initial={
+                shouldReduceMotion
+                  ? { clipPath: 'inset(0 0% 0 0)' }
+                  : { clipPath: 'inset(0 100% 0 0)' }
+              }
               animate={{
                 clipPath: 'inset(0 0% 0 0)',
-                transition: { duration: typeDuration, ease: 'linear' },
+                transition: shouldReduceMotion
+                  ? { duration: 0 }
+                  : { duration: typeDuration, ease: 'linear' },
               }}
             >
               {active}

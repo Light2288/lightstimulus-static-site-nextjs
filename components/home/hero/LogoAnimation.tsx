@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useReducedMotion } from 'motion/react'
 import { gsap } from 'gsap'
 import { DrawSVGPlugin, MotionPathPlugin } from 'gsap/all'
 import { detectRefreshOrFirstLoad } from '../../../utils/detectRefreshOrFirstLoad'
@@ -47,6 +48,7 @@ const CIRCLE_TOP_R = 56.7 // matches #circle-top
 
 export default function LogoAnimation() {
   const svgRef = useRef<SVGSVGElement | null>(null)
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     if (!svgRef.current) return
@@ -64,10 +66,11 @@ export default function LogoAnimation() {
     const allDrawn = [tailLower, tailUpper, bodyLower, bodyUpper, circleMiddle, circleTop]
 
     /* =======================================================================
-       CASE 1 — Animation should NOT run (internal SPA navigation)
-       Snap everything to the final, fully visible state with resting glow.
+       CASE 1 — Animation should NOT run (internal SPA navigation OR the user
+       has requested reduced motion). Snap everything to the final, fully
+       visible state with resting glow.
     ======================================================================= */
-    const shouldAnimate = detectRefreshOrFirstLoad('logo_mount_ts')
+    const shouldAnimate = detectRefreshOrFirstLoad('logo_mount_ts') && !shouldReduceMotion
 
     if (!shouldAnimate) {
       const drops = svg.querySelectorAll('ellipse')
@@ -238,7 +241,7 @@ export default function LogoAnimation() {
       tl.kill()
       gsap.killTweensOf('*')
     }
-  }, [])
+  }, [shouldReduceMotion])
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">

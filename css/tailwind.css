@@ -630,3 +630,27 @@ input:-webkit-autofill:focus {
 .fixed-analogy-container {
   cursor: default !important;
 }
+
+/* ==========================
+   Reduced-motion safety net
+   Blanket override: when the user requests reduced motion, tame every
+   animation and transition to near-instant, stop looping keyframes (e.g. the
+   footer heartbeat), and disable smooth scrolling. This catches all current
+   and future CSS/Motion animations without per-rule maintenance. Any future
+   motion that is genuinely essential can opt out via a dedicated class the
+   blanket rule below excludes (none exist today).
+   ========================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+}

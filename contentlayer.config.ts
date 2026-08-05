@@ -1,5 +1,4 @@
 import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
-import { writeFileSync } from 'fs'
 import readingTime from 'reading-time'
 import path from 'path'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
@@ -24,8 +23,8 @@ import rehypeCitation from 'rehype-citation'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import { createBlogTagCount } from '@/lib/generateBlogTagData'
+import { createSearchIndex } from './lib/generateSearchIndex'
 
 const root = process.cwd()
 
@@ -61,19 +60,6 @@ const baseComputedFields: ComputedFields = {
 const blogComputedFields: ComputedFields = {
   ...baseComputedFields,
   toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
-}
-
-function createSearchIndex(allBlogs) {
-  if (
-    siteMetadata?.search?.provider === 'kbar' &&
-    siteMetadata.search.kbarConfig.searchDocumentsPath
-  ) {
-    writeFileSync(
-      `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
-      JSON.stringify(allCoreContent(sortPosts(allBlogs)))
-    )
-    console.log('Local search index generated...')
-  }
 }
 
 export const Blog = defineDocumentType(() => ({
@@ -314,9 +300,9 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs, allProjects } = await importData()
+    const { allBlogs, allProjects, allAuthors } = await importData()
     await createBlogTagCount(allBlogs)
     await createProjectTagCount(allProjects)
-    createSearchIndex(allBlogs)
+    await createSearchIndex(allBlogs, allProjects, allAuthors)
   },
 })

@@ -4,7 +4,6 @@ import 'remark-github-blockquote-alert/alert.css'
 
 import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
-import { SearchProvider, SearchConfig } from 'pliny/search'
 import Layout from '@/components/common/Layout'
 import siteMetadata from '@/data/siteMetadata'
 import { Metadata } from 'next'
@@ -112,9 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to main content
         </a>
         <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-        <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-          <Layout>{children}</Layout>
-        </SearchProvider>
+        <Layout>{children}</Layout>
       </body>
     </html>
   )

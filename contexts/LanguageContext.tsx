@@ -9,9 +9,11 @@
  *
  * **Key Features:**
  * - ✅ Instant language switching without page reload
- * - ✅ Preference stored in localStorage (persists across sessions)
- * - ✅ Defaults to English unless user explicitly switches
- * - ✅ Does NOT use browser language detection
+ * - ✅ First-visit language auto-detection from navigator.language (EN/IT)
+ * - ✅ Auto-detected language is NEVER persisted — it re-detects each visit,
+ *      so it follows the user's OS/browser language until they choose manually
+ * - ✅ A manual toggle IS persisted in localStorage and always takes priority
+ * - ✅ SSR-safe: renders English on the server, reconciles on the client
  * - ✅ Does NOT create language-specific URLs (/en/*, /it/*)
  * - ✅ Variable interpolation support in translations
  *
@@ -52,6 +54,25 @@ import it from '@/locales/it.json'
 type Lang = 'en' | 'it'
 
 /**
+ * Detect the first-visit language from the browser.
+ *
+ * Reads `navigator.language` (client-side only) and returns Italian when it
+ * starts with `it` (case-insensitive — covers `it`, `it-IT`, `it-CH`,
+ * `it-SM`, etc.), otherwise English. Falls back to English when running
+ * server-side or when `navigator.language` is unavailable/empty.
+ *
+ * This function is pure and side-effect free: it never writes to
+ * localStorage, so it can safely run on every visit that has no stored
+ * preference.
+ *
+ * @returns {Lang} The detected language ('it' or 'en')
+ */
+function detectBrowserLang(): Lang {
+  if (typeof navigator === 'undefined' || !navigator.language) return 'en'
+  return navigator.language.toLowerCase().startsWith('it') ? 'it' : 'en'
+}
+
+/**
  * Language Context value shape
  */
 interface LanguageContextType {
@@ -76,10 +97,13 @@ const LanguageContext = createContext<LanguageContextType>({
  * Should be placed high in the component tree (typically in root layout).
  *
  * **Initialization Logic:**
- * 1. On mount, checks localStorage for saved preference
- * 2. If found, uses saved language
- * 3. If not found, defaults to English and saves it
- * 4. Does NOT use browser language detection
+ * 1. Renders English on the server / initial mount (hydration-safe default)
+ * 2. On mount, checks localStorage for a saved preference
+ * 3. If a valid saved preference exists ('en' | 'it'), uses it and never
+ *    re-detects (a stored value is treated as an explicit manual choice)
+ * 4. Otherwise detects the language from navigator.language (Italian if it
+ *    starts with 'it', else English) WITHOUT persisting it, so it keeps
+ *    following the browser language on future visits
  *
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Child components to wrap
@@ -105,14 +129,18 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const translations = { en, it }
 
   useEffect(() => {
-    const saved = PreferencesService.getPref('lang') as Lang | null
-    if (saved) {
+    const saved = PreferencesService.getPref('lang')
+    if (saved === 'en' || saved === 'it') {
+      // A stored preference is a manual choice: always honor it and never
+      // re-detect or override it.
       setLang(saved)
-    } else {
-      // Always default to English unless user has previously selected a language
-      setLang('en')
-      PreferencesService.setPref('lang', 'en')
+      return
     }
+    // No valid stored preference (first visit, or invalid/legacy value):
+    // detect from the browser and apply it WITHOUT persisting, so the
+    // displayed language keeps following the user's OS/browser language on
+    // future visits until they make a manual choice.
+    setLang(detectBrowserLang())
   }, [])
 
   /**

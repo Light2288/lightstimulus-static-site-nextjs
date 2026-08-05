@@ -2,6 +2,7 @@
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import clsx from 'clsx'
+import { useReducedMotion } from 'motion/react'
 import { useRef, useEffect, useMemo } from 'react'
 
 /**
@@ -117,9 +118,11 @@ export default function FixedAnalogyParagraph() {
   const html = useMemo(() => buildHighlightedHtml(rawText), [rawText])
 
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const shouldReduceMotion = useReducedMotion()
 
   /* Container handlers: update ripple coords and opacity (for whole background) */
   const handleContainerMouseMove = (e: React.MouseEvent) => {
+    if (shouldReduceMotion) return
     const el = containerRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
@@ -128,6 +131,7 @@ export default function FixedAnalogyParagraph() {
     el.style.setProperty('--ripple-opacity', '1')
   }
   const handleContainerMouseLeave = () => {
+    if (shouldReduceMotion) return
     const el = containerRef.current
     if (!el) return
     el.style.setProperty('--ripple-opacity', '0')
@@ -135,6 +139,10 @@ export default function FixedAnalogyParagraph() {
 
   /* Per-word listeners: attach after html changes; they update both the word mask vars and container ripple */
   useEffect(() => {
+    // Reduced motion: skip all cursor-follow / ripple / hover-glow listeners;
+    // highlighted words remain static styling.
+    if (shouldReduceMotion) return
+
     const elContainer = containerRef.current
     const nodes = Array.from(document.querySelectorAll('.highlight-word')) as HTMLElement[]
     const disposers: Array<() => void> = []
@@ -185,7 +193,7 @@ export default function FixedAnalogyParagraph() {
     return () => {
       disposers.forEach((d) => d())
     }
-  }, [html])
+  }, [html, shouldReduceMotion])
 
   return (
     <section

@@ -177,9 +177,25 @@ red→green cycles; none weakened the acceptance criteria.
   Babel-based `@vitejs/plugin-react`. The Babel plugin pulled a Babel 8 RC
   that produced an unresolvable peer conflict; the SWC plugin is
   conflict-free and mirrors Next.js's own SWC transforms.
-- **Path aliases: Vite native `resolve.tsconfigPaths: true`** instead of
-  the `vite-tsconfig-paths` plugin (the plugin failed to resolve `@/app/*`
-  in this Vite version; the plugin dependency was removed).
+- **Test toolchain pinned to the Vitest 2 / Vite 5 line** (`vitest@2.1.9`,
+  `@vitest/coverage-v8@2.1.9`, `@vitejs/plugin-react-swc@3.11.0`). The
+  initial Vitest 4 install pulled Vite 8, which declares a strict
+  `esbuild ^0.27||^0.28` peer that conflicts with the app's pinned
+  `esbuild@0.25.2`. That conflict is invisible to a flagged local install
+  but breaks Netlify's bare `npm ci` (`ERESOLVE`). Vite 5 has no such
+  esbuild peer, so `npm ci` now resolves cleanly with no flags.
+- **Path aliases derived from `tsconfig.json` in the Vitest config**
+  (a small `aliasFromTsconfig()` helper builds `resolve.alias` entries).
+  `vite-tsconfig-paths` was tried and removed: it silently failed to
+  resolve several aliases in this tsconfig (`@/app/*`, `@/contexts/*`)
+  while resolving others. Deriving aliases directly keeps them in sync
+  with tsconfig and is deterministic across Vite versions.
+- **Config file is `vitest.config.mts`** (not `.ts`): the config uses ESM
+  and the project's `package.json` has no `"type": "module"`, so the
+  `.mts` extension forces ESM loading. `**/*.mts` was added to the
+  tsconfig `include` so lint/typecheck cover it.
+- **Path aliases: Vite native `resolve.tsconfigPaths`** — superseded; see
+  the tsconfig-derived alias note above.
 - **`@testing-library/dom` added explicitly** as a direct dev dependency —
   it is a required peer of `@testing-library/react` / `jest-dom` that was
   not auto-installed under npm's `--legacy-peer-deps`.
@@ -197,8 +213,11 @@ red→green cycles; none weakened the acceptance criteria.
   criterion.
 - **Chosen example components**: `components/PageTitle.tsx` (presentational)
   and `components/Tag.tsx` (consumes `useLanguage`, asserted in EN and IT).
-- **Actual dependency versions installed**: `vitest ^4.1.10`,
-  `@vitejs/plugin-react-swc ^4.3.3`, `jsdom ^30`,
+- **Actual dependency versions installed**: `vitest ^2.1.9`,
+  `@vitejs/plugin-react-swc ^3.11.0`, `jsdom ^30`,
   `@testing-library/react ^16.3.2`, `@testing-library/jest-dom ^7`,
   `@testing-library/user-event ^14.6.3`, `@testing-library/dom`,
-  `@vitest/coverage-v8 ^4.1.10`.
+  `@vitest/coverage-v8 ^2.1.9`.
+- **Netlify parity verified**: the full `npm ci && npm run build` sequence
+  (Netlify's build command) completes with exit 0, and `npm test`,
+  `npm run test:coverage`, and `npx tsc --noEmit` all pass.

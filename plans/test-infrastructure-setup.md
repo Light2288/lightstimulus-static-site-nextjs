@@ -369,14 +369,22 @@ still met and every deviation was driven by a TDD red→green cycle.
 - **Task 1 — React plugin**: used **`@vitejs/plugin-react-swc`** instead of
   `@vitejs/plugin-react`; the Babel-based plugin pulled a Babel 8 RC that
   produced an unresolvable peer conflict.
+- **Task 1 — toolchain pinned to Vitest 2 / Vite 5**
+  (`vitest@2.1.9`, `@vitest/coverage-v8@2.1.9`,
+  `@vitejs/plugin-react-swc@3.11.0`). Vitest 4 pulled Vite 8, whose strict
+  `esbuild ^0.27||^0.28` peer conflicts with the app's `esbuild@0.25.2`
+  and broke Netlify's `npm ci`. Vite 5 has no such peer, so `npm ci`
+  resolves with **no `--legacy-peer-deps` flag needed**.
 - **Task 1 — extra dep**: added **`@testing-library/dom`** explicitly (a
-  required peer not auto-installed under npm's `--legacy-peer-deps`).
-- **Task 1 — install flag**: install required **`--legacy-peer-deps`** due
-  to the app's pinned `esbuild@0.25.2` vs Vite 8's newer esbuild peer
-  range; the app's esbuild pin was left unchanged.
-- **Task 2 — path aliases**: dropped the **`vite-tsconfig-paths`** plugin
-  (it failed to resolve `@/app/*`) in favor of Vite's native
-  **`resolve.tsconfigPaths: true`**; the plugin dependency was uninstalled.
+  required peer that was not auto-installed under the earlier flagged
+  install).
+- **Task 2 — path aliases**: aliases are **derived from `tsconfig.json`**
+  by a helper in the Vitest config. `vite-tsconfig-paths` was tried and
+  removed — it failed to resolve `@/app/*` and `@/contexts/*` in this
+  tsconfig. Vite 5 also lacks the native `resolve.tsconfigPaths` option.
+- **Task 2 — config file is `vitest.config.mts`** (ESM; the project isn't
+  `"type": "module"`). `**/*.mts` was added to the tsconfig `include` so
+  lint/typecheck cover it.
 - **Task 3 — storage mock**: added an **in-memory `Storage`** implementation
   in `test/setup.ts` because Node 26 shadows jsdom's
   `localStorage`/`sessionStorage` with a disabled native version.

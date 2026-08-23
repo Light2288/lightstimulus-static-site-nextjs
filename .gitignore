@@ -21,6 +21,9 @@ public/sitemap.xml
 # production
 /build
 
+# typescript incremental build cache (tsconfig has incremental/composite)
+*.tsbuildinfo
+
 # rss feed
 /public/feed.xml
 public/tags/**/feed.xml

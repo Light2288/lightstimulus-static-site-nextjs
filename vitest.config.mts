@@ -65,6 +65,43 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: [
+      // SVG must win over the tsconfig-derived `@/data/*` alias, otherwise
+      // `@/data/logo.svg` resolves to a URL string and rendering it as a
+      // component throws `InvalidCharacterError`. Mirrors the
+      // `@svgr/webpack` rule in next.config.js.
+      //
+      // The pattern matches the *whole* specifier: Vite replaces only the
+      // matched substring, so a bare /\.svg$/ would rewrite just the
+      // extension and produce a broken path.
+      {
+        find: /^.*\.svg$/,
+        replacement: fileURLToPath(new URL('./test/svgStub.tsx', import.meta.url)),
+      },
+      // framer-motion latches `prefers-reduced-motion` in a module-level
+      // singleton and its `exports` map blocks deep imports, so tests cannot
+      // reach the state to switch branches. This alias exposes the real state
+      // module (same instance the library uses) to `test/mockMatchMedia.ts`.
+      {
+        find: /^framer-motion-reduced-motion-state$/,
+        replacement: fileURLToPath(
+          new URL(
+            './node_modules/framer-motion/dist/es/utils/reduced-motion/state.mjs',
+            import.meta.url
+          )
+        ),
+      },
+      // `app/*` bare specifiers (e.g. `import tagData from
+      // 'app/blog-tag-data.json'` in BlogListClient / ProjectsListClient, and
+      // `from 'app/seo'` in the route files) are resolved by Next via
+      // tsconfig's `baseUrl: "."`, but there is no `@/`-prefixed `paths` entry
+      // for them, so `aliasFromTsconfig()` below never produces one and Vite
+      // fails with "Failed to resolve import". Note this must also come before
+      // the tsconfig-derived aliases: a `vi.mock('app/…')` in a test cannot
+      // work around it, because mock resolution runs after import analysis.
+      {
+        find: /^app\/(.*)$/,
+        replacement: fileURLToPath(new URL('./app/$1', import.meta.url)),
+      },
       {
         find: /^contentlayer\/generated$/,
         replacement: fileURLToPath(new URL('./.contentlayer/generated', import.meta.url)),

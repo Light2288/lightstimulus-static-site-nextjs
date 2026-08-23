@@ -31,7 +31,8 @@
     "cv": {
       "title": "Curriculum Vitae",
       "description": "Una sintesi della mia esperienza, delle mie competenze e dei miei progetti principali.",
-      "download": "Scarica CV"
+      "download": "Scarica CV",
+      "resume_link": "Vedi esperienza completa"
     },
     "exploring": {
       "title": "Cosa sto esplorando ora"

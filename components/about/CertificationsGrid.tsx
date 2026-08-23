@@ -68,7 +68,7 @@ export function CertificationsGrid({ items }: { items: Certification[] }) {
   const groups = groupCertifications(items, groupingMode, t('about.certifications.other'))
 
   return (
-    <section className="mt-16">
+    <section>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h2 className="inline-block bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-2xl font-semibold text-transparent">
           {t('about.certifications.title')}

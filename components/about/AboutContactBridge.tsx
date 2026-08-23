@@ -7,7 +7,7 @@ export function AboutContactBridge() {
   const { t } = useLanguage()
 
   return (
-    <section className="mt-16">
+    <section>
       <p className="text-text-secondary mx-auto max-w-2xl text-center text-sm leading-relaxed dark:text-gray-300">
         {t('about.contact_bridge.text')}
       </p>

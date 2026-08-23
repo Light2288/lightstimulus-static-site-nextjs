@@ -120,4 +120,13 @@ describe('locale parity', () => {
     expect(placeholders(flatEn['blog.previous_article'])).toEqual(new Set(['prevTitle']))
     expect(placeholders(flatEn['blog.next_article'])).toEqual(new Set(['nextTitle']))
   })
+
+  it('provides the CV card strings, including the resume pointer label', () => {
+    for (const flat of [flatEn, flatIt]) {
+      expect(flat).toHaveProperty('about.cv.title')
+      expect(flat).toHaveProperty('about.cv.description')
+      expect(flat).toHaveProperty('about.cv.download')
+      expect(flat).toHaveProperty('about.cv.resume_link')
+    }
+  })
 })

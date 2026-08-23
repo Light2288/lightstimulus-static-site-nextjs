@@ -31,7 +31,8 @@
     "cv": {
       "title": "Curriculum Vitae",
       "description": "A concise overview of my experience, skills, and selected projects.",
-      "download": "Download CV"
+      "download": "Download CV",
+      "resume_link": "View full experience"
     },
     "exploring": {
       "title": "What I’m exploring now"

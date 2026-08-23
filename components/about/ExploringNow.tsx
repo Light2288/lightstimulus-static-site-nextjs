@@ -15,8 +15,8 @@ export function ExploringNow({ items }: { items: ExploringNow[] }) {
   if (!items.length) return null
 
   return (
-    <section className="mt-16">
-      <h2 className="mb-6 inline-block bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-2xl font-semibold text-transparent">
+    <section className="flex h-full flex-col">
+      <h2 className="mb-6 inline-block bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-lg font-semibold text-transparent">
         {t('about.exploring.title')}
       </h2>
 
@@ -31,7 +31,7 @@ export function ExploringNow({ items }: { items: ExploringNow[] }) {
             transition: { staggerChildren: 0.08 },
           },
         }}
-        className="glass-bg rounded-xl border border-white/20 p-6 shadow-md backdrop-blur dark:border-white/10"
+        className="glass-bg flex-1 rounded-xl border border-white/20 p-6 shadow-md backdrop-blur dark:border-white/10"
       >
         <ul className="space-y-3">
           {items.map((item) => (

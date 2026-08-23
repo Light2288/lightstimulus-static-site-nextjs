@@ -14,7 +14,7 @@ export function FocusAreas({ areas }: { areas: FocusArea[] }) {
   if (!areas.length) return null
 
   return (
-    <section className="mt-14">
+    <section>
       <h2 className="mb-6 inline-block bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-2xl font-semibold text-transparent">
         {t('about.focus.title')}
       </h2>

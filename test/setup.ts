@@ -159,3 +159,37 @@ vi.mock('gsap/all', () => ({
   MotionPathPlugin: {},
   ScrollTrigger: { create: vi.fn(), refresh: vi.fn(), getAll: vi.fn(() => []) },
 }))
+
+// --- body-scroll-lock -------------------------------------------------------
+// `MobileNav` renders fine with the real library, but it mutates document
+// styles and its calls are behaviour worth asserting (open locks, close
+// unlocks, unmount clears). Spies make that observable and keep jsdom clean.
+vi.mock('body-scroll-lock', () => ({
+  disableBodyScroll: vi.fn(),
+  enableBodyScroll: vi.fn(),
+  clearAllBodyScrollLocks: vi.fn(),
+}))
+
+// --- next/navigation --------------------------------------------------------
+// jsdom has no Next.js router context, so the real `useSearchParams()` returns
+// null and `.get()` throws. The mock reads mutable state from
+// `test/mockNavigation.ts`, which tests configure via `mockNavigation({...})`.
+//
+// `vi.mock` is only hoisted within the file that calls it, so registering it
+// here (a setup file that runs for every test file) is what makes it global.
+vi.mock('next/navigation', async () => {
+  const { navigationState, navigationRouter } = await import('./mockNavigation')
+  return {
+    usePathname: vi.fn(() => navigationState.pathname),
+    // Returning a real URLSearchParams (never null) is the whole point.
+    useSearchParams: vi.fn(() => navigationState.searchParams),
+    useRouter: vi.fn(() => navigationRouter),
+    useParams: vi.fn(() => ({})),
+    useSelectedLayoutSegment: vi.fn(() => null),
+    useSelectedLayoutSegments: vi.fn(() => []),
+    notFound: vi.fn(() => {
+      throw new Error('NEXT_NOT_FOUND')
+    }),
+    redirect: vi.fn(),
+  }
+})

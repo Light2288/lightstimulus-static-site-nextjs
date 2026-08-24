@@ -40,4 +40,13 @@ export const staticSearchPages: StaticSearchPage[] = [
       it: 'Articoli e note su codice, esperimenti e le idee dietro i progetti.',
     },
   },
+  {
+    url: '/resume',
+    type: 'Page',
+    title: { en: 'Resume', it: 'Curriculum' },
+    summary: {
+      en: 'Full professional experience, roles, and education, with the CV available as a PDF.',
+      it: 'Esperienza professionale completa, ruoli e formazione, con il CV disponibile in PDF.',
+    },
+  },
 ]

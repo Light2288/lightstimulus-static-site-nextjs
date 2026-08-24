@@ -137,5 +137,23 @@
       "npm": "Pacchetto NPM",
       "figma": "Figma"
     }
+  },
+  "resume": {
+    "title": "Curriculum",
+    "description": "Esperienza professionale completa, ruoli e formazione — con il PDF disponibile per il download.",
+    "present": "Oggi",
+    "company_link": "Visita il sito",
+    "experience": {
+      "title": "Esperienza"
+    },
+    "education": {
+      "title": "Formazione"
+    },
+    "cv": {
+      "download": "Scarica il PDF"
+    },
+    "stack": {
+      "label": "Tecnologie"
+    }
   }
 }

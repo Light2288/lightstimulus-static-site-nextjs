@@ -137,5 +137,23 @@
       "npm": "NPM Package",
       "figma": "Figma"
     }
+  },
+  "resume": {
+    "title": "Resume",
+    "description": "Full professional experience, roles, and education — with the PDF available to download.",
+    "present": "Present",
+    "company_link": "Visit website",
+    "experience": {
+      "title": "Experience"
+    },
+    "education": {
+      "title": "Education"
+    },
+    "cv": {
+      "download": "Download PDF"
+    },
+    "stack": {
+      "label": "Technologies"
+    }
   }
 }

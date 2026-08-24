@@ -179,6 +179,46 @@ export const Authors = defineDocumentType(() => ({
       default: [],
     },
 
+    // NOTE: `list of json` fields are not deeply validated by Contentlayer —
+    // the nested `fields` below document the intended shape but are not
+    // enforced at build time. Consumers must therefore tolerate partial data
+    // at runtime (see components/resume/resumeDates.ts).
+    experience: {
+      type: 'list',
+      of: {
+        type: 'json',
+        fields: {
+          id: { type: 'string', required: true },
+          role: { type: 'json', required: true }, // { en, it }
+          company: { type: 'string', required: true },
+          location: { type: 'json' }, // { en, it }
+          startDate: { type: 'string', required: true }, // YYYY-MM
+          endDate: { type: 'string' }, // YYYY-MM; omitted = current role
+          highlights: { type: 'list', of: { type: 'json' } }, // [{ en, it }]
+          stack: { type: 'list', of: { type: 'string' } },
+          url: { type: 'string' },
+        },
+      },
+      default: [],
+    },
+
+    education: {
+      type: 'list',
+      of: {
+        type: 'json',
+        fields: {
+          id: { type: 'string', required: true },
+          degree: { type: 'json', required: true }, // { en, it }
+          institution: { type: 'string', required: true },
+          location: { type: 'json' }, // { en, it }
+          startDate: { type: 'string' }, // YYYY-MM
+          endDate: { type: 'string' }, // YYYY-MM
+          notes: { type: 'json' }, // { en, it }
+        },
+      },
+      default: [],
+    },
+
     cv: {
       type: 'json',
       fields: {

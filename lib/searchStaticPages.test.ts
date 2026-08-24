@@ -3,11 +3,17 @@ import { staticSearchPages } from './searchStaticPages'
 
 /**
  * Characterisation tests for the hand-authored static search entries.
- * These back the `/contact`, `/projects` and `/blog` routes in the kbar index.
+ * These back the `/contact`, `/projects`, `/blog` and `/resume` routes in the
+ * kbar index.
  */
 describe('staticSearchPages', () => {
-  it('contains the three static routes', () => {
-    expect(staticSearchPages.map((page) => page.url)).toEqual(['/contact', '/projects', '/blog'])
+  it('contains the four static routes', () => {
+    expect(staticSearchPages.map((page) => page.url)).toEqual([
+      '/contact',
+      '/projects',
+      '/blog',
+      '/resume',
+    ])
   })
 
   it('uses unique urls', () => {
@@ -51,5 +57,13 @@ describe('staticSearchPages', () => {
     expect(projects?.title.it).toBe('Progetti')
     // "Blog" is intentionally identical in both locales.
     expect(blog?.title.it).toBe('Blog')
+  })
+
+  it('exposes the resume route with a translated title', () => {
+    const resume = staticSearchPages.find((page) => page.url === '/resume')
+
+    expect(resume).toBeDefined()
+    expect(resume?.title.en).toBe('Resume')
+    expect(resume?.title.it).not.toBe(resume?.title.en)
   })
 })

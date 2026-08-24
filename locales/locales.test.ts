@@ -93,6 +93,7 @@ describe('locale parity', () => {
       'home',
       'nav',
       'projects',
+      'resume',
     ]) {
       expect(en).toHaveProperty(namespace)
       expect(itLocale).toHaveProperty(namespace)
@@ -128,5 +129,24 @@ describe('locale parity', () => {
       expect(flat).toHaveProperty('about.cv.download')
       expect(flat).toHaveProperty('about.cv.resume_link')
     }
+  })
+
+  it('provides every string the resume page renders', () => {
+    for (const flat of [flatEn, flatIt]) {
+      expect(flat).toHaveProperty('resume.title')
+      expect(flat).toHaveProperty('resume.description')
+      expect(flat).toHaveProperty('resume.experience.title')
+      expect(flat).toHaveProperty('resume.education.title')
+      expect(flat).toHaveProperty('resume.present')
+      expect(flat).toHaveProperty('resume.cv.download')
+      expect(flat).toHaveProperty('resume.stack.label')
+      expect(flat).toHaveProperty('resume.company_link')
+    }
+  })
+
+  it('translates the resume present label rather than reusing English', () => {
+    // "Present" vs "Oggi" is the one resume string most likely to be forgotten,
+    // because an untranslated copy still reads plausibly to an English speaker.
+    expect(flatIt['resume.present']).not.toBe(flatEn['resume.present'])
   })
 })

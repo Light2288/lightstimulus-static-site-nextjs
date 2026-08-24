@@ -52,6 +52,12 @@ describe('sitemap', () => {
     )
   })
 
+  it('includes the resume route so it is discoverable by crawlers', async () => {
+    const urls = (await loadSitemap()).map((entry) => entry.url)
+
+    expect(urls).toContain(`${siteMetadata.siteUrl}/resume`)
+  })
+
   it('emits a /tags route even though no tags route exists in the app', async () => {
     // Documented as-is: `app/tags` does not exist. Recorded as a finding.
     const urls = (await loadSitemap()).map((entry) => entry.url)
@@ -110,7 +116,7 @@ describe('sitemap', () => {
   })
 
   it('returns one entry per static route plus non-draft blogs plus all projects', async () => {
-    // 6 static + 2 non-draft blogs + 2 projects
-    expect(await loadSitemap()).toHaveLength(10)
+    // 7 static + 2 non-draft blogs + 2 projects
+    expect(await loadSitemap()).toHaveLength(11)
   })
 })

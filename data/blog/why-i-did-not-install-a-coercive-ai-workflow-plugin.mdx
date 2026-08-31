@@ -1,0 +1,403 @@
+---
+title:
+  en: Why I did not give my coding agent Superpowers
+  it: Perché non ho dato i Superpowers al mio coding agent
+
+summary:
+  en: >
+    I considered installing Superpowers, then discovered that I had already built
+    most of the workflow I wanted, with stricter permissions and less ceremony.
+  it: >
+    Ho valutato di installare Superpowers, poi ho scoperto che avevo già costruito
+    quasi tutto il workflow che mi serviva, con permessi più rigidi e meno cerimonie.
+
+date: 2026-08-31
+lastmod: 2026-08-31
+
+topic_key: why-i-did-not-install-a-coercive-ai-workflow-plugin
+
+tags:
+  - id: opencode
+    label:
+      en: OpenCode
+      it: OpenCode
+  - id: ai-agents
+    label:
+      en: AI Agents
+      it: Agenti AI
+  - id: developer-tools
+    label:
+      en: Developer Tools
+      it: Strumenti per sviluppatori
+  - id: workflow
+    label:
+      en: Workflow
+      it: Workflow
+
+draft: true
+images: []
+---
+
+<Lang value="en">
+
+I recently considered installing
+[Superpowers](https://github.com/obra/superpowers), a development workflow for
+coding agents. It promises a reassuring sequence: clarify the design, write a
+plan, use test-driven development, debug systematically, review the result, and
+verify everything before declaring victory.
+
+This is sensible. Suspiciously sensible, in fact. It described almost exactly
+what I wanted from [OpenCode](https://opencode.ai), including several things I
+had already spent time building for myself. Installing it looked like the
+obvious next step.
+
+So naturally, instead of installing it, I conducted an unnecessarily thorough
+inspection of my own configuration, the plugin documentation, and the overlap
+between the two (this is how I relax).
+
+I eventually decided not to install it. Not because Superpowers is bad, and not
+because reusable workflows are a mistake. I declined because its strongest
+opinions overlapped with mine while its operating model did not. I already had
+the process I needed, and I preferred to keep control over when that process
+activates, which model performs each part, and what every agent is physically
+allowed to change.
+
+## So far, nothing to object to
+
+Superpowers presents a complete software-development method as a collection of
+composable skills. Its documented flow covers brainstorming, implementation
+planning, Git worktrees, TDD, systematic debugging, subagent-driven execution,
+code review, and branch completion.
+
+There is a lot to like there. “Evidence over claims” is an excellent rule for a
+coding agent. So is refusing to fix a bug before establishing its root cause.
+Writing a failing test before implementation is certainly less exciting than
+asking an agent to generate half a project in a morning, but it also means fewer
+afternoons spent negotiating with a test suite that has developed constitutional
+objections.
+
+The project is open source, well documented, and available for multiple coding
+harnesses. For someone starting with a mostly default agent, it offers a
+coherent process without first having to become the unpaid operations manager
+of a small synthetic engineering department.
+
+My problem was duplication.
+
+My OpenCode configuration already had separate workflows for defining a spec,
+planning it, and implementing it with a red-green TDD loop. It had systematic
+debugging, sequential spec and quality reviews, architecture maps, ADRs,
+repository audits, and document workflows. The configuration lives in a
+[public repository](https://github.com/Light2288/opencode-personal-skills-agents),
+partly because version control is useful and partly because even my prompts now
+require change management.
+
+Installing another opinionated workflow would not fill an empty space. It would
+place a second set of road markings over roads I had already painted.
+
+## Automatic discipline is still automatic
+
+The decisive detail was the bootstrap rule in Superpowers’
+`using-superpowers` skill. It instructs the agent to invoke a relevant skill
+before any response or action, including clarifying questions, whenever there
+is even a one-percent chance that a skill applies. The wording is deliberately
+forceful: using an applicable skill is mandatory, not optional.
+
+I understand the reasoning. A skill library is useless if the model casually
+ignores it, and models are very good at deciding that a formal workflow is
+unnecessary approximately three seconds before doing the thing that the
+workflow was designed to prevent. Strong instructions defend against that.
+
+But they also make process selection automatic. A simple request can enter a
+workflow because a matching skill exists, not because I decided that the cost
+was justified. The framework calls that consistency. In my setup, I would
+experience some of it as ceremony.
+
+I prefer explicit entry points. I use commands such as `/define`, `/plan`,
+`/implement`, `/review`, and `/audit`. They make the contract visible. When I
+invoke `/review`, I am validating changed work against acceptance criteria.
+When I invoke `/audit`, I am looking for pre-existing problems in a repository,
+even if the worktree is clean. That distinction emerged after I tried to use a
+diff-oriented review for a whole-project health check and the workflow, quite
+correctly and quite unhelpfully, refused.
+
+Explicit invocation does create a risk: I can forget to use the right process.
+I accept that risk because the alternative is paying the process cost on tasks
+where it contributes little. My aim is not maximum ritual compliance. It is
+enough discipline at the point where failure becomes expensive.
+
+## A skill tells; an agent can be fenced in
+
+There was another difference that mattered more than prompt style: permissions.
+
+In OpenCode, a skill is a reusable set of instructions loaded into the current
+context. It explains how work should be done. An agent can additionally have
+its own model, context, tool access, and runtime-enforced permission boundaries.
+
+That lets me separate advice from enforcement. My review agents are read-only.
+They can inspect a diff and report a finding, but they cannot quietly “help” by
+editing the code they are reviewing. A document worker may write only inside
+its designated evidence and deliverable directories. An implementation agent
+can edit application files, while a planning agent cannot wander into the
+source and begin implementing its own plan in a fit of premature enthusiasm.
+
+The skill says, “do not edit.” The permission boundary says, “you cannot edit.”
+I sleep better with the second one.
+
+This also keeps responsibilities legible. Interactive work such as defining a
+spec belongs to a primary agent that can ask me questions. Batch analysis such
+as a quality review belongs to a subagent with a fresh context and a narrow
+output contract. The distinction is not merely organizational. It changes what
+the runtime permits and how much conversational baggage reaches the task.
+
+## Token cost is architecture too
+
+Workflow quality is not the only cost. Every instruction loaded into context
+competes with the code, specification, test output, and conversation the model
+actually needs.
+
+A broad library has more opportunities to help, but it also creates more
+matching decisions and more process text. Automatic activation makes that cost
+easy to overlook because no invoice appears when another procedure enters the
+context. The bill arrives as latency, token usage, or an agent that remembers
+the workflow perfectly while becoming hazy about the file it was meant to
+change.
+
+My smaller setup is not automatically efficient. I have produced spectacularly
+verbose agents too. At one point, an analysis repeated essentially the same
+progress update several times while checking adjacent files. The agent was not
+stuck. It was providing play-by-play coverage of an activity in which nothing
+new was happening, like a sports commentator assigned to a person looking
+through kitchen drawers.
+
+I fixed that with a global rule: one kickoff update for a related exploration,
+then another only for materially new evidence, a blocker, a changed plan, or a
+decision. I also route exploration, titles, and summaries to a smaller model,
+while reserving stronger models for work that benefits from them. These are
+modest savings, but they are attached to actual behavior I observed rather than
+to a general hope that more automation will somehow use less automation.
+
+## What I kept from the comparison
+
+Rejecting the installation did not mean rejecting the ideas. The comparison
+was useful precisely because it exposed gaps in my own setup.
+
+I kept the emphasis on deterministic reproduction before debugging, fresh
+review contexts, spec compliance before quality review, and verification
+evidence before success claims. I also added bounded review loops after learning
+that an agent can rediscover one adjacent edge case per iteration with the
+steady efficiency of someone feeding coins into a parking meter that, after
+every coin, calmly asks for one more.
+
+The result is not a universal alternative to Superpowers. It is a configuration
+for my work: part developer workflow, part architecture toolkit, part document
+pipeline. It includes commands that would be irrelevant to many developers and
+omits conveniences they would reasonably consider essential.
+
+That is the point. A framework is most valuable when its defaults are close to
+the desired operating model. If I were starting from scratch, wanted an
+end-to-end methodology immediately, and preferred automatic enforcement of its
+skills, I would seriously consider Superpowers. With a mature custom setup,
+however, adopting it would mean reconciling two systems that agree on principles
+but compete over control.
+
+I chose the smaller system I could inspect, fence, and change. Then I spent far
+more time documenting that decision than installing the plugin would have
+taken, which suggests that the configuration is working exactly as intended.
+
+The whole setup, agents and skills and the increasingly ceremonial collection
+of guardrails, lives at
+[github.com/Light2288/opencode-personal-skills-agents](https://github.com/Light2288/opencode-personal-skills-agents)
+if you want to inspect it or calculate how many workflows it takes to avoid
+installing one plugin.
+
+</Lang>
+
+<Lang value="it">
+
+Di recente ho valutato di installare
+[Superpowers](https://github.com/obra/superpowers), un workflow di sviluppo per
+coding agent. Promette una sequenza rassicurante: chiarire il design, scrivere un
+plan, usare il test-driven development, fare debug in modo sistematico, rivedere
+il risultato e verificare tutto prima di dichiarare vittoria.
+
+È un approccio sensato. Sospettosamente sensato, anzi. Descriveva quasi
+esattamente quello che volevo da [OpenCode](https://opencode.ai), comprese
+diverse cose che avevo già impiegato parecchio tempo a costruirmi da solo.
+Installarlo sembrava il passo successivo più ovvio.
+
+Quindi, naturalmente, invece di installarlo ho condotto un'ispezione
+ingiustificatamente meticolosa della mia configurazione, della documentazione
+del plugin e delle sovrapposizioni tra i due (è così che mi rilasso).
+
+Alla fine ho deciso di non installarlo. Non perché Superpowers sia fatto male,
+né perché i workflow riutilizzabili siano una cattiva idea. Ho rinunciato perché
+le sue opinioni più forti coincidevano con le mie, ma il suo modello operativo
+no. Avevo già il processo che mi serviva e preferivo mantenere il controllo su
+quando attivarlo, quale modello assegnare a ogni fase e cosa ogni agent fosse
+fisicamente autorizzato a modificare.
+
+## Fin qui, niente da obiettare
+
+Superpowers propone un metodo completo di sviluppo software sotto forma di
+skill componibili. Il workflow documentato comprende brainstorming, planning
+dell'implementazione, Git worktree, TDD, debug sistematico, esecuzione tramite
+subagent, code review e chiusura del branch.
+
+C'è molto di buono. “Evidence over claims” è un'ottima regola per un coding
+agent. Lo stesso vale per il divieto di correggere un bug prima di averne
+stabilito la root cause. Scrivere un test che fallisce prima
+dell'implementazione è sicuramente meno esaltante che chiedere a un agent di
+generare mezzo progetto in una mattinata, ma significa anche meno pomeriggi
+passati a negoziare con una suite di test che ha sollevato obiezioni di
+legittimità costituzionale.
+
+Il progetto è open source, ben documentato e disponibile per diversi coding
+harness. Per chi parte da un agent quasi privo di configurazione, offre un
+processo coerente senza costringere prima a diventare il responsabile operativo,
+non retribuito, di un piccolo reparto di ingegneria sintetica.
+
+Il mio problema era la duplicazione.
+
+La mia configurazione OpenCode aveva già workflow separati per definire una
+spec, pianificarla e implementarla con un ciclo TDD red-green. Aveva debug
+sistematico, review sequenziali prima sulla spec e poi sulla qualità,
+architecture map, ADR, repository audit e workflow documentali. La
+configurazione vive in un
+[repository pubblico](https://github.com/Light2288/opencode-personal-skills-agents),
+in parte perché il version control è utile e in parte perché ormai perfino i
+miei prompt richiedono il change management.
+
+Installare un altro workflow fortemente strutturato non avrebbe riempito uno
+spazio vuoto. Avrebbe tracciato una seconda segnaletica sopra strade che avevo
+già dipinto.
+
+## Anche la disciplina automatica resta automatica
+
+Il dettaglio decisivo è stato la regola di bootstrap nella skill
+`using-superpowers`. La skill ordina all'agent di invocare quella pertinente
+prima di qualsiasi risposta o azione, comprese le domande di chiarimento, ogni
+volta che esiste anche solo l'un per cento di probabilità che si applichi. Il
+testo è volutamente perentorio: usare una skill pertinente è obbligatorio, non
+facoltativo.
+
+Capisco il motivo. Una libreria di skill non serve a nulla se il modello può
+ignorarla con noncuranza, e i modelli sono bravissimi a decidere che un workflow
+formale non è necessario circa tre secondi prima di fare proprio la cosa che
+quel workflow avrebbe dovuto impedire. Istruzioni forti servono a evitare questa
+deriva.
+
+Ma rendono automatica anche la scelta del processo. Una richiesta semplice può
+finire dentro un workflow perché esiste una skill compatibile, non perché io
+abbia deciso che il costo sia giustificato. Il framework la chiama coerenza.
+Nel mio setup, a volte sarebbe solo burocrazia aggiunta al task.
+
+Preferisco entry point espliciti. Uso comandi come `/define`, `/plan`,
+`/implement`, `/review` e `/audit`. Rendono visibile il contratto. Quando invoco
+`/review`, sto validando le modifiche rispetto agli acceptance criteria. Quando
+invoco `/audit`, sto cercando problemi preesistenti in un repository, anche con
+un worktree pulito. Questa distinzione è nata dopo che ho provato a usare una
+review pensata per un diff come controllo generale dello stato di un progetto e
+il workflow, in modo del tutto corretto e senza essermi di alcun aiuto, si è
+rifiutato.
+
+L'invocazione esplicita introduce un rischio: posso dimenticarmi di usare il
+processo giusto. Lo accetto perché l'alternativa è pagare il costo del processo
+anche per i task in cui aggiunge poco. Non cerco la massima conformità rituale.
+Cerco abbastanza disciplina nel punto in cui un errore comincia a costare caro.
+
+## Una skill suggerisce, un agent impone
+
+C'era un'altra differenza, più importante dello stile del prompt: i permessi.
+
+In OpenCode, una skill è un insieme riutilizzabile di istruzioni caricato nel
+contesto corrente. Spiega come svolgere il lavoro. Un agent può avere anche un
+proprio modello, un contesto separato, accesso specifico ai tool e confini di
+permesso imposti dal runtime.
+
+Questo mi permette di separare i consigli dai vincoli reali. I miei agent di
+review sono read-only. Possono ispezionare un diff e segnalare un problema, ma
+non possono “dare una mano” modificando di nascosto il codice che stanno
+valutando. Un document worker può scrivere soltanto nelle directory assegnate a
+evidence e deliverable. Un agent di implementazione può modificare i file
+dell'applicazione, mentre quello di planning non può sconfinare nel source code
+e cominciare a implementare il proprio plan in un impeto di entusiasmo
+prematuro.
+
+La skill dice: “non modificare”. Il permission boundary dice: “non puoi
+modificare”. Con il secondo dormo meglio.
+
+Anche le responsabilità restano più leggibili. Il lavoro interattivo, come la
+definizione di una spec, appartiene a un primary agent che può farmi domande.
+Un'analisi batch, come una quality review, appartiene a un subagent con un
+contesto fresco e un contratto di output ristretto. Non è solo una distinzione
+organizzativa. Cambia ciò che il runtime permette e la quantità di bagaglio
+della conversazione che arriva al task.
+
+## Anche il costo dei token è architettura
+
+La qualità del workflow non è l'unico costo. Ogni istruzione caricata nel
+contesto compete con il codice, la spec, l'output dei test e la conversazione di
+cui il modello ha davvero bisogno.
+
+Una libreria ampia ha più occasioni di essere utile, ma crea anche più decisioni
+di matching e più testo di processo. L'attivazione automatica rende facile
+ignorare questo costo perché non compare nessuna fattura quando un'altra
+procedura entra nel contesto. Il conto arriva sotto forma di latenza, consumo di
+token o di un agent che ricorda perfettamente il workflow ma diventa vago sul
+file che avrebbe dovuto modificare.
+
+La mia configurazione più piccola non è automaticamente efficiente. Ho prodotto
+anch'io agent spettacolarmente prolissi. A un certo punto, durante un'analisi,
+uno di loro ha ripetuto più volte quasi lo stesso aggiornamento mentre
+controllava file adiacenti. Non era bloccato. Faceva la telecronaca di
+un'attività in cui non stava succedendo nulla di nuovo, come un commentatore
+assegnato a una persona che cerca qualcosa nei cassetti della cucina, con
+collegamento in diretta, moviola e un plastico dell'appartamento preparato da
+Bruno Vespa.
+
+Ho corretto il problema con una regola globale: un solo aggiornamento iniziale
+per una fase di esplorazione, poi un altro soltanto in presenza di nuove prove
+rilevanti, un blocco, un cambio di piano o una decisione. Inoltre assegno
+esplorazione, titoli e riassunti a un modello più piccolo, riservando quelli più
+potenti ai lavori che ne traggono davvero beneficio. Sono risparmi modesti, ma
+derivano da comportamenti osservati, non dalla speranza generica che aggiungere
+automazione finisca in qualche modo per usare meno automazione.
+
+## Le idee che ho deciso di portarmi dietro
+
+Rinunciare all'installazione non significava rifiutarne le idee. Il confronto è
+stato utile proprio perché ha fatto emergere i buchi della mia configurazione.
+
+Ho mantenuto l'enfasi sulla riproduzione deterministica prima del debug, sui
+contesti freschi per le review, sulla conformità alla spec prima della quality
+review e sulle prove di verifica prima di dichiarare un successo. Ho aggiunto
+anche un limite ai cicli di review, dopo aver scoperto che un agent può trovare
+un singolo edge case adiacente a ogni iterazione con la produttività costante di
+chi infila monete in un parchimetro che, dopo ogni moneta, con assoluta calma ne
+chiede un'altra.
+
+Il risultato non è un'alternativa universale a Superpowers. È una configurazione
+per il mio lavoro: in parte workflow di sviluppo, in parte toolkit di
+architettura, in parte pipeline documentale. Comprende comandi che per molti
+developer sarebbero inutili e non offre comodità che altri considererebbero, con
+ottime ragioni, indispensabili.
+
+Questo è il punto. Un framework è utile soprattutto quando i suoi default sono
+vicini al modello operativo desiderato. Se partissi da zero, volessi subito una
+metodologia end-to-end e preferissi l'applicazione automatica delle skill,
+prenderei seriamente in considerazione Superpowers. Con una configurazione
+custom già matura, invece, adottarlo avrebbe significato riconciliare due
+sistemi d'accordo sui principi ma in competizione per il controllo.
+
+Ho scelto il sistema più piccolo, quello che posso ispezionare, recintare e
+modificare. Poi ho impiegato molto più tempo a documentare la decisione di
+quanto ne sarebbe servito per installare il plugin, segno che la configurazione
+sta funzionando esattamente come previsto.
+
+Tutto quanto, agent, skill e la sempre più cerimoniale collezione di guardrails,
+sta su
+[github.com/Light2288/opencode-personal-skills-agents](https://github.com/Light2288/opencode-personal-skills-agents),
+per chi volesse ispezionarlo o calcolare quanti workflow servono per evitare di
+installare un plugin.
+
+</Lang>

@@ -1,0 +1,614 @@
+---
+title:
+  en: Building a traceable multimodal document pipeline for architecture work
+  it: Costruire una pipeline multimodale tracciabile per il lavoro di
+    architettura
+
+summary:
+  en: >
+    I wanted an AI workflow that could reason over PDFs, Office files, and
+    images. What I actually needed was a safe evidence pipeline that could
+    explain where every claim came from.
+  it: >
+    Volevo un workflow AI capace di ragionare su PDF, file Office e immagini.
+    Mi serviva invece una pipeline sicura per la gestione delle evidenze, in
+    grado di spiegare da dove arrivasse ogni affermazione.
+
+date: 2026-08-31
+lastmod: 2026-09-01
+
+topic_key: building-a-traceable-multimodal-document-pipeline-for-architecture-work
+
+tags:
+  - id: document-processing
+    label:
+      en: Document processing
+      it: Elaborazione documenti
+  - id: software-architecture
+    label:
+      en: Software architecture
+      it: Architettura software
+  - id: ai-workflows
+    label:
+      en: AI workflows
+      it: Workflow AI
+  - id: security
+    label:
+      en: Security
+      it: Sicurezza
+
+draft: false
+images: []
+---
+
+<Lang value="en">
+
+“Support documents” sounded like a reasonable requirement when I wrote it
+down.
+PDFs go in, useful analysis comes out. Add Word, Excel, PowerPoint, and a few
+images, then let a multimodal model do the clever part. Simple.
+
+It stopped being simple almost immediately.
+
+A document is not just a bag of text. A spreadsheet has formulas, hidden rows,
+filters, charts, and images anchored to cells. A presentation has a declared
+slide order, speaker notes, and abandoned package members that may no longer
+appear anywhere. A Word file can contain tables and media without reliable page
+numbers. Even a PDF may be either digital text or a scan wearing a PDF costume.
+
+More importantly, an architecture recommendation is only useful if I can trace
+it back to evidence. “The model found this requirement somewhere in those
+seventeen files” is not provenance. It is a scavenger hunt with a confident
+narrator.
+
+So the feature grew from a document reader into a pipeline: normalize
+heterogeneous inputs locally, preserve source identity and coverage, let a
+restricted worker assemble cited evidence, then reuse that evidence for
+analysis, summaries, estimates, option comparisons, and architecture decisions.
+
+That extra machinery was not decorative engineering. It was the requirement I
+had failed to write down the first time.
+
+## Normalize first, reason second
+
+I split the workflow into layers instead of asking one agent to open a
+directory and improvise.
+
+The first layer is a local Python normalizer. It recursively discovers
+supported inputs, sorts their relative paths, and assigns stable IDs such as
+`S1`, `S2`, and `S3`. It handles plain text, Markdown, PDF, DOCX, XLSX, PPTX,
+and common image formats. Legacy `.doc`, `.xls`, and `.ppt` files are
+explicitly marked unsupported rather than quietly vanishing.
+
+For each source, it produces either normalized Markdown or a validated
+attachment, plus extracted media where relevant. It also writes an
+`extraction-report.json` recording the source path, format, extraction method,
+artifacts, visuals, warnings, status, and coverage.
+
+The output is an evidence directory with a predictable shape:
+
+```text
+docs/evidence/<topic>/
+├── manifest.md
+├── extraction-report.json
+├── sources/
+│   └── S<n>/
+│       └── content.md
+└── intermediates/
+    └── S<n>/
+        ├── extracted media
+        └── rendered.pdf
+```
+
+The second layer is a restricted document worker. It receives normalized text,
+attachments, extracted visuals, and the report. Its job is not to convert files
+or wander around the repository. It builds the evidence manifest and cites
+factual claims using the stable source IDs and the most reliable available
+location: a PDF page, a slide and speaker note, a spreadsheet sheet and cell
+range, a DOCX paragraph or table, or an image identifier.
+
+This separation gave me two useful boundaries. File parsing became
+deterministic and testable without a model, while interpretation remained
+multimodal but constrained by an explicit evidence contract. If the model later
+writes a summary or compares architecture options, it works from the same
+evidence set instead of reopening the original documents and developing a fresh
+opinion about reality.
+
+## Provenance is more than a filename
+
+Stable source IDs solved only the easiest part of traceability. The harder
+question was what a citation could honestly claim.
+
+For DOCX, the normalizer extracts paragraphs, tables, relationships, and
+embedded media. It can cite “paragraph 12” or “table 3,” but it does not
+invent
+a page number unless a rendering makes pagination reliable. Office layout is
+complicated, and confidence is not a substitute for a rendering engine (sadly,
+neither is optimism).
+
+XLSX needed much more structure. The pipeline records sheet names and
+visibility, cell references and values, formulas, hidden rows and columns,
+filters, tables, charts, and drawing ownership. It handles shared strings,
+dates, booleans, errors, and several formula cases.
+
+Visual ownership matters too. An image anchored to a worksheet belongs to that
+sheet and, when possible, to a cell range. An absolute drawing anchor gets its
+actual position and extent, not a fictional cell address. If the relationship
+cannot be resolved, coverage becomes partial.
+
+PPTX introduced another trap. A presentation package may contain orphan slides,
+charts, or images left behind by edits. If `presentation.xml` is present, its
+declared slide relationships are authoritative. The pipeline preserves those
+slide ordinals, follows only reachable notes and media, and does not promote
+every conveniently named XML file into evidence. A missing slide remains a
+missing slide; the next one does not get renumbered to make the report look
+tidier.
+
+The manifest then separates direct evidence, claims attributed to a source, and
+analyst inference. That distinction sounds almost bureaucratic until an
+estimate contains an assumption that looks exactly like a contractual deadline.
+Then bureaucracy suddenly develops charm.
+
+## Partial is a result, not an embarrassment
+
+My first instinct was to think in binary terms: extraction succeeded or failed.
+Real document folders objected.
+
+One readable spreadsheet may sit beside an old `.xls`, a damaged DOCX, and a
+presentation whose structured content is available but whose layout could not
+be rendered. Throwing away the readable material would be wasteful. Calling the
+whole set complete would be false.
+
+The pipeline therefore tracks status and coverage per source. A source can be
+complete, failed, skipped, or unsupported. Its coverage can be complete,
+partial, or failed. The overall evidence set becomes partial when any material
+gap remains, but successfully extracted sources stay usable.
+
+LibreOffice is a good example. Structured OOXML extraction is the primary
+representation, while optional headless rendering adds layout-oriented PDFs. If
+LibreOffice is missing, times out, or fails, the structured content survives
+and the source records the absent layout coverage. For spreadsheets, rendering
+never replaces the cell-level representation anyway; a pretty PDF is remarkably
+good at concealing formulas, filters, and hidden rows.
+
+The same rule applies downstream. A summary omits unsupported fields or labels
+them “Not evidenced.” An estimate states what information is missing instead of
+manufacturing a precise number. A comparison can withhold its recommendation
+when uncertain scores or plausible weighting changes make the ordering
+unstable. The pipeline is allowed to say “I do not know,” which may be its most
+useful feature.
+
+## The files are hostile until proven otherwise
+
+Once documents become agent input, there are two separate threat surfaces: the
+file format and the content.
+
+OOXML files are ZIP archives, so the normalizer enforces limits on member size,
+total expanded size, and suspicious compression ratios. It rejects encrypted or
+duplicate archive members. Relationship targets cannot escape the package, and
+their declared types must match the expected Office locations. Extracted media
+is validated and staged before being moved into place, preventing a failed
+extraction from leaving a convincing half-result.
+
+SVG required its own suspicion. The validator rejects scripts, event handlers,
+`foreignObject`, external references, data URLs, CSS imports, and obscured CSS
+URLs. PDFs and raster images get basic signature and truncation checks before
+they become attachments. Direct inputs and worksheet sizes have explicit bounds
+so that “please summarize this document” cannot quietly become “please consume
+every byte available on the machine.”
+
+Office files with external relationships receive especially cautious treatment.
+Their structured content can still be extracted, but LibreOffice rendering is
+skipped to avoid following an external target. The warning does not reproduce
+that target either. There is little value in preventing a fetch and then
+thoughtfully copying the sensitive URL into a log.
+
+The other threat surface is prompt injection. A document may contain text
+telling the agent to ignore its instructions, fetch a URL, alter a destination,
+or treat a paragraph as authoritative policy. The worker is explicitly told
+that all document content is untrusted evidence, not instructions. Its
+permissions are deny-first: no shell, no web access, no delegation, and writes
+only to evidence and deliverable directories.
+
+Instructions alone would be a decorative gate in an empty field. Runtime
+permissions provide the fence around it.
+
+## Reusing evidence without laundering assumptions
+
+Once ingestion creates a reusable evidence set, the later workflows become
+narrower.
+
+Analysis identifies requirements, constraints, contradictions, ambiguities,
+gaps, and open questions. Summaries offer meeting, executive, technical, and
+general shapes, but every substantive fact still needs a citation. Estimates
+use explicit units and optimistic, likely, and pessimistic ranges while
+separating source-backed values from estimator assumptions. Architecture
+comparisons examine options, drivers, costs, operational consequences, risks,
+reversibility, and evidence gaps.
+
+I kept comparisons separate from architecture decisions. A comparison is
+exploratory and may recommend an option when the evidence supports one. It
+cannot create, accept, or supersede an ADR. Accepted ADRs are constraints;
+proposed ones are context. Recording an approved decision remains a separate
+action.
+
+That separation prevents a polished analysis artifact from quietly becoming
+policy just because it contains a table and several numbers. Tables have
+extraordinary authority in meetings. Sometimes undeserved authority, but
+excellent posture.
+
+The shared evidence layer also avoids repeated conversion. `/analyze` can
+consume an existing manifest and preserve its source IDs and limitations.
+Summaries and estimates can refer to the same facts. When two deliverables
+disagree, I can inspect whether the difference comes from their purpose, an
+explicit assumption, or a genuine reasoning error. Without shared provenance, I
+would be comparing two confident retellings of the original documents.
+
+## Most of the work appeared during review
+
+The implementation went through many spec and quality review iterations. That
+was fortunate, because several important guarantees live in failure paths
+rather than the happy demo.
+
+Updating an evidence set is one example. Writing directly into the existing
+directory risks mixing old artifacts with a partially completed new run. The
+final design builds a fresh sibling directory, validates its manifest and
+extraction report, moves the old target to a same-filesystem backup, and
+promotes the new set with rollback if replacement fails. It also rejects
+symlinked roots and referenced artifacts that escape the evidence directory.
+
+Other review-driven cases included orphan presentation members, invalid
+relationship types, media path traversal, filename hierarchy collisions,
+renderer errors leaking output, ambiguous Excel values, absolute drawing
+anchors, and the distinction between a source read failure and an output
+filesystem failure. None makes for a thrilling five-minute demo. Together they
+decide whether I can trust the result after the demo ends.
+
+The regression suite eventually grew to cover deterministic discovery, mixed
+formats, source immutability, archive bounds, hostile relationships, SVG active
+content, media collisions, rendering behavior, cleanup, promotion rollback,
+direct attachment validation, and strict report schemas. Synthetic fixtures
+generate documents with paragraphs, tables, formulas, charts, notes, images,
+unsupported legacy formats, and deliberate damage.
+
+There is still an honest boundary around those tests. A fake renderer tests the
+LibreOffice invocation contract, but real rendering remains
+environment-dependent and needs a live smoke test. Configuration can declare
+multimodal attachment support, but only a provider-side run proves that the
+deployed model handles those inputs correctly. A unit test cannot negotiate
+with reality on my behalf, despite my repeated attempts to delegate the
+conversation.
+
+## What “supports documents” means now
+
+The pipeline does not provide perfect Office fidelity, general OCR, or local
+model inference. Complex layouts, animations, macros, some chart semantics,
+shared-formula translation, and exact DOCX pagination can remain incomplete.
+PDFs and images are validated locally, but their interpretation still depends
+on the multimodal model. Evidence and attachments are submitted to the
+configured inference endpoint, so confidential use depends on that endpoint
+being approved for the material.
+
+Those limitations are part of the feature, not fine print beneath it.
+
+I started with a format checklist: PDF, Word, Excel, PowerPoint, images. I
+ended with a different definition of support. A format is supported when the
+system can identify the source, extract or preserve useful representations,
+attach reliable locations, retain visual ownership, surface missing coverage,
+resist hostile input, and carry those facts into every downstream deliverable.
+
+The model still does the clever part. I just no longer ask it to do the
+clerical, forensic, security, and records-management parts at the same time
+(which is also how I finally stopped asking future me to debug all of them at
+once).
+
+The whole contraption, normalizer, document workers, skills, tests, and enough
+guardrails to make a compliance officer feel briefly optimistic, lives at
+[github.com/Light2288/opencode-personal-skills-agents](https://github.com/Light2288/opencode-personal-skills-agents),
+for anyone who wants to inspect it or count how many lines of code it takes to
+admit that “supports documents” was not, in fact, a complete requirement.
+
+</Lang>
+
+<Lang value="it">
+
+“Aggiungere il supporto ai documenti” sembrava un requisito ragionevole quando
+l'ho scritto.
+Entrano i PDF, esce un'analisi utile. Poi si aggiungono Word, Excel, PowerPoint
+e qualche immagine, lasciando al modello multimodale la parte intelligente.
+Semplice.
+
+Ha smesso di esserlo quasi subito.
+
+Un documento non è soltanto un sacco di testo. Un foglio di calcolo ha formule,
+righe nascoste, filtri, grafici e immagini ancorate alle celle. Una
+presentazione
+ha un ordine dichiarato delle slide, speaker notes e membri del package
+abbandonati che potrebbero non comparire più da nessuna parte. Un file Word può
+contenere tabelle e media senza numeri di pagina affidabili. Perfino un PDF può
+essere testo digitale oppure una scansione travestita da PDF.
+
+Soprattutto, una raccomandazione architetturale è utile solo se posso ricondurla
+alle evidenze da cui deriva. “Il modello ha trovato questo requisito da qualche
+parte in quei diciassette file” non è provenienza. È una caccia al tesoro con un
+narratore molto sicuro di sé.
+
+Così la feature è cresciuta da lettore di documenti a pipeline: normalizzare gli
+input eterogenei in locale, conservare identità e coverage delle sorgenti,
+lasciare a un worker con permessi limitati il compito di assemblare evidenze
+citabili, poi riutilizzarle per analisi, riepiloghi, stime, confronti tra
+opzioni
+e decisioni architetturali.
+
+Quella macchina aggiuntiva non era ingegnerizzazione decorativa. Era il requisito che
+la prima volta avevo dimenticato di scrivere.
+
+## Prima normalizzare, poi ragionare
+
+Ho diviso il workflow in layer invece di chiedere a un solo agent di aprire una
+directory e improvvisare.
+
+Il primo layer è un normalizer Python locale. Scopre ricorsivamente gli input
+supportati, ordina i relativi path e assegna ID stabili come `S1`, `S2` e `S3`.
+Gestisce testo semplice, Markdown, PDF, DOCX, XLSX, PPTX e i formati di immagine
+più comuni. I file legacy `.doc`, `.xls` e `.ppt` vengono indicati
+esplicitamente come unsupported, invece di sparire in silenzio.
+
+Per ogni source produce Markdown normalizzato oppure un attachment validato,
+oltre agli eventuali media estratti. Scrive anche un `extraction-report.json`
+che registra source path, format, extraction method, artifacts, visual, warning,
+status e coverage.
+
+L'output è una directory di evidenze con una struttura prevedibile:
+
+```text
+docs/evidence/<topic>/
+├── manifest.md
+├── extraction-report.json
+├── sources/
+│   └── S<n>/
+│       └── content.md
+└── intermediates/
+    └── S<n>/
+        ├── extracted media
+        └── rendered.pdf
+```
+
+Il secondo layer è un document worker con permessi limitati. Riceve testo
+normalizzato, attachment, elementi visivi estratti e report. Non deve convertire
+file né andare a zonzo per il repository. Costruisce il manifest delle evidenze
+e cita le affermazioni fattuali usando gli ID stabili delle sorgenti e il
+riferimento più affidabile disponibile: una pagina PDF, una slide con speaker
+note, un foglio e un intervallo di celle, un paragrafo o una tabella DOCX,
+oppure
+l'identificatore di un'immagine.
+
+Questa separazione mi ha dato due confini utili. Il parsing dei file è diventato
+deterministico e testabile senza modello, mentre l'interpretazione è rimasta
+multimodale ma vincolata da un contratto esplicito sulle evidenze. Se in seguito
+il modello scrive un riepilogo o confronta opzioni architetturali, lavora sullo
+stesso insieme di evidenze invece di riaprire i documenti originali e sviluppare
+una nuova opinione sulla realtà.
+
+## La provenienza è più di un nome file
+
+Gli ID stabili delle sorgenti hanno risolto solo la parte più facile della
+tracciabilità. La domanda difficile era che cosa potesse affermare onestamente
+una citazione.
+
+Per DOCX, il normalizer estrae paragrafi, tabelle, relazioni e media embedded.
+Può citare “paragraph 12” o “table 3”, ma non inventa un numero di pagina se un
+rendering non rende affidabile la paginazione. Il layout di Office è complicato,
+e la confidenza non sostituisce un rendering engine (purtroppo nemmeno
+l'ottimismo).
+
+XLSX richiedeva molta più struttura. La pipeline registra nomi e visibility dei
+sheet, riferimenti e valori delle celle, formule, righe e colonne nascoste,
+filtri, tabelle, grafici e ownership dei drawing. Gestisce shared strings, date,
+booleani, errori e diversi casi di formula.
+
+Conta anche l'ownership visuale. Un'immagine ancorata a un worksheet appartiene
+a quel foglio e, quando possibile, a un cell range. Un absolute drawing anchor
+riceve posizione ed estensione reali, non un indirizzo di cella inventato. Se la
+relazione non può essere risolta, la coverage diventa parziale.
+
+PPTX introduce un'altra trappola. Un presentation package può contenere slide,
+grafici o immagini orfane rimaste dopo alcune modifiche. Se è presente
+`presentation.xml`, fanno fede le slide relationship dichiarate. La
+pipeline conserva quegli ordinali, segue solo note e media raggiungibili e non
+promuove ogni file XML dal nome conveniente a evidenza. Una slide mancante
+resta mancante; quella successiva non viene rinumerata per rendere il report più
+ordinato.
+
+Il manifest separa quindi le evidenze dirette, le affermazioni attribuite a una
+sorgente e le deduzioni dell'analista. La distinzione sembra quasi burocratica
+finché una stima contiene un'ipotesi che assomiglia in tutto e per tutto a una
+scadenza contrattuale. A quel punto la burocrazia sviluppa improvvisamente un
+certo fascino.
+
+## Un risultato parziale non è una vergogna
+
+Il mio primo istinto era ragionare in termini binari: extraction riuscita oppure
+fallita. Le cartelle di documenti reali hanno presentato ricorso.
+
+Un foglio di calcolo leggibile può stare accanto a un vecchio `.xls`, a un DOCX
+danneggiato e a una presentazione il cui contenuto strutturato è disponibile ma
+il cui layout non può essere renderizzato. Buttare via il materiale leggibile
+sarebbe uno spreco. Dichiarare completo l'intero set sarebbe falso.
+
+La pipeline tiene quindi traccia di status e coverage per ogni sorgente. Una
+sorgente può essere `complete`, `failed`, `skipped` o `unsupported`. La sua
+coverage può essere `complete`, `partial` o `failed`. L'insieme delle evidenze
+risulta parziale quando resta una lacuna materiale, ma le sorgenti estratte con
+successo rimangono utilizzabili.
+
+LibreOffice è un buon esempio. L'estrazione strutturata OOXML è la
+rappresentazione primaria, mentre il rendering headless opzionale aggiunge PDF
+orientati al layout. Se LibreOffice manca, va in timeout o fallisce, il
+contenuto
+strutturato sopravvive e la sorgente registra l'assenza della layout coverage.
+Per
+gli spreadsheet, il rendering non sostituisce comunque la rappresentazione a
+livello di cella: un PDF elegante è sorprendentemente bravo a nascondere
+formule, filtri e righe nascoste.
+
+La stessa regola vale nelle fasi successive. Un riepilogo omette i campi non
+supportati oppure li indica come “Non presenti nelle evidenze”. Una stima
+dichiara quali informazioni mancano invece di fabbricare un numero preciso. Un
+confronto può evitare una raccomandazione quando punteggi incerti o cambiamenti
+plausibili dei pesi rendono instabile l'ordine. La pipeline può dire “non lo
+so”,
+che potrebbe essere la sua caratteristica più utile.
+
+## I file sono da considerarsi ostili fino a prova contraria
+
+Quando i documenti diventano input per un agent, ci sono due threat surface
+separate: il formato del file e il suo contenuto.
+
+I file OOXML sono archivi ZIP, quindi il normalizer impone limiti alla
+dimensione
+dei member, alla dimensione totale espansa e ai compression ratio sospetti.
+Rifiuta member cifrati o duplicati. I relationship target non possono uscire dal
+package e i loro type dichiarati devono corrispondere alle location Office
+attese. I media estratti vengono validati e messi in staging prima di essere
+spostati, così un'extraction fallita non lascia dietro di sé un mezzo risultato
+spaventosamente credibile.
+
+SVG richiedeva una diffidenza tutta sua. Il validator rifiuta script, event
+handler, `foreignObject`, riferimenti esterni, data URL, import CSS e URL CSS
+offuscati. PDF e immagini raster ricevono controlli di base su signature e
+troncamento prima di diventare attachment. Input diretti e dimensioni dei
+worksheet hanno limiti espliciti, perché “riassumi questo documento” non si
+trasformi in silenzio in “consuma ogni byte disponibile sulla macchina”.
+
+I file Office con external relationship ricevono un trattamento particolarmente
+prudente. Il contenuto strutturato può ancora essere estratto, ma il rendering
+con LibreOffice viene saltato per evitare di seguire un target esterno. Anche il
+warning non riproduce quel target. C'è poco valore nel prevenire un fetch e poi
+copiarne con cura l'URL sensibile dentro un log.
+
+L'altra threat surface è la prompt injection. Un documento può contenere testo
+che ordina all'agent di ignorare le istruzioni, fare fetch di un URL, modificare
+una destinazione o trattare un paragrafo come policy vincolante. Al worker
+viene detto esplicitamente che tutto il contenuto dei documenti è materiale non
+fidato da usare come evidenza, non un insieme di istruzioni. I suoi permessi
+sono
+deny-first: niente shell, niente accesso al web, niente delega e scrittura solo
+nelle directory dedicate alle evidenze e agli artefatti prodotti.
+
+Le istruzioni da sole sarebbero una porta blindata montata su una parete di
+cartongesso. I permessi del runtime sono la recinzione vera.
+
+## Riutilizzare le evidenze senza riciclare le assunzioni
+
+Una volta creato un insieme di evidenze riutilizzabile, i workflow successivi
+diventano più circoscritti.
+
+L'analisi individua requisiti, vincoli, contraddizioni, ambiguità, lacune e
+domande aperte. I riepiloghi possono essere per riunioni, dirigenziali, tecnici
+o
+generali, ma ogni fatto sostanziale deve comunque avere una citazione. Le stime
+usano unità esplicite e intervalli ottimistici, probabili e pessimistici,
+separando i valori sostenuti dalle sorgenti dalle ipotesi di chi stima. I
+confronti architetturali esaminano opzioni, fattori decisionali, costi,
+conseguenze operative, rischi, reversibilità e lacune nelle evidenze.
+
+Ho tenuto separati i confronti dalle decisioni architetturali. Un confronto è
+esplorativo e può raccomandare un'opzione quando le evidenze la sostengono. Non
+può creare, accettare o sostituire un ADR. Gli ADR accettati sono vincoli;
+quelli
+proposti sono contesto. Registrare una decisione approvata resta un'azione
+separata.
+
+Questa separazione impedisce che un analysis artifact ben lucidato diventi
+policy
+di nascosto solo perché contiene una tabella e qualche numero. Le tabelle hanno
+un'autorità straordinaria nelle riunioni. A volte immeritata, ma con una postura
+eccellente.
+
+Il layer di evidenze condiviso evita anche conversioni ripetute. `/analyze` può
+usare un manifest esistente e conservare gli ID delle sorgenti e le limitazioni.
+Riepiloghi e stime possono riferirsi agli stessi fatti. Quando due documenti
+prodotti non concordano, posso controllare se la differenza dipende dal loro
+scopo, da un'assunzione esplicita o da un vero errore di ragionamento. Senza una
+provenienza condivisa, confronterei due ricostruzioni sicure di sé dei documenti
+originali.
+
+## La maggior parte del lavoro è comparsa durante la review
+
+L'implementazione ha attraversato molte iterazioni di spec review e quality
+review. È stata una fortuna, perché diverse garanzie importanti vivono nei
+failure path, non nella happy demo.
+
+L'aggiornamento di un insieme di evidenze è un esempio. Scrivere direttamente
+nella
+directory esistente rischia di mescolare vecchi artifact e un nuovo run
+completato solo a metà. Il design finale costruisce una directory sibling nuova,
+valida manifest ed extraction report, sposta il vecchio target in un backup
+sullo
+stesso filesystem e promuove il nuovo set con rollback se la replacement
+fallisce.
+Inoltre rifiuta root symlinkate e artifact referenziati che escano dalla
+directory delle evidenze.
+
+Altri casi emersi dalle review includevano member orfani nelle presentazioni,
+relationship type non validi, path traversal dei media, collisioni nella
+filename hierarchy, output del renderer che trapelava, valori Excel ambigui,
+absolute drawing anchor e la distinzione tra un errore di lettura della sorgente
+e un
+filesystem failure dell'output. Nessuno di questi rende entusiasmante una demo
+di cinque minuti. Insieme decidono se posso fidarmi del risultato quando la demo
+è finita.
+
+La regression suite è cresciuta fino a coprire discovery deterministica, formati
+misti, immutabilità delle sorgenti, limiti degli archivi, relationship ostili,
+contenuto attivo SVG, collisioni dei media, comportamento del rendering,
+cleanup, rollback della promotion, validazione degli attachment diretti e
+strict schema dei report. I synthetic fixture generano documenti con paragrafi,
+tabelle, formule, grafici, note, immagini, formati legacy unsupported e danni
+deliberati.
+
+Resta comunque un confine onesto attorno a questi test. Un fake renderer
+verifica
+il contract dell'invocazione a LibreOffice, ma il rendering reale dipende
+dall'ambiente e richiede un live smoke test. La configurazione può dichiarare il
+supporto ad attachment multimodali, ma solo un run lato provider dimostra che il
+modello deployed gestisce davvero quegli input. Un unit test non può trattare
+con
+la realtà al posto mio, nonostante i miei ripetuti tentativi di delegargli la
+conversazione.
+
+## Che cosa significa ormai “supporta i documenti”
+
+La pipeline non offre una fedeltà Office perfetta, OCR general-purpose o model
+inference locale. Layout complessi, animazioni, macro, alcuni significati dei
+grafici, la traduzione delle shared formula e la paginazione DOCX esatta possono
+restare incompleti. PDF e immagini vengono validati in locale, ma la loro
+interpretazione dipende ancora dal modello multimodale. Evidence e attachment
+vengono inviati all'inference endpoint configurato, quindi l'uso con materiale
+confidenziale dipende dall'approvazione di quell'endpoint.
+
+Queste limitazioni fanno parte della feature, non sono una postilla nascosta a
+piè di pagina.
+
+Sono partito da una checklist dei formati: PDF, Word, Excel, PowerPoint,
+immagini.
+Sono arrivato a una definizione diversa di supporto. Un formato è supportato
+quando il sistema sa identificare la sorgente, estrarre o conservare
+rappresentazioni utili, associare location affidabili, mantenere l'ownership
+visuale, rendere visibile la coverage mancante, resistere a input ostili e
+portare questi fatti in ogni documento prodotto nelle fasi successive.
+
+Il modello fa ancora la parte intelligente. Io non gli chiedo più di occuparsi
+insieme della parte clericale, forense, di security e di records management
+(ed è così che ho finalmente smesso di chiedere al me del futuro di fare debug
+di tutto contemporaneamente).
+
+Tutto il marchingegno, normalizer, document worker, skill, test e abbastanza
+guardrails da rendere per qualche istante ottimista un responsabile della
+sicurezza, vive su
+[github.com/Light2288/opencode-personal-skills-agents](https://github.com/Light2288/opencode-personal-skills-agents),
+per chi volesse ispezionarlo o contare quante righe di codice servono per
+ammettere che “supporta i documenti” non era, in effetti, un requisito completo.
+
+</Lang>

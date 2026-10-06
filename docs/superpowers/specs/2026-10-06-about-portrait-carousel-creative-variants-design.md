@@ -2,8 +2,8 @@
 
 **Slug:** `about-portrait-carousel-creative-variants`
 **Type:** feature
-**Status:** DRAFT
-**Provenance:** Current user request; `app/about/page.tsx`; `components/about/AboutProfile.tsx`; `components/about/AboutProfile.test.tsx`; `data/authors/default.mdx`; `contentlayer.config.ts`; `/Users/davide/Personal/Images/Lightstimulus_About_Page_Pictures`
+**Status:** APPROVED
+**Provenance:** Current user request; `app/about/page.tsx`; `components/about/AboutProfile.tsx`; `components/about/AboutProfile.test.tsx`; `data/authors/default.mdx`; `contentlayer.config.ts`; `scripts/compress-images.mjs`; `/Users/davide/Personal/Images/Lightstimulus_About_Page_Pictures`
 
 ## Problem
 
@@ -50,7 +50,7 @@ another photo always resets its state to `Original` (`Originale` in Italian).
 | `family-sunset` | Family sunset / Tramonto in famiglia      | Coastal Anime / Anime sulla costa    | Storybook / Libro illustrato   | Future Coast / Costa futura              |
 | `polaroid`      | Polaroid portrait / Ritratto Polaroid     | Y2K Pop                              | Dream Portal / Portale onirico | Hologram / Ologramma                     |
 | `mountain`      | Mountain portrait / Ritratto in montagna  | Future Explorer / Esploratore futuro | Low Poly                       | Topo Watercolor / Acquerello topografico |
-| `statue`        | Statue encounter / Incontro con la statua | Noir Comic / Fumetto noir            | Living Bronze / Bronzo vivente | 8-bit Quest / Missione 8-bit             |
+| `statue`        | Statue encounter / Incontro con la statua | Noir Comic / Fumetto noir            | Bronze Echo / Eco di bronzo    | 8-bit Quest / Missione 8-bit             |
 
 Each state must preserve recognizable faces, pose, and the essential
 composition of its source. All four people in the family photo must remain
@@ -153,6 +153,39 @@ creative variants for each original. Master PNGs remain outside the served
 site in the user's verified backup location. Display assets live under
 `public/static/images/about/portraits/` using stable photo-and-state filenames.
 
+The prepared source and destination names are:
+
+| Group    | PNG files                                                                                                                                 |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Guitar   | `guitar_session.png`, `guitar_session_16_bit_rock.png`, `guitar_session_90s_anime.png`, `guitar_session_cubist_riff.png`                  |
+| Family   | `family_sunset.png`, `family_sunset_coastal_anime.png`, `family_sunset_storybook.png`, `family_sunset_retro_futurist.png`                 |
+| Polaroid | `polaroid_portrait.png`, `polaroid_portrait_y2k_pop.png`, `polaroid_portrait_dream_portal.png`, `polaroid_portrait_hologram.png`          |
+| Mountain | `mountain_day.png`, `mountain_day_future_explorer.png`, `mountain_day_low_poly.png`, `mountain_day_topo_watercolor.png`                   |
+| Budapest | `budapest_encounter.png`, `budapest_encounter_noir_comic.png`, `budapest_encounter_bronze_echo.png`, `budapest_encounter_8_bit_quest.png` |
+
+Implementation must copy only these PNG files from
+`/Users/davide/Personal/Images/Lightstimulus_About_Page_Pictures` into the new
+portrait directory. The source file `family_sunset.PNG` is normalized to the
+lowercase destination name `family_sunset.png`. JPEG generation sources and
+the external `originals-backup-2026-10-06` directory are not copied into the
+repository.
+
+After the fresh PNGs are copied, implementation must run
+`npm run compress-images`, which invokes `scripts/compress-images.mjs`. For
+each new portrait asset, the script:
+
+- places an uncompressed local backup under the gitignored
+  `public/static/images/original-backups/about/portraits/` path;
+- compresses the main PNG in place, limiting its dimensions to 1000 by 1000;
+- creates available 144w, 200w, 640w, 800w, and 1000w PNG derivatives under
+  `public/static/images/about/portraits/responsive/` without enlargement; and
+- creates matching WebP derivatives.
+
+The implementation must verify the generated 144w and 200w PNG/WebP files for
+all 20 assets because those are the sizes selected by `components/Image.tsx`
+for the 160/176-pixel portrait. The gitignored optimization backups must not be
+staged or committed.
+
 The existing image optimization workflow must create the 144w and 200w PNG
 and WebP derivatives expected by `components/Image.tsx`. The carousel must use
 those display-sized derivatives and must not serve multi-megabyte master PNGs
@@ -207,11 +240,14 @@ network calls.
   state labels, control labels, and announcements without leaking raw keys.
 - **AC-12:** The served portrait uses responsive PNG/WebP derivatives; the
   full-resolution master PNGs are not requested by the browser.
-- **AC-13:** Missing or partial portrait content follows the defined fallback
+- **AC-13:** All 20 approved source PNGs are copied with the specified lowercase
+  destination names, `npm run compress-images` succeeds, and every asset has
+  the required 144w and 200w PNG/WebP derivatives.
+- **AC-14:** Missing or partial portrait content follows the defined fallback
   behavior without breaking the identity card.
-- **AC-14:** Existing identity, occupation, company, social links, highlights,
+- **AC-15:** Existing identity, occupation, company, social links, highlights,
   profile-card layout, About-page ordering, and page rhythm remain functional.
-- **AC-15:** The complete interaction is verified at compact and desktop
+- **AC-16:** The complete interaction is verified at compact and desktop
   widths in light and dark themes, including the family crop and visible focus
   treatment.
 
@@ -224,6 +260,8 @@ network calls.
   retaining the legacy-avatar cases.
 - Add normalization tests for malformed Contentlayer JSON and asset-contract
   tests for all configured files and responsive derivatives.
+- Verify the image-preparation step by checking the compression command's exit
+  status and the complete 20-asset responsive manifest.
 - Extend page composition tests only where the prop contract changes; the
   surrounding About-page bands and rhythm must remain unchanged.
 - Run the project test suite, lint/type checks, and static production build.
@@ -238,8 +276,10 @@ network calls.
   native pointer handling insufficient.
 - Preserve the verified source-image backup at
   `/Users/davide/Personal/Images/Lightstimulus_About_Page_Pictures/originals-backup-2026-10-06`.
-- The user will supply the final author-only mountain PNG and the 15 approved
-  creative PNGs before production completion.
+- Treat the 20 prepared PNGs in
+  `/Users/davide/Personal/Images/Lightstimulus_About_Page_Pictures` as the
+  approved implementation inputs. The final mountain image is author-only and
+  all 15 creative variants are present.
 
 ## Edge Cases
 

@@ -170,9 +170,17 @@ lowercase destination name `family_sunset.png`. JPEG generation sources and
 the external `originals-backup-2026-10-06` directory are not copied into the
 repository.
 
+The current compression script scans the entire image tree and uses gitignored
+backup files as its skip markers. A fresh worktree has no such markers, so an
+unscoped run would recompress unrelated existing assets. Implementation must
+therefore add a backward-compatible optional relative-directory argument to
+`scripts/compress-images.mjs`: no argument retains the existing all-images
+behavior, `about/portraits` limits discovery to that subtree, and paths that
+escape `public/static/images/` are rejected.
+
 After the fresh PNGs are copied, implementation must run
-`npm run compress-images`, which invokes `scripts/compress-images.mjs`. For
-each new portrait asset, the script:
+`npm run compress-images -- about/portraits`. For each new portrait asset, the
+script:
 
 - places an uncompressed local backup under the gitignored
   `public/static/images/original-backups/about/portraits/` path;
@@ -241,8 +249,9 @@ network calls.
 - **AC-12:** The served portrait uses responsive PNG/WebP derivatives; the
   full-resolution master PNGs are not requested by the browser.
 - **AC-13:** All 20 approved source PNGs are copied with the specified lowercase
-  destination names, `npm run compress-images` succeeds, and every asset has
-  the required 144w and 200w PNG/WebP derivatives.
+  destination names, `npm run compress-images -- about/portraits` succeeds
+  without modifying unrelated image assets, and every portrait asset has the
+  required 144w and 200w PNG/WebP derivatives.
 - **AC-14:** Missing or partial portrait content follows the defined fallback
   behavior without breaking the identity card.
 - **AC-15:** Existing identity, occupation, company, social links, highlights,
@@ -262,6 +271,8 @@ network calls.
   tests for all configured files and responsive derivatives.
 - Verify the image-preparation step by checking the compression command's exit
   status and the complete 20-asset responsive manifest.
+- Add focused tests for the compression script's default root, scoped portrait
+  root, and rejection of paths outside `public/static/images/`.
 - Extend page composition tests only where the prop contract changes; the
   surrounding About-page bands and rhythm must remain unchanged.
 - Run the project test suite, lint/type checks, and static production build.

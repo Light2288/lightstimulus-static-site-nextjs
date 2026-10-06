@@ -10,6 +10,16 @@
       "link": "Continue to the contact page →"
     },
     "profile": {
+      "carousel": {
+        "original": "Original",
+        "previous_photo": "Previous photo",
+        "next_photo": "Next photo",
+        "select_photo": "Show {{title}}",
+        "cycle_variant": "Cycle the creative version of {{title}}",
+        "photo_announcement": "{{title}}. {{state}}, {{position}} of {{total}}.",
+        "state_announcement": "{{state}}, {{position}} of {{total}} for {{title}}.",
+        "image_fallback": "The selected image could not be loaded. Showing the original."
+      },
       "highlights": {
         "0": "Senior Application Architect & Technical Leader",
         "1": "People Manager (20+ professionals team)",

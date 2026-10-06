@@ -46,6 +46,7 @@ export default function AboutPage() {
             <AboutProfile
               name={author.name}
               avatar={author.avatar}
+              portraits={author.portraits}
               occupation={author.occupation}
               company={author.company}
               socials={{

@@ -199,11 +199,23 @@ async function findImages(dir, baseDir = dir) {
   return images
 }
 
-async function compressAllImages() {
+export function resolveScanRoot(relativeDir) {
+  const candidate = path.resolve(IMAGES_ROOT, relativeDir ?? '.')
+  const relativePath = path.relative(IMAGES_ROOT, candidate)
+
+  if (path.isAbsolute(relativePath) || relativePath.startsWith('..')) {
+    throw new Error(`Image target must stay inside ${IMAGES_ROOT}`)
+  }
+
+  return candidate
+}
+
+export async function compressAllImages(relativeDir) {
   console.log('🖼️  Starting image compression + responsive variant generation...\n')
 
   // Find all images recursively
-  const images = await findImages(IMAGES_ROOT)
+  const scanRoot = resolveScanRoot(relativeDir)
+  const images = await findImages(scanRoot, IMAGES_ROOT)
 
   if (images.length === 0) {
     console.log('No images found to process.')
@@ -246,4 +258,6 @@ async function compressAllImages() {
   console.log(`📁 Responsive variants saved to: [image-dir]/responsive/`)
 }
 
-compressAllImages().catch(console.error)
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  compressAllImages(process.argv[2]).catch(console.error)
+}

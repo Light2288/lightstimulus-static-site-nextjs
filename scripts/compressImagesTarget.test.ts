@@ -1,13 +1,7 @@
+import fs from 'fs'
+import os from 'os'
 import path from 'path'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-
-vi.mock('fs', () => {
-  const promises = {
-    readdir: vi.fn().mockResolvedValue([]),
-  }
-
-  return { default: { promises }, promises }
-})
 
 vi.mock('sharp', () => ({ default: vi.fn() }))
 
@@ -41,5 +35,20 @@ describe('compress-images scan target', () => {
     expect(() => compressionModule.resolveScanRoot('/tmp/outside')).toThrow(
       /public\/static\/images/
     )
+  })
+
+  it('rejects an in-root symlink whose real target escapes the image root', () => {
+    const externalDir = fs.mkdtempSync(path.join(os.tmpdir(), 'compress-images-outside-'))
+    const linkName = `.test-symlink-escape-${process.pid}`
+    const linkPath = path.join(imagesRoot, linkName)
+
+    try {
+      fs.symlinkSync(externalDir, linkPath, 'dir')
+
+      expect(() => compressionModule.resolveScanRoot(linkName)).toThrow(/public\/static\/images/)
+    } finally {
+      fs.rmSync(linkPath, { force: true })
+      fs.rmSync(externalDir, { recursive: true, force: true })
+    }
   })
 })

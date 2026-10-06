@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-import { promises as fs } from 'fs'
+import { promises as fs, realpathSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -200,14 +200,22 @@ async function findImages(dir, baseDir = dir) {
 }
 
 export function resolveScanRoot(relativeDir) {
-  const candidate = path.resolve(IMAGES_ROOT, relativeDir ?? '.')
-  const relativePath = path.relative(IMAGES_ROOT, candidate)
+  const realImagesRoot = realpathSync(IMAGES_ROOT)
+  const candidate = path.resolve(realImagesRoot, relativeDir ?? '.')
+  const relativePath = path.relative(realImagesRoot, candidate)
 
   if (path.isAbsolute(relativePath) || relativePath.startsWith('..')) {
     throw new Error(`Image target must stay inside ${IMAGES_ROOT}`)
   }
 
-  return candidate
+  const realCandidate = realpathSync(candidate)
+  const realRelativePath = path.relative(realImagesRoot, realCandidate)
+
+  if (path.isAbsolute(realRelativePath) || realRelativePath.startsWith('..')) {
+    throw new Error(`Image target must stay inside ${IMAGES_ROOT}`)
+  }
+
+  return realCandidate
 }
 
 export async function compressAllImages(relativeDir) {

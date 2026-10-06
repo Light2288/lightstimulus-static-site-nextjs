@@ -136,6 +136,21 @@ export const Authors = defineDocumentType(() => ({
   fields: {
     name: { type: 'string', required: true },
     avatar: { type: 'string' },
+    // `list of json` documents the nested shape but requires runtime normalization.
+    portraits: {
+      type: 'list',
+      of: {
+        type: 'json',
+        fields: {
+          id: { type: 'string', required: true },
+          title: { type: 'json', required: true }, // { en, it }
+          original: { type: 'string', required: true },
+          focalPoint: { type: 'string' },
+          variants: { type: 'list', of: { type: 'json' } }, // [{ id, label: { en, it }, src }]
+        },
+      },
+      default: [],
+    },
     occupation: { type: 'string' },
     company: { type: 'string' },
     email: { type: 'string' },

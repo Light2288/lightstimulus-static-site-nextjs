@@ -1,5 +1,7 @@
-import { describe, expect, it, vi } from 'vitest'
-import { act, renderWithProviders, screen, within } from '../../test/renderWithProviders'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { act, fireEvent, renderWithProviders, screen, within } from '../../test/renderWithProviders'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { mockReducedMotion, resetMatchMedia } from '../../test/mockMatchMedia'
 import type { Portrait } from './portraitData'
 import PortraitCarousel from './PortraitCarousel'
 
@@ -62,12 +64,36 @@ const renderCarousel = (locale: 'en' | 'it' = 'en') =>
     { locale }
   )
 
+function CarouselWithLanguageSwitch() {
+  const { switchLang } = useLanguage()
+
+  return (
+    <>
+      <PortraitCarousel
+        portraits={portraits}
+        fallbackAvatar="/static/images/avatar.png"
+        fallbackAlt="Davide Aliti"
+      />
+      <button type="button" onClick={() => switchLang('it')}>
+        Switch to Italian
+      </button>
+    </>
+  )
+}
+
+const getActiveImage = (portraitButton: HTMLElement) => {
+  const images = portraitButton.querySelectorAll('img')
+  return images.item(images.length - 1)
+}
+
 const expectActiveImage = (portraitButton: HTMLElement, src: string) => {
-  const image = portraitButton.querySelector('img')
+  const image = getActiveImage(portraitButton)
   expect(image).toBeInTheDocument()
   expect(decodeURIComponent(image?.getAttribute('src') ?? '')).toContain(src)
   return image
 }
+
+afterEach(() => resetMatchMedia())
 
 describe('PortraitCarousel core controls', () => {
   it('starts with the first original and places its state chip inside the portrait', async () => {
@@ -166,5 +192,159 @@ describe('PortraitCarousel core controls', () => {
 
     await user.click(portraitButton)
     expect(within(portraitButton).getByText('Rock a 16-bit · 2/4')).toBeInTheDocument()
+  })
+
+  it('cycles with Enter and Space while keeping focus on the portrait', async () => {
+    const { user } = renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    portraitButton.focus()
+    await user.keyboard('{Enter}')
+    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+    expect(portraitButton).toHaveFocus()
+
+    await user.keyboard('[Space]')
+    expect(within(portraitButton).getByText('90s Anime · 3/4')).toBeInTheDocument()
+    expect(portraitButton).toHaveFocus()
+  })
+
+  it('uses scoped arrow keys to wrap photos, reset state, and preserve focus', async () => {
+    const { user } = renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    portraitButton.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
+    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(portraitButton).toHaveFocus()
+
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
+
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
+    expect(portraitButton).toHaveFocus()
+  })
+
+  it('announces completed photo and state changes in a polite live region', async () => {
+    const { user } = renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    await user.click(portraitButton)
+    expect(screen.getByRole('status')).toHaveTextContent('16-bit Rock, 2 of 4 for Guitar session.')
+
+    await user.click(screen.getByRole('button', { name: 'Next photo' }))
+    expect(screen.getByRole('status')).toHaveTextContent('Family sunset. Original, 1 of 4.')
+  })
+
+  it('updates visible, accessible, and announced copy without resetting state on language change', async () => {
+    const { user } = renderWithProviders(<CarouselWithLanguageSwitch />, { locale: 'en' })
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    await user.click(portraitButton)
+    await user.click(screen.getByRole('button', { name: 'Switch to Italian' }))
+
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Sessione con la chitarra')
+    expect(within(portraitButton).getByText('Rock a 16-bit · 2/4')).toBeInTheDocument()
+    expect(portraitButton).toHaveAccessibleName(
+      /Sessione con la chitarra.*Rock a 16-bit.*Cambia la versione creativa/i
+    )
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Rock a 16-bit, 2 di 4 per Sessione con la chitarra.'
+    )
+  })
+
+  it('treats a 31px horizontal release as one variant tap', async () => {
+    renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
+    fireEvent.pointerUp(portraitButton, { clientX: 69, clientY: 50, pointerId: 1 })
+    fireEvent.click(portraitButton)
+
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
+    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+  })
+
+  it('treats a 32px horizontal-dominant swipe as one photo change and suppresses click', async () => {
+    renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
+    fireEvent.pointerUp(portraitButton, { clientX: 68, clientY: 60, pointerId: 1 })
+    fireEvent.click(portraitButton)
+
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
+    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+  })
+
+  it('treats vertical-dominant movement as one variant tap instead of a photo swipe', async () => {
+    renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
+    fireEvent.pointerUp(portraitButton, { clientX: 60, clientY: 100, pointerId: 1 })
+    fireEvent.click(portraitButton)
+
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
+    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+  })
+
+  it('applies three rapid activations without dropping a state update', async () => {
+    renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    fireEvent.click(portraitButton)
+    fireEvent.click(portraitButton)
+    fireEvent.click(portraitButton)
+
+    expect(within(portraitButton).getByText('Cubist Riff · 4/4')).toBeInTheDocument()
+    expectActiveImage(portraitButton, '/static/images/about/portraits/guitar_cubist.png')
+  })
+
+  it('falls back from a creative image to its original once and announces the fallback', async () => {
+    const { user } = renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    await user.click(portraitButton)
+    fireEvent.error(getActiveImage(portraitButton))
+
+    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expectActiveImage(portraitButton, '/static/images/about/portraits/guitar.png')
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'The selected image could not be loaded. Showing the original.'
+    )
+  })
+
+  it('falls back from a failed original to the legacy avatar without retrying it', async () => {
+    renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    fireEvent.error(getActiveImage(portraitButton))
+    const fallbackImage = expectActiveImage(portraitButton, '/static/images/avatar.png')
+    fireEvent.error(fallbackImage as HTMLImageElement)
+
+    expectActiveImage(portraitButton, '/static/images/avatar.png')
+  })
+
+  it('uses standard motion by default', async () => {
+    renderCarousel()
+
+    expect(await screen.findByTestId('portrait-carousel')).toHaveAttribute(
+      'data-motion',
+      'standard'
+    )
+  })
+
+  it('uses immediate reduced-motion swaps when the preference is enabled', async () => {
+    mockReducedMotion()
+    const { user } = renderCarousel()
+    const carousel = await screen.findByTestId('portrait-carousel')
+    const portraitButton = screen.getByRole('button', { name: /Guitar session.*Original/i })
+
+    expect(carousel).toHaveAttribute('data-motion', 'reduced')
+    await user.click(portraitButton)
+    expect(portraitButton.querySelectorAll('img')).toHaveLength(1)
+    expectActiveImage(portraitButton, '/static/images/about/portraits/guitar_pixel.png')
   })
 })

@@ -114,6 +114,8 @@ describe('PortraitCarousel core controls', () => {
     expect(styleControl).toHaveTextContent('Change style')
     expect(styleControl).not.toHaveTextContent('1/4')
     expect(portraitButton).not.toContainElement(styleControl)
+    expect(portraitButton.parentElement).toContainElement(styleControl)
+    expect(styleControl).toHaveClass('absolute', 'bottom-full')
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
     expect(container.querySelector('[data-testid="portrait-caption"]')).not.toHaveTextContent(
       '16-bit Rock'

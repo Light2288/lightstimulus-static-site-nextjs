@@ -190,20 +190,20 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
       data-motion={shouldReduceMotion ? 'reduced' : 'standard'}
       className="flex flex-col items-center"
     >
-      <button
-        type="button"
-        data-testid="portrait-style-control"
-        onClick={cycleVariant}
-        aria-label={`${t('about.profile.carousel.change_style')}: ${activeState.label}. ${title}`}
-        className="focus-visible:ring-primary-500 mb-2 flex max-w-60 flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 rounded-full border border-gray-200 bg-white/85 px-3 py-1.5 text-center text-xs leading-tight font-medium text-gray-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 dark:border-gray-700 dark:bg-gray-900/85 dark:text-gray-200 dark:hover:bg-gray-900"
-      >
-        <span>{activeState.label}</span>
-        <span aria-hidden="true">·</span>
-        <span>{t('about.profile.carousel.change_style')}</span>
-        <span aria-hidden="true">↻</span>
-      </button>
-
       <div className="relative">
+        <button
+          type="button"
+          data-testid="portrait-style-control"
+          onClick={cycleVariant}
+          aria-label={`${t('about.profile.carousel.change_style')}: ${activeState.label}. ${title}`}
+          className="focus-visible:ring-primary-500 absolute bottom-full left-1/2 z-10 mb-2 flex w-max max-w-60 -translate-x-1/2 flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 rounded-full border border-gray-200 bg-white/85 px-3 py-1.5 text-center text-xs leading-tight font-medium text-gray-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 dark:border-gray-700 dark:bg-gray-900/85 dark:text-gray-200 dark:hover:bg-gray-900"
+        >
+          <span>{activeState.label}</span>
+          <span aria-hidden="true">·</span>
+          <span>{t('about.profile.carousel.change_style')}</span>
+          <span aria-hidden="true">↻</span>
+        </button>
+
         <button
           type="button"
           onClick={handlePortraitClick}

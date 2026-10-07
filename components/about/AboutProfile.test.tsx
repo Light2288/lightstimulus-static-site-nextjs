@@ -76,14 +76,18 @@ const IT_HIGHLIGHTS = [
 
 describe('AboutProfile', () => {
   describe('identity block', () => {
-    it('vertically centers the identity and highlights beside the portrait carousel', async () => {
-      renderWithProviders(<AboutProfile {...baseProps} portraits={portraits} />)
+    it('top-aligns the identity and highlights with the portrait circle', async () => {
+      const { container } = renderWithProviders(
+        <AboutProfile {...baseProps} portraits={portraits} />
+      )
 
       const heading = await screen.findByRole('heading', { level: 2, name: 'Davide Aliti' })
       const highlights = screen.getByRole('list')
+      const card = container.querySelector('section')
 
-      expect(heading.parentElement).toHaveClass('self-center')
-      expect(highlights.parentElement).toHaveClass('self-center')
+      expect(card).toHaveClass('items-start', 'px-6', 'pt-16', 'pb-6')
+      expect(heading.parentElement).not.toHaveClass('self-center')
+      expect(highlights.parentElement).not.toHaveClass('self-center')
     })
 
     it('renders the name as a level-2 heading', async () => {

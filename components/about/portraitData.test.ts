@@ -12,6 +12,8 @@ const validPortrait = {
   title: { en: 'Guitar session', it: 'Sessione con la chitarra' },
   original: '/static/images/about/portraits/guitar.png',
   focalPoint: '45% 50%',
+  originalFocalPoint: '48% 46%',
+  originalScale: 1.06,
   variants: [validVariant],
 }
 
@@ -77,6 +79,24 @@ describe('normalizePortraits', () => {
     expect(normalizePortraits([{ ...validPortrait, focalPoint: undefined }])[0].focalPoint).toBe(
       '50% 50%'
     )
+  })
+
+  it('normalizes original-only crop tuning without changing the creative crop', () => {
+    const tuned = normalizePortraits([validPortrait])[0]
+    const defaults = normalizePortraits([
+      { ...validPortrait, originalFocalPoint: undefined, originalScale: undefined },
+    ])[0]
+    const invalid = normalizePortraits([
+      { ...validPortrait, originalFocalPoint: 12, originalScale: 0 },
+    ])[0]
+
+    expect(tuned).toMatchObject({
+      focalPoint: '45% 50%',
+      originalFocalPoint: '48% 46%',
+      originalScale: 1.06,
+    })
+    expect(defaults).toMatchObject({ originalFocalPoint: '45% 50%', originalScale: 1 })
+    expect(invalid).toMatchObject({ originalFocalPoint: '45% 50%', originalScale: 1 })
   })
 
   it('returns fresh objects without mutating the Contentlayer value', () => {

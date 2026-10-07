@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, renderWithProviders, screen, within } from '../../test/renderWithProviders'
+import { act, fireEvent, renderWithProviders, screen } from '../../test/renderWithProviders'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { mockReducedMotion, resetMatchMedia } from '../../test/mockMatchMedia'
 import type { Portrait } from './portraitData'
@@ -11,6 +11,8 @@ const portraits: Portrait[] = [
     title: { en: 'Guitar session', it: 'Sessione con la chitarra' },
     original: '/static/images/about/portraits/guitar.png',
     focalPoint: '45% 50%',
+    originalFocalPoint: '48% 46%',
+    originalScale: 1.06,
     variants: [
       {
         id: 'pixel',
@@ -34,6 +36,8 @@ const portraits: Portrait[] = [
     title: { en: 'Family sunset', it: 'Tramonto in famiglia' },
     original: '/static/images/about/portraits/family.png',
     focalPoint: '50% 46%',
+    originalFocalPoint: '50% 42%',
+    originalScale: 1.05,
     variants: [
       {
         id: 'coastal',
@@ -87,29 +91,51 @@ const getActiveImage = (portraitButton: HTMLElement) => {
 }
 
 const expectActiveImage = (portraitButton: HTMLElement, src: string) => {
-  const image = getActiveImage(portraitButton)
+  const image = Array.from(portraitButton.querySelectorAll('img')).find((candidate) =>
+    decodeURIComponent(candidate.getAttribute('src') ?? '').includes(src)
+  )
   expect(image).toBeInTheDocument()
-  expect(decodeURIComponent(image?.getAttribute('src') ?? '')).toContain(src)
   return image
 }
 
 afterEach(() => resetMatchMedia())
 
 describe('PortraitCarousel core controls', () => {
-  it('starts with the first original and places its state chip inside the portrait', async () => {
+  it('shows an external style control with an action hint instead of a visible counter', async () => {
     const { container } = renderCarousel()
     const portraitButton = await screen.findByRole('button', {
       name: /Guitar session.*Original.*Cycle/i,
     })
-    const chip = within(portraitButton).getByText('Original · 1/4')
+    const styleControl = screen.getByTestId('portrait-style-control')
 
     const image = expectActiveImage(portraitButton, '/static/images/about/portraits/guitar.png')
-    expect(image).toHaveStyle({ objectPosition: '45% 50%' })
-    expect(portraitButton).toContainElement(chip)
+    expect(image).toHaveStyle({ objectPosition: '48% 46%', transform: 'scale(1.06)' })
+    expect(styleControl).toHaveTextContent('Original')
+    expect(styleControl).toHaveTextContent('Change style')
+    expect(styleControl).not.toHaveTextContent('1/4')
+    expect(portraitButton).not.toContainElement(styleControl)
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
     expect(container.querySelector('[data-testid="portrait-caption"]')).not.toHaveTextContent(
       '16-bit Rock'
     )
+  })
+
+  it('cycles the creative state from either the portrait or the external style control', async () => {
+    const { user } = renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const styleControl = screen.getByTestId('portrait-style-control')
+
+    await user.click(styleControl)
+    const creativeImage = expectActiveImage(
+      portraitButton,
+      '/static/images/about/portraits/guitar_pixel.png'
+    )
+    expect(creativeImage).toHaveStyle({ objectPosition: '45% 50%', transform: 'scale(1)' })
+    expect(styleControl).toHaveTextContent('16-bit Rock')
+
+    await user.click(portraitButton)
+    expectActiveImage(portraitButton, '/static/images/about/portraits/guitar_anime.png')
+    expect(styleControl).toHaveTextContent('90s Anime')
   })
 
   it('cycles through all creative states in order and wraps to the original', async () => {
@@ -125,7 +151,7 @@ describe('PortraitCarousel core controls', () => {
     for (const [src, label] of expectedStates) {
       await user.click(portraitButton)
       expectActiveImage(portraitButton, src)
-      expect(within(portraitButton).getByText(label)).toBeInTheDocument()
+      expect(screen.getByTestId('portrait-style-control')).toHaveTextContent(label.split(' · ')[0])
       expect(screen.getByTestId('portrait-caption')).not.toHaveTextContent(label.split(' · ')[0])
     }
   })
@@ -135,15 +161,15 @@ describe('PortraitCarousel core controls', () => {
     const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
 
     await user.click(portraitButton)
-    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('16-bit Rock')
 
     await user.click(screen.getByRole('button', { name: 'Next photo' }))
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
 
     await user.click(screen.getByRole('button', { name: 'Previous photo' }))
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
 
     await user.click(screen.getByRole('button', { name: 'Previous photo' }))
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
@@ -165,20 +191,42 @@ describe('PortraitCarousel core controls', () => {
     await user.click(dots[1])
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
     expect(dots[1]).toHaveAttribute('aria-current', 'true')
+  })
+
+  it('provides 24px direct-selection targets while keeping the visual dots compact', async () => {
+    renderCarousel()
+    const dots = await screen.findAllByRole('button', {
+      name: /Show (Guitar session|Family sunset)/,
+    })
+
+    dots.forEach((dot) => {
+      expect(dot).toHaveClass('h-6', 'w-6')
+      expect(dot.firstElementChild).toHaveClass('h-2.5', 'w-2.5')
+    })
+  })
+
+  it('groups previous and next controls with the direct-selection dots', async () => {
+    renderCarousel()
+    const navigation = await screen.findByTestId('portrait-navigation')
+    const dots = screen.getAllByRole('button', { name: /Show (Guitar session|Family sunset)/ })
+
+    expect(navigation).toContainElement(screen.getByRole('button', { name: 'Previous photo' }))
+    expect(navigation).toContainElement(screen.getByRole('button', { name: 'Next photo' }))
+    dots.forEach((dot) => expect(navigation).toContainElement(dot))
   })
 
   it('does not advance automatically after sixty seconds', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    await screen.findByRole('button', { name: /Guitar session.*Original/i })
 
     vi.useFakeTimers()
     act(() => vi.advanceTimersByTime(60_000))
     vi.useRealTimers()
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
   })
 
   it('renders Italian photo and state labels from the active language', async () => {
@@ -188,10 +236,11 @@ describe('PortraitCarousel core controls', () => {
     })
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Sessione con la chitarra')
-    expect(within(portraitButton).getByText('Originale · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Originale')
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Cambia stile')
 
     await user.click(portraitButton)
-    expect(within(portraitButton).getByText('Rock a 16-bit · 2/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Rock a 16-bit')
   })
 
   it('cycles with Enter and Space while keeping focus on the portrait', async () => {
@@ -200,11 +249,11 @@ describe('PortraitCarousel core controls', () => {
 
     portraitButton.focus()
     await user.keyboard('{Enter}')
-    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('16-bit Rock')
     expect(portraitButton).toHaveFocus()
 
     await user.keyboard('[Space]')
-    expect(within(portraitButton).getByText('90s Anime · 3/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('90s Anime')
     expect(portraitButton).toHaveFocus()
   })
 
@@ -215,7 +264,7 @@ describe('PortraitCarousel core controls', () => {
     portraitButton.focus()
     await user.keyboard('{ArrowRight}')
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
     expect(portraitButton).toHaveFocus()
 
     await user.keyboard('{ArrowLeft}')
@@ -245,7 +294,7 @@ describe('PortraitCarousel core controls', () => {
     await user.click(screen.getByRole('button', { name: 'Switch to Italian' }))
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Sessione con la chitarra')
-    expect(within(portraitButton).getByText('Rock a 16-bit · 2/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Rock a 16-bit')
     expect(portraitButton).toHaveAccessibleName(
       /Sessione con la chitarra.*Rock a 16-bit.*Cambia la versione creativa/i
     )
@@ -263,7 +312,7 @@ describe('PortraitCarousel core controls', () => {
     fireEvent.click(portraitButton)
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
-    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('16-bit Rock')
   })
 
   it('treats a 32px horizontal-dominant swipe as one photo change and suppresses click', async () => {
@@ -275,7 +324,22 @@ describe('PortraitCarousel core controls', () => {
     fireEvent.click(portraitButton)
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
+  })
+
+  it('does not suppress the next tap when a swipe produces no compatibility click', async () => {
+    renderCarousel()
+    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+
+    fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
+    fireEvent.pointerUp(portraitButton, { clientX: 68, clientY: 50, pointerId: 1 })
+    expect(screen.getByTestId('portrait-title')).toHaveTextContent('Family sunset')
+
+    fireEvent.pointerDown(portraitButton, { clientX: 50, clientY: 50, pointerId: 2 })
+    fireEvent.pointerUp(portraitButton, { clientX: 50, clientY: 50, pointerId: 2 })
+    fireEvent.click(portraitButton)
+
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Coastal Anime')
   })
 
   it('treats vertical-dominant movement as one variant tap instead of a photo swipe', async () => {
@@ -287,7 +351,7 @@ describe('PortraitCarousel core controls', () => {
     fireEvent.click(portraitButton)
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
-    expect(within(portraitButton).getByText('16-bit Rock · 2/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('16-bit Rock')
   })
 
   it('applies three rapid activations without dropping a state update', async () => {
@@ -298,7 +362,7 @@ describe('PortraitCarousel core controls', () => {
     fireEvent.click(portraitButton)
     fireEvent.click(portraitButton)
 
-    expect(within(portraitButton).getByText('Cubist Riff · 4/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Cubist Riff')
     expectActiveImage(portraitButton, '/static/images/about/portraits/guitar_cubist.png')
   })
 
@@ -309,7 +373,7 @@ describe('PortraitCarousel core controls', () => {
     await user.click(portraitButton)
     fireEvent.error(getActiveImage(portraitButton))
 
-    expect(within(portraitButton).getByText('Original · 1/4')).toBeInTheDocument()
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
     expectActiveImage(portraitButton, '/static/images/about/portraits/guitar.png')
     expect(screen.getByRole('status')).toHaveTextContent(
       'The selected image could not be loaded. Showing the original.'
@@ -325,6 +389,9 @@ describe('PortraitCarousel core controls', () => {
     fireEvent.error(fallbackImage as HTMLImageElement)
 
     expectActiveImage(portraitButton, '/static/images/avatar.png')
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'The original image could not be loaded. Showing the fallback portrait.'
+    )
   })
 
   it('uses standard motion by default', async () => {

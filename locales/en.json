@@ -15,10 +15,12 @@
         "previous_photo": "Previous photo",
         "next_photo": "Next photo",
         "select_photo": "Show {{title}}",
+        "change_style": "Change style",
         "cycle_variant": "Cycle the creative version of {{title}}",
         "photo_announcement": "{{title}}. {{state}}, {{position}} of {{total}}.",
         "state_announcement": "{{state}}, {{position}} of {{total}} for {{title}}.",
-        "image_fallback": "The selected image could not be loaded. Showing the original."
+        "image_fallback": "The selected image could not be loaded. Showing the original.",
+        "avatar_fallback": "The original image could not be loaded. Showing the fallback portrait."
       },
       "highlights": {
         "0": "Senior Application Architect & Technical Leader",

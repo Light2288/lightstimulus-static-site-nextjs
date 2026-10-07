@@ -146,6 +146,8 @@ export const Authors = defineDocumentType(() => ({
           title: { type: 'json', required: true }, // { en, it }
           original: { type: 'string', required: true },
           focalPoint: { type: 'string' },
+          originalFocalPoint: { type: 'string' },
+          originalScale: { type: 'number' },
           variants: { type: 'list', of: { type: 'json' } }, // [{ id, label: { en, it }, src }]
         },
       },

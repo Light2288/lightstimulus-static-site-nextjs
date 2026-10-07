@@ -234,6 +234,7 @@ export async function compressAllImages(relativeDir) {
 
   let processed = 0
   let skipped = 0
+  let failed = 0
   let totalOriginalSize = 0
   let totalCompressedSize = 0
 
@@ -246,7 +247,13 @@ export async function compressAllImages(relativeDir) {
       processed++
       totalOriginalSize += result.originalSize
       totalCompressedSize += result.compressedSize
+    } else if (result?.error) {
+      failed++
     }
+  }
+
+  if (failed > 0) {
+    throw new Error(`Failed to process ${failed} image${failed === 1 ? '' : 's'}`)
   }
 
   console.log('\n' + '='.repeat(60))
@@ -267,5 +274,8 @@ export async function compressAllImages(relativeDir) {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  compressAllImages(process.argv[2]).catch(console.error)
+  compressAllImages(process.argv[2]).catch((error) => {
+    console.error(error)
+    process.exitCode = 1
+  })
 }

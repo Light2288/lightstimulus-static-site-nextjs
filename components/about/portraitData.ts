@@ -14,6 +14,8 @@ export type Portrait = {
   title: LocalizedPortraitText
   original: string
   focalPoint: string
+  originalFocalPoint: string
+  originalScale: number
   variants: PortraitVariant[]
 }
 
@@ -64,12 +66,24 @@ export function normalizePortraits(value: unknown): Portrait[] {
         })
       : []
 
+    const focalPoint = isNonEmptyString(candidate.focalPoint) ? candidate.focalPoint : '50% 50%'
+    const originalScale =
+      typeof candidate.originalScale === 'number' &&
+      Number.isFinite(candidate.originalScale) &&
+      candidate.originalScale > 0
+        ? candidate.originalScale
+        : 1
+
     return [
       {
         id: candidate.id,
         title,
         original: candidate.original,
-        focalPoint: isNonEmptyString(candidate.focalPoint) ? candidate.focalPoint : '50% 50%',
+        focalPoint,
+        originalFocalPoint: isNonEmptyString(candidate.originalFocalPoint)
+          ? candidate.originalFocalPoint
+          : focalPoint,
+        originalScale,
         variants,
       },
     ]

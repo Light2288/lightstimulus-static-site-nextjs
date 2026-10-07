@@ -29,6 +29,26 @@
 - Use the existing `Image`, `LanguageContext`, Motion, styling, and test-helper conventions.
 - Keep the existing identity, social links, highlights, About-page ordering, and page rhythm unchanged.
 
+## Approved Post-Implementation Refinement
+
+After browser testing, the user approved a bounded refinement that supersedes
+the original plan wherever its presentation details conflict with the current
+specification:
+
+- move the active-style control above and outside the circular crop, remove
+  its visible `n/4` counter, and add an explicit localized change-style hint;
+- let both the portrait and style control cycle variants;
+- group previous/next controls with the direct-selection dots below the title;
+- keep the title closer to the circle;
+- preload display-sized variants and use a smoother crossfade without a blank
+  flash; and
+- support original-only focal-position and scale tuning for Family, Polaroid,
+  and Statue while keeping creative-state alignment unchanged.
+
+The implementation uses focused TDD for this revision, followed by the full
+test suite, lint, static build, and responsive browser checks. The remaining
+tasks below document the already-completed original implementation plan.
+
 ## Review Focus
 
 - **Compression target escape or scope regression:** `../`, absolute, and unrelated paths must be rejected or excluded; Task 1 tests root resolution and Task 3 verifies no unrelated image diff.

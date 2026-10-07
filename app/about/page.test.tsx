@@ -35,6 +35,21 @@ const BASE_AUTHOR = {
   email: 'a@b.c',
   github: 'https://github.com/x',
   linkedin: 'https://linkedin.com/in/x',
+  portraits: [
+    {
+      id: 'guitar',
+      title: { en: 'Configured guitar portrait', it: 'Ritratto con chitarra configurato' },
+      original: '/static/images/about/portraits/guitar_session.png',
+      focalPoint: '50% 50%',
+      variants: [
+        {
+          id: 'pixel',
+          label: { en: '16-bit Rock', it: 'Rock a 16-bit' },
+          src: '/static/images/about/portraits/guitar_session_16_bit_rock.png',
+        },
+      ],
+    },
+  ],
   focusAreas: [
     {
       title: { en: 'Frontend Architecture', it: 'Architettura Frontend' },
@@ -89,6 +104,19 @@ function pairedRow(container: HTMLElement): HTMLElement | null {
 }
 
 describe('About page composition', () => {
+  describe('profile data flow', () => {
+    it('renders the configured first portrait and its initial original state', async () => {
+      await renderAboutPage()
+
+      expect(screen.getByTestId('portrait-title')).toHaveTextContent('Configured guitar portrait')
+      expect(
+        screen.getByRole('button', {
+          name: /Configured guitar portrait.*Original · 1\/2/i,
+        })
+      ).toBeInTheDocument()
+    })
+  })
+
   describe('band order', () => {
     it('orders the bands profile, bio, focus, paired row, certifications, bridge', async () => {
       const { container } = await renderAboutPage()

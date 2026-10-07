@@ -34,6 +34,32 @@ const baseProps = {
   socials,
 }
 
+const portraits = [
+  {
+    id: 'guitar',
+    title: { en: 'Guitar session', it: 'Sessione con la chitarra' },
+    original: '/static/images/about/portraits/guitar.png',
+    focalPoint: '50% 50%',
+    variants: [
+      {
+        id: 'pixel',
+        label: { en: '16-bit Rock', it: 'Rock a 16-bit' },
+        src: '/static/images/about/portraits/guitar_pixel.png',
+      },
+      {
+        id: 'anime',
+        label: { en: '90s Anime', it: "Anime anni '90" },
+        src: '/static/images/about/portraits/guitar_anime.png',
+      },
+      {
+        id: 'cubist',
+        label: { en: 'Cubist Riff', it: 'Riff cubista' },
+        src: '/static/images/about/portraits/guitar_cubist.png',
+      },
+    ],
+  },
+]
+
 const EN_HIGHLIGHTS = [
   'Senior Application Architect & Technical Leader',
   'People Manager (20+ professionals team)',
@@ -50,6 +76,20 @@ const IT_HIGHLIGHTS = [
 
 describe('AboutProfile', () => {
   describe('identity block', () => {
+    it('top-aligns the identity and highlights with the portrait circle', async () => {
+      const { container } = renderWithProviders(
+        <AboutProfile {...baseProps} portraits={portraits} />
+      )
+
+      const heading = await screen.findByRole('heading', { level: 2, name: 'Davide Aliti' })
+      const highlights = screen.getByRole('list')
+      const card = container.querySelector('section')
+
+      expect(card).toHaveClass('items-start', 'px-6', 'pt-16', 'pb-6')
+      expect(heading.parentElement).not.toHaveClass('self-center')
+      expect(highlights.parentElement).not.toHaveClass('self-center')
+    })
+
     it('renders the name as a level-2 heading', async () => {
       renderWithProviders(<AboutProfile {...baseProps} />)
 
@@ -92,6 +132,26 @@ describe('AboutProfile', () => {
   })
 
   describe('avatar', () => {
+    it('renders valid portrait content as the carousel instead of a standalone avatar', async () => {
+      renderWithProviders(<AboutProfile {...baseProps} portraits={portraits} />)
+
+      expect(
+        await screen.findByRole('button', { name: /Guitar session.*Original · 1\/4/i })
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('portrait-title')).toHaveTextContent('Guitar session')
+      expect(screen.queryByRole('img', { name: 'Davide Aliti' })).not.toBeInTheDocument()
+    })
+
+    it.each([[], [{ id: '', original: '' }]])(
+      'preserves the standalone avatar when portrait content has no valid entry',
+      async (invalidPortraits) => {
+        renderWithProviders(<AboutProfile {...baseProps} portraits={invalidPortraits} />)
+
+        expect(await screen.findByRole('img', { name: 'Davide Aliti' })).toBeInTheDocument()
+        expect(screen.queryByTestId('portrait-carousel')).not.toBeInTheDocument()
+      }
+    )
+
     it('renders an image using the name as alt text when avatar is set', async () => {
       renderWithProviders(<AboutProfile {...baseProps} />)
 

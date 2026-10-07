@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-import { promises as fs } from 'fs'
+import { promises as fs, realpathSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -199,11 +199,31 @@ async function findImages(dir, baseDir = dir) {
   return images
 }
 
-async function compressAllImages() {
+export function resolveScanRoot(relativeDir) {
+  const realImagesRoot = realpathSync(IMAGES_ROOT)
+  const candidate = path.resolve(realImagesRoot, relativeDir ?? '.')
+  const relativePath = path.relative(realImagesRoot, candidate)
+
+  if (path.isAbsolute(relativePath) || relativePath.startsWith('..')) {
+    throw new Error(`Image target must stay inside ${IMAGES_ROOT}`)
+  }
+
+  const realCandidate = realpathSync(candidate)
+  const realRelativePath = path.relative(realImagesRoot, realCandidate)
+
+  if (path.isAbsolute(realRelativePath) || realRelativePath.startsWith('..')) {
+    throw new Error(`Image target must stay inside ${IMAGES_ROOT}`)
+  }
+
+  return realCandidate
+}
+
+export async function compressAllImages(relativeDir) {
   console.log('🖼️  Starting image compression + responsive variant generation...\n')
 
   // Find all images recursively
-  const images = await findImages(IMAGES_ROOT)
+  const scanRoot = resolveScanRoot(relativeDir)
+  const images = await findImages(scanRoot, IMAGES_ROOT)
 
   if (images.length === 0) {
     console.log('No images found to process.')
@@ -214,6 +234,7 @@ async function compressAllImages() {
 
   let processed = 0
   let skipped = 0
+  let failed = 0
   let totalOriginalSize = 0
   let totalCompressedSize = 0
 
@@ -226,7 +247,13 @@ async function compressAllImages() {
       processed++
       totalOriginalSize += result.originalSize
       totalCompressedSize += result.compressedSize
+    } else if (result?.error) {
+      failed++
     }
+  }
+
+  if (failed > 0) {
+    throw new Error(`Failed to process ${failed} image${failed === 1 ? '' : 's'}`)
   }
 
   console.log('\n' + '='.repeat(60))
@@ -246,4 +273,9 @@ async function compressAllImages() {
   console.log(`📁 Responsive variants saved to: [image-dir]/responsive/`)
 }
 
-compressAllImages().catch(console.error)
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  compressAllImages(process.argv[2]).catch((error) => {
+    console.error(error)
+    process.exitCode = 1
+  })
+}

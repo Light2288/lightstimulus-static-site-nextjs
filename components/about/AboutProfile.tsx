@@ -5,10 +5,13 @@ import SocialIcon from '@/components/social-icons'
 import clsx from 'clsx'
 import { motion } from 'motion/react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PortraitCarousel from './PortraitCarousel'
+import { normalizePortraits } from './portraitData'
 
 interface Props {
   name?: string
   avatar?: string
+  portraits?: unknown
   occupation?: string
   company?: string
   socials: {
@@ -20,8 +23,16 @@ interface Props {
   }
 }
 
-export default function AboutProfile({ name, avatar, occupation, company, socials }: Props) {
+export default function AboutProfile({
+  name,
+  avatar,
+  portraits,
+  occupation,
+  company,
+  socials,
+}: Props) {
   const { t } = useLanguage()
+  const normalizedPortraits = normalizePortraits(portraits)
 
   return (
     <motion.section
@@ -29,27 +40,38 @@ export default function AboutProfile({ name, avatar, occupation, company, social
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 180, damping: 26 }}
       className={clsx(
-        'glass-bg rounded-xl border border-white/20 p-6 backdrop-blur',
-        'grid gap-8 md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr_1fr]',
+        'glass-bg rounded-xl border border-white/20 backdrop-blur',
+        normalizedPortraits.length > 0 ? 'px-6 pt-16 pb-6' : 'p-6',
+        'grid items-start gap-8 md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr_1fr]',
         'dark:border-white/10'
       )}
     >
-      {/* Avatar */}
-      {avatar && (
-        <motion.div
-          whileHover={{ scale: 1.03 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-          className="flex justify-center lg:justify-start"
-        >
-          <Image
-            src={avatar}
-            alt={name ?? 'Avatar'}
-            width={144}
-            height={144}
-            sizes="144px"
-            className="h-36 w-36 rounded-full"
+      {/* Portrait carousel or legacy avatar fallback */}
+      {normalizedPortraits.length > 0 ? (
+        <div className="flex justify-center lg:justify-start">
+          <PortraitCarousel
+            portraits={normalizedPortraits}
+            fallbackAvatar={avatar}
+            fallbackAlt={name ?? 'Avatar'}
           />
-        </motion.div>
+        </div>
+      ) : (
+        avatar && (
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            className="flex justify-center lg:justify-start"
+          >
+            <Image
+              src={avatar}
+              alt={name ?? 'Avatar'}
+              width={144}
+              height={144}
+              sizes="144px"
+              className="h-36 w-36 rounded-full"
+            />
+          </motion.div>
+        )
       )}
 
       {/* Identity */}

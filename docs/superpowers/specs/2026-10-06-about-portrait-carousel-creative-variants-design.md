@@ -31,13 +31,15 @@ original and three tailored creative versions. Photo navigation and creative
 variation navigation are distinct:
 
 - arrows, dots, horizontal swipe, or scoped Left/Right keys change photos;
-- clicking or tapping the portrait, or pressing Enter/Space while it is
-  focused, cycles that photo through its four visual states.
+- clicking or tapping the portrait or its style control, or pressing
+  Enter/Space while the portrait is focused, cycles that photo through its
+  four visual states.
 
-The original remains the default presentation for every photo. A compact chip
-inside the portrait identifies the active state and its position, such as
-`90s Anime · 2/4`. Only the localized photo title appears below the portrait;
-style descriptions do not appear below it.
+The original remains the default presentation for every photo. A compact
+control above the portrait identifies the active state and explicitly invites
+the user to change it, such as `90s Anime · Change style ↻`. The visible state
+counter is removed. Only the localized photo title appears directly below the
+portrait; style descriptions do not appear below it.
 
 ## Approved Creative Set
 
@@ -78,6 +80,8 @@ type Portrait = {
   title: { en: string; it: string }
   original: string
   focalPoint?: string
+  originalFocalPoint?: string
+  originalScale?: number
   variants: Array<{
     id: string
     label: { en: string; it: string }
@@ -109,10 +113,11 @@ introduced.
 ### Interaction state machine
 
 The active photo begins at the first configured portrait and state index zero
-(`Original · 1/4`).
+(`Original`).
 
 1. Activating the portrait increments the state index modulo four:
    `Original → Style 1 → Style 2 → Style 3 → Original`.
+   Activating the external style control performs the same action.
 2. Activating a dot selects that photo directly and resets the state index to
    zero.
 3. Activating a previous/next arrow or a scoped Left/Right key changes the
@@ -134,16 +139,23 @@ state changes without moving focus.
 
 - Keep the portrait circular and within the existing glass profile card.
 - Use a 176-by-176-pixel circle on desktop and a 160-by-160-pixel circle on
-  compact layouts. Use focal-position metadata to keep the family group
-  recognizable without overflowing the existing card.
-- Place the current localized state and `n/4` counter in a compact chip inside
-  the lower portion of the circle.
-- Place only the localized photo title and the five direct-selection dots
-  below the circle.
-- Place previous and next buttons on the left and right edges of the portrait.
+  compact layouts. Use shared creative focal-position metadata plus optional
+  original-only focal-position and scale tuning. This keeps the original
+  family, Polaroid, and statue compositions aligned with their creative states
+  without changing the already-aligned variants.
+- Place the current localized state and a localized `Change style` action in a
+  compact button above and outside the circle. It may wrap but must never be
+  clipped by the circular crop. The portrait and this control both cycle the
+  state.
+- Place the localized photo title close below the circle.
+- Place previous and next buttons in the same navigation row as the five
+  direct-selection dots: previous, dots, next. Controls must remain within the
+  portrait column and must not overlap adjacent profile text.
 - Use a restrained directional transition for photo changes and a short
-  crossfade for variation changes. When `prefers-reduced-motion: reduce` is
-  active, swap images without animated movement or fading.
+  preloaded crossfade with subtle scale and blur for variation changes. The
+  outgoing image remains available while the incoming state appears, avoiding
+  a blank flash. When `prefers-reduced-motion: reduce` is active, swap images
+  without animated movement or fading.
 - Preserve light/dark-theme contrast and visible focus indicators.
 
 ### Image assets and performance
@@ -199,7 +211,8 @@ and WebP derivatives expected by `components/Image.tsx`. The carousel must use
 those display-sized derivatives and must not serve multi-megabyte master PNGs
 for the small portrait. Outside the brief transition window, only the active
 image is rendered; a transition may temporarily retain the outgoing and
-incoming images. Normal browser caching retains previously visited states.
+incoming images. The component proactively warms the browser cache with the 20
+display-sized 200w WebP derivatives, not the master PNGs.
 
 Creative asset generation is an input to implementation, not a runtime site
 feature. The website performs no AI generation and makes no image-generation
@@ -224,17 +237,21 @@ network calls.
 
 - **AC-01:** The About profile renders five portrait groups in the configured
   order, each with one original and exactly three tailored creative variants.
-- **AC-02:** The first portrait initially shows `Original · 1/4`; activating the
-  portrait cycles through all four states in order and wraps to Original.
-- **AC-03:** The active-state chip appears inside the circle and contains the
-  localized state label plus its `n/4` position. No style/effect description is
-  rendered below the portrait.
-- **AC-04:** Only the localized photo title and five direct-selection dots
-  appear below the portrait.
+- **AC-02:** The first portrait initially shows `Original`; activating the
+  portrait or the style control cycles through all four states in order and
+  wraps to Original.
+- **AC-03:** The active-state control appears above and outside the circle and
+  contains the localized state label plus an explicit localized change-style
+  affordance. It remains fully readable for long labels and shows no visible
+  `n/4` counter. No style/effect description is rendered below the portrait.
+- **AC-04:** The localized photo title sits close below the portrait. The
+  previous button, five direct-selection dots, and next button share one
+  centered navigation row below the title and do not overlap adjacent text.
 - **AC-05:** Previous/next buttons, direct-selection dots, scoped Left/Right
   keys, and horizontal touch swipe change photos manually and wrap at both
   ends. No photo changes automatically.
-- **AC-06:** Every photo change resets that photo to `Original · 1/4`.
+- **AC-06:** Every photo change resets that photo to `Original` while the
+  accessible announcement retains the dynamic position and total.
 - **AC-07:** Enter/Space on the focused portrait cycles variants. All controls
   have localized accessible names, visible focus, and polite state
   announcements without unexpected focus movement.
@@ -242,8 +259,9 @@ network calls.
   cycling, never both.
 - **AC-09:** All four people remain recognizable in every family-photo state.
   The production mountain states use the final author-only source.
-- **AC-10:** Standard motion uses restrained photo and variant transitions;
-  reduced-motion mode performs immediate state changes without animation.
+- **AC-10:** Standard motion uses restrained photo transitions and a smooth,
+  preloaded crossfade for variants without a blank flash; reduced-motion mode
+  performs immediate state changes without animation.
 - **AC-11:** English and Italian display the corresponding photo titles,
   state labels, control labels, and announcements without leaking raw keys.
 - **AC-12:** The served portrait uses responsive PNG/WebP derivatives; the
@@ -263,8 +281,9 @@ network calls.
 ## Testing Strategy
 
 - Add focused component tests for initial state, four-state cycling, wrapping,
-  arrows, direct dots, keyboard controls, photo-reset behavior, localized
-  labels, live announcements, swipe/tap disambiguation, and fallbacks.
+  external style control, grouped arrows and direct dots, keyboard controls,
+  photo-reset behavior, original-only crop tuning, localized labels, live
+  announcements, swipe/tap disambiguation, and fallbacks.
 - Extend `AboutProfile` characterization tests to cover portrait data while
   retaining the legacy-avatar cases.
 - Add normalization tests for malformed Contentlayer JSON and asset-contract

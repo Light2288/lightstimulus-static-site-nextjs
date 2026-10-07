@@ -7,6 +7,9 @@ import { describe, expect, it } from 'vitest'
 type PortraitFrontmatter = {
   id: string
   original: string
+  focalPoint: string
+  originalFocalPoint?: string
+  originalScale?: number
   variants: Array<{ src: string }>
 }
 
@@ -20,7 +23,7 @@ const assetPaths = portraits.flatMap((portrait) => [
 
 const toPublicPath = (src: string) => path.join(process.cwd(), 'public', src)
 
-const responsivePath = (src: string, width: 144 | 200, extension: 'png' | 'webp') => {
+const responsivePath = (src: string, width: number, extension: 'png' | 'webp') => {
   const parsed = path.parse(toPublicPath(src))
   return path.join(parsed.dir, 'responsive', `${parsed.name}-${width}w.${extension}`)
 }
@@ -61,4 +64,25 @@ describe('About portrait assets', () => {
       }
     }
   })
+
+  it.each(['family-sunset', 'statue'])(
+    'uses an aligned square original and complete responsive set for %s',
+    (id) => {
+      const portrait = portraits.find((candidate) => candidate.id === id)
+      expect(portrait).toBeDefined()
+
+      const primary = imageSize(readFileSync(toPublicPath(portrait!.original)))
+      expect(primary).toMatchObject({ width: 1000, height: 1000, type: 'png' })
+      expect(portrait!.originalFocalPoint ?? portrait!.focalPoint).toBe(portrait!.focalPoint)
+      expect(portrait!.originalScale ?? 1).toBe(1)
+
+      for (const width of [144, 200, 640, 800, 1000] as const) {
+        for (const extension of ['png', 'webp'] as const) {
+          const variant = responsivePath(portrait!.original, width, extension)
+          expect(existsSync(variant)).toBe(true)
+          expect(imageSize(readFileSync(variant)).width).toBe(width)
+        }
+      }
+    }
+  )
 })

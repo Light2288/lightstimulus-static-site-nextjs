@@ -74,7 +74,7 @@ export default function AboutProfile({
       )}
 
       {/* Identity */}
-      <div className="text-center md:text-left">
+      <div className="self-center text-center md:text-left">
         <h2 className="mb-2 inline-block bg-gradient-to-r from-[var(--color-primary-500)] to-[var(--color-secondary-500)] bg-clip-text text-2xl font-semibold text-transparent">
           {name}
         </h2>
@@ -90,7 +90,7 @@ export default function AboutProfile({
       </div>
 
       {/* High-signal highlights */}
-      <div className="text-text-secondary space-y-3 text-sm md:col-span-2 lg:col-span-1 lg:pl-4">
+      <div className="text-text-secondary space-y-3 self-center text-sm md:col-span-2 lg:col-span-1 lg:pl-4">
         <ul className="space-y-3">
           <li>• {t('about.profile.highlights.0')}</li>
           <li>• {t('about.profile.highlights.1')}</li>

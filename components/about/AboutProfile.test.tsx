@@ -76,6 +76,16 @@ const IT_HIGHLIGHTS = [
 
 describe('AboutProfile', () => {
   describe('identity block', () => {
+    it('vertically centers the identity and highlights beside the portrait carousel', async () => {
+      renderWithProviders(<AboutProfile {...baseProps} portraits={portraits} />)
+
+      const heading = await screen.findByRole('heading', { level: 2, name: 'Davide Aliti' })
+      const highlights = screen.getByRole('list')
+
+      expect(heading.parentElement).toHaveClass('self-center')
+      expect(highlights.parentElement).toHaveClass('self-center')
+    })
+
     it('renders the name as a level-2 heading', async () => {
       renderWithProviders(<AboutProfile {...baseProps} />)
 

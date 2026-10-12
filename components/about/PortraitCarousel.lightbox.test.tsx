@@ -7,7 +7,7 @@ import {
   within,
 } from '../../test/renderWithProviders'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { resetMatchMedia } from '../../test/mockMatchMedia'
+import { mockReducedMotion, resetMatchMedia } from '../../test/mockMatchMedia'
 import type { Portrait } from './portraitData'
 import PortraitCarousel from './PortraitCarousel'
 
@@ -192,5 +192,144 @@ describe('PortraitCarousel lightbox shell', () => {
     expect(screen.getByTestId('portrait-expand-control')).toHaveAccessibleName(
       'Visualizza ingrandita: Sessione con la chitarra, Rock a 16-bit'
     )
+  })
+})
+
+describe('PortraitCarousel lightbox controls', () => {
+  it('cycles shared styles in the lightbox and wraps both surfaces to Original', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: Original' }))
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, 16-bit Rock')
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('16-bit Rock')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: 16-bit Rock' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: 90s Anime' }))
+
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, Original')
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
+  })
+
+  it('navigates previous next and dots with wrap and resets each photo to Original', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: Original' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Previous photo' }))
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Family sunset, Original')
+    expect(within(dialog).getByRole('button', { name: 'Show Family sunset' })).toHaveAttribute(
+      'aria-current',
+      'true'
+    )
+
+    await user.click(within(dialog).getByRole('button', { name: 'Next photo' }))
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, Original')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Show Family sunset' }))
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Family sunset, Original')
+  })
+
+  it('preserves the final shared selection across close and reopen', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    let dialog = await screen.findByRole('dialog')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Next photo' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: Original' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Close larger view' }))
+
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Family sunset, Coastal Anime' })
+    )
+    dialog = await screen.findByRole('dialog')
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Family sunset, Coastal Anime')
+  })
+
+  it('keeps a one-photo carousel stable under every lightbox navigation control', async () => {
+    const { user } = renderWithProviders(
+      <PortraitCarousel
+        portraits={[portraits[0]]}
+        fallbackAvatar="/static/images/avatar.png"
+        fallbackAlt="Davide Aliti"
+      />
+    )
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Previous photo' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Next photo' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Show Guitar session' }))
+
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, Original')
+    expect(within(dialog).getByRole('button', { name: 'Show Guitar session' })).toHaveAttribute(
+      'aria-current',
+      'true'
+    )
+  })
+
+  it('renders responsive object-contain imagery and mobile-safe touch controls', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+    const image = within(dialog).getByRole('img')
+    const webpSource = image.closest('picture')?.querySelector('source[type="image/webp"]')
+
+    expect(image).toHaveClass('object-contain')
+    expect(webpSource).toHaveAttribute('srcset', expect.stringContaining('-640w.webp'))
+    expect(webpSource).toHaveAttribute('srcset', expect.stringContaining('-800w.webp'))
+    expect(webpSource).toHaveAttribute('srcset', expect.stringContaining('-1000w.webp'))
+    expect(screen.getByTestId('portrait-lightbox-panel')).toHaveClass(
+      'max-h-[calc(100dvh-2rem)]',
+      'overflow-y-auto'
+    )
+    for (const name of ['Close larger view', 'Previous photo', 'Next photo']) {
+      expect(within(dialog).getByRole('button', { name })).toHaveClass('h-11', 'w-11')
+    }
+    expect(within(dialog).getByRole('button', { name: 'Show Guitar session' })).toHaveClass(
+      'h-11',
+      'w-11'
+    )
+  })
+
+  it('uses existing light and dark theme classes with visible focus styles', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+    const panel = screen.getByTestId('portrait-lightbox-panel')
+    const styleControl = within(dialog).getByRole('button', { name: 'Change style: Original' })
+
+    expect(panel.className).toMatch(/bg-white/)
+    expect(panel.className).toMatch(/dark:bg-gray-900/)
+    expect(styleControl.className).toMatch(/focus-visible:ring-2/)
+    expect(styleControl.className).toMatch(/dark:/)
+  })
+
+  it('uses immediate lightbox swaps when reduced motion is enabled', async () => {
+    mockReducedMotion()
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog).toHaveAttribute('data-motion', 'reduced')
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: Original' }))
+    expect(within(dialog).getAllByRole('img')).toHaveLength(1)
+    expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, 16-bit Rock')
   })
 })

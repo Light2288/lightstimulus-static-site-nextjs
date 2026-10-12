@@ -329,10 +329,19 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
       </span>
       <PortraitLightbox
         open={isLightboxOpen}
+        portraits={portraits}
+        activePhotoIndex={activePhotoIndex}
         title={title}
         stateLabel={activeState.label}
         displaySrc={displaySrc}
+        displayKey={displayKey}
+        transitionKind={transitionKind}
+        transitionDirection={transitionDirection}
+        shouldReduceMotion={shouldReduceMotion ?? false}
         onClose={() => setIsLightboxOpen(false)}
+        onCycleVariant={cycleVariant}
+        onNavigatePhoto={navigatePhoto}
+        onSelectPhoto={selectPhoto}
         onImageError={handleImageError}
       />
     </div>

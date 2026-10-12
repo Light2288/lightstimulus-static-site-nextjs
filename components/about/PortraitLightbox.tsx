@@ -174,12 +174,18 @@ export default function PortraitLightbox({
               type="button"
               onClick={onCycleVariant}
               aria-label={`${t('about.profile.carousel.change_style')}: ${stateLabel}`}
-              className="focus-visible:ring-primary-500 col-start-2 row-start-1 flex min-h-11 max-w-full min-w-0 items-center gap-1.5 justify-self-center rounded-full border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-medium whitespace-nowrap text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:gap-2 sm:px-4 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900"
+              className="focus-visible:ring-primary-500 col-start-2 row-start-1 flex min-h-11 max-w-full min-w-0 flex-col items-center gap-0 justify-self-center rounded-full border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:flex-row sm:gap-2 sm:px-4 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900"
             >
-              <span className="shrink-0">{stateLabel}</span>
-              <span aria-hidden="true">·</span>
-              <span>{t('about.profile.carousel.change_style')}</span>
-              <span aria-hidden="true">↻</span>
+              <span className="max-w-full text-center leading-tight sm:whitespace-nowrap">
+                {stateLabel}
+              </span>
+              <span aria-hidden="true" className="hidden sm:inline">
+                ·
+              </span>
+              <span className="flex shrink-0 items-center gap-1 leading-tight">
+                <span>{t('about.profile.carousel.change_style')}</span>
+                <span aria-hidden="true">↻</span>
+              </span>
             </button>
           </div>
 

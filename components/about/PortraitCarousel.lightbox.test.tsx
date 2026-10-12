@@ -311,15 +311,7 @@ describe('PortraitCarousel lightbox controls', () => {
       'grid-cols-[2.75rem_minmax(0,1fr)_2.75rem]'
     )
     const styleControl = within(dialog).getByRole('button', { name: 'Change style: Original' })
-    expect(within(styleControl).getByText('Original')).toHaveClass('shrink-0')
-    expect(styleControl).toHaveClass(
-      'col-start-2',
-      'justify-self-center',
-      'whitespace-nowrap',
-      'gap-1.5',
-      'px-3',
-      'sm:px-4'
-    )
+    expect(styleControl).toHaveClass('col-start-2', 'justify-self-center', 'px-3', 'sm:px-4')
     for (const name of ['Close larger view', 'Previous photo', 'Next photo']) {
       expect(within(dialog).getByRole('button', { name })).toHaveClass('h-11', 'w-11')
     }
@@ -327,6 +319,47 @@ describe('PortraitCarousel lightbox controls', () => {
     expect.soft(activeDot.parentElement).toHaveClass('gap-0', 'sm:gap-1')
     expect.soft(activeDot).toHaveClass('h-9', 'w-9', 'sm:h-11', 'sm:w-11')
     expect.soft(activeDot.firstElementChild).toHaveClass('h-1.5', 'w-1.5', 'sm:h-2', 'sm:w-2')
+  })
+
+  it('stacks a long Italian style label above the action on mobile only', async () => {
+    const longLabelPortrait: Portrait = {
+      ...portraits[0],
+      variants: [
+        {
+          id: 'topographic-watercolor',
+          label: { en: 'Topographic Watercolor', it: 'Acquerello topografico' },
+          src: '/static/images/about/portraits/guitar_topographic_watercolor.png',
+        },
+      ],
+    }
+    const { user } = renderWithProviders(
+      <PortraitCarousel
+        portraits={[longLabelPortrait]}
+        fallbackAvatar="/static/images/avatar.png"
+        fallbackAlt="Davide Aliti"
+      />,
+      { locale: 'it' }
+    )
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: 'Visualizza ingrandita: Sessione con la chitarra, Originale',
+      })
+    )
+    const dialog = await screen.findByRole('dialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Cambia stile: Originale' }))
+    const styleControl = within(dialog).getByRole('button', {
+      name: 'Cambia stile: Acquerello topografico',
+    })
+
+    expect(styleControl).toHaveTextContent('Acquerello topografico')
+    expect(styleControl).toHaveTextContent('Cambia stile')
+    expect.soft(styleControl).toHaveClass('flex-col', 'gap-0', 'text-xs')
+    expect.soft(styleControl).toHaveClass('sm:flex-row', 'sm:gap-2', 'sm:text-sm')
+    expect.soft(within(styleControl).getByText('·')).toHaveClass('hidden', 'sm:inline')
+    expect
+      .soft(within(styleControl).getByText('Cambia stile').parentElement)
+      .toHaveClass('flex', 'shrink-0')
   })
 
   it('uses existing light and dark theme classes with visible focus styles', async () => {

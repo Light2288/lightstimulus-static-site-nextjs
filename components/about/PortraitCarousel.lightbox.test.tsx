@@ -365,7 +365,7 @@ describe('PortraitCarousel lightbox fallback', () => {
     )
     expect(within(dialog).getByRole('img')).toHaveAttribute(
       'src',
-      expect.stringContaining('avatar.png')
+      expect.stringContaining('avatar-225w.webp')
     )
   })
 
@@ -423,5 +423,31 @@ describe('PortraitCarousel lightbox fallback', () => {
       expect(within(dialog).getByRole('img')).toHaveAccessibleName('Family sunset, Original')
     )
     expect(within(dialog).queryByText('This image is unavailable.')).not.toBeInTheDocument()
+  })
+
+  it('uses existing native-width responsive assets for nonstandard originals and avatar fallback', async () => {
+    const { user } = renderWithProviders(
+      <PortraitCarousel
+        portraits={[
+          {
+            ...portraits[0],
+            original: '/static/images/about/portraits/guitar_session.png',
+          },
+        ]}
+        fallbackAvatar="/static/images/avatar.png"
+        fallbackAlt="Davide Aliti"
+      />
+    )
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+    const original = within(dialog).getByRole('img', { name: 'Guitar session, Original' })
+
+    expect(original).toHaveAttribute('src', expect.stringContaining('guitar_session-636w.webp'))
+
+    fireEvent.error(original)
+    const avatar = await within(dialog).findByRole('img', { name: 'Davide Aliti' })
+    expect(avatar).toHaveAttribute('src', expect.stringContaining('avatar-225w.webp'))
   })
 })

@@ -31,6 +31,12 @@ export type PortraitLightboxProps = {
 const controlClass =
   'focus-visible:ring-primary-500 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-2xl leading-none text-gray-700 shadow-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700 dark:bg-gray-800/90 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900'
 
+const nativeWidthSources: Record<string, string> = {
+  '/static/images/about/portraits/guitar_session.png':
+    '/static/images/about/portraits/responsive/guitar_session-636w.webp',
+  '/static/images/avatar.png': '/static/images/responsive/avatar-225w.webp',
+}
+
 type LightboxImageFrameProps = {
   src: string
   alt: string
@@ -77,7 +83,7 @@ function LightboxImageFrame({
       className="absolute inset-0"
     >
       <Image
-        src={src}
+        src={nativeWidthSources[src] ?? src}
         alt={isPresent ? alt : ''}
         fill
         sizes="(min-width: 1024px) 896px, calc(100vw - 8rem)"

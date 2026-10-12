@@ -433,6 +433,12 @@ describe('PortraitCarousel lightbox fallback', () => {
             ...portraits[0],
             original: '/static/images/about/portraits/guitar_session.png',
           },
+          {
+            ...portraits[1],
+            id: 'mountain',
+            title: { en: 'Mountain portrait', it: 'Ritratto in montagna' },
+            original: '/static/images/about/portraits/mountain_day.png',
+          },
         ]}
         fallbackAvatar="/static/images/avatar.png"
         fallbackAlt="Davide Aliti"
@@ -449,5 +455,11 @@ describe('PortraitCarousel lightbox fallback', () => {
     fireEvent.error(original)
     const avatar = await within(dialog).findByRole('img', { name: 'Davide Aliti' })
     expect(avatar).toHaveAttribute('src', expect.stringContaining('avatar-225w.webp'))
+
+    await user.click(within(dialog).getByRole('button', { name: 'Next photo' }))
+    const mountain = await within(dialog).findByRole('img', {
+      name: 'Mountain portrait, Original',
+    })
+    expect(mountain).toHaveAttribute('src', expect.stringContaining('mountain_day-870w.webp'))
   })
 })

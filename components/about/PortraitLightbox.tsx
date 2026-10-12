@@ -34,6 +34,8 @@ const controlClass =
 const nativeWidthSources: Record<string, string> = {
   '/static/images/about/portraits/guitar_session.png':
     '/static/images/about/portraits/responsive/guitar_session-636w.webp',
+  '/static/images/about/portraits/mountain_day.png':
+    '/static/images/about/portraits/responsive/mountain_day-870w.webp',
   '/static/images/avatar.png': '/static/images/responsive/avatar-225w.webp',
 }
 

@@ -237,7 +237,7 @@ export default function PortraitLightbox({
             </button>
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-1">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-0 sm:gap-1">
             {portraits.map((portrait, index) => {
               const isActive = index === activePhotoIndex
               const dotTitle = portrait.title[lang]
@@ -249,11 +249,11 @@ export default function PortraitLightbox({
                   aria-label={t('about.profile.carousel.select_photo', { title: dotTitle })}
                   aria-current={isActive ? 'true' : undefined}
                   onClick={() => onSelectPhoto(index)}
-                  className="group focus-visible:ring-primary-500 flex h-11 w-11 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+                  className="group focus-visible:ring-primary-500 flex h-9 w-9 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:h-11 sm:w-11 dark:focus-visible:ring-offset-gray-900"
                 >
                   <span
                     aria-hidden="true"
-                    className={`h-2 w-2 rounded-full transition-colors ${
+                    className={`h-1.5 w-1.5 rounded-full transition-colors sm:h-2 sm:w-2 ${
                       isActive
                         ? 'bg-primary-500 dark:bg-primary-400'
                         : 'bg-gray-300 group-hover:bg-gray-400 dark:bg-gray-600 dark:group-hover:bg-gray-500'

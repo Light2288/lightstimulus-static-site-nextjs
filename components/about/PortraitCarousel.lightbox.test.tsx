@@ -324,8 +324,9 @@ describe('PortraitCarousel lightbox controls', () => {
       expect(within(dialog).getByRole('button', { name })).toHaveClass('h-11', 'w-11')
     }
     const activeDot = within(dialog).getByRole('button', { name: 'Show Guitar session' })
-    expect(activeDot).toHaveClass('h-11', 'w-11')
-    expect(activeDot.firstElementChild).toHaveClass('h-2', 'w-2')
+    expect.soft(activeDot.parentElement).toHaveClass('gap-0', 'sm:gap-1')
+    expect.soft(activeDot).toHaveClass('h-9', 'w-9', 'sm:h-11', 'sm:w-11')
+    expect.soft(activeDot.firstElementChild).toHaveClass('h-1.5', 'w-1.5', 'sm:h-2', 'sm:w-2')
   })
 
   it('uses existing light and dark theme classes with visible focus styles', async () => {

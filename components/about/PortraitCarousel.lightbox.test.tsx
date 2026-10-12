@@ -84,7 +84,7 @@ function CarouselWithLanguageSwitch() {
 afterEach(() => resetMatchMedia())
 
 describe('PortraitCarousel lightbox shell', () => {
-  it('renders a separate 44px contextual expand control without activating the portrait', async () => {
+  it('renders a polished side-aligned zoom control without activating the portrait', async () => {
     const { user } = renderCarousel()
     const portraitButton = await screen.findByRole('button', {
       name: /Guitar session.*Original.*Cycle/i,
@@ -94,6 +94,8 @@ describe('PortraitCarousel lightbox shell', () => {
     })
 
     expect(expandButton).toHaveClass('h-11', 'w-11')
+    expect(expandButton).toHaveClass('left-full', 'top-1/2', 'ml-3', '-translate-y-1/2')
+    expect(expandButton.querySelector('svg.lucide-zoom-in')).toBeInTheDocument()
     expect(portraitButton).not.toContainElement(expandButton)
     expect(portraitButton.parentElement).toContainElement(expandButton)
 
@@ -112,6 +114,9 @@ describe('PortraitCarousel lightbox shell', () => {
     await user.click(expandButton)
 
     const dialog = await screen.findByRole('dialog', { name: 'Larger view of Guitar session' })
+    expect(
+      within(dialog).getByRole('heading', { name: 'Larger view of Guitar session' })
+    ).toHaveClass('sr-only')
     expect(
       within(dialog).getByRole('img', { name: 'Guitar session, Original' })
     ).toBeInTheDocument()
@@ -278,7 +283,7 @@ describe('PortraitCarousel lightbox controls', () => {
     )
   })
 
-  it('renders responsive object-contain imagery and mobile-safe touch controls', async () => {
+  it('renders a square content-sized image region with mobile-safe touch controls', async () => {
     const { user } = renderCarousel()
     await user.click(
       await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
@@ -293,7 +298,12 @@ describe('PortraitCarousel lightbox controls', () => {
     expect(webpSource).toHaveAttribute('srcset', expect.stringContaining('-1000w.webp'))
     expect(screen.getByTestId('portrait-lightbox-panel')).toHaveClass(
       'max-h-[calc(100dvh-2rem)]',
-      'overflow-y-auto'
+      'overflow-y-auto',
+      'w-[min(calc(100vw-2rem),46rem)]'
+    )
+    expect(screen.getByTestId('portrait-lightbox-image-region')).toHaveClass(
+      'aspect-square',
+      'w-full'
     )
     for (const name of ['Close larger view', 'Previous photo', 'Next photo']) {
       expect(within(dialog).getByRole('button', { name })).toHaveClass('h-11', 'w-11')
@@ -382,7 +392,9 @@ describe('PortraitCarousel lightbox fallback', () => {
 
     expect(await within(dialog).findByText('This image is unavailable.')).toBeInTheDocument()
     expect(within(dialog).queryByRole('img')).not.toBeInTheDocument()
-    expect(within(dialog).getByText('Larger view of Guitar session')).toBeInTheDocument()
+    expect(
+      within(dialog).getByRole('heading', { name: 'Larger view of Guitar session' })
+    ).toHaveClass('sr-only')
     expect(within(dialog).getByRole('button', { name: 'Next photo' })).toBeInTheDocument()
   })
 

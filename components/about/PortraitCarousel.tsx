@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { ZoomIn } from 'lucide-react'
 import Image from '@/components/Image'
 import { useLanguage } from '@/contexts/LanguageContext'
 import type { Portrait } from './portraitData'
@@ -269,9 +270,9 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
             title,
             state: activeState.label,
           })}
-          className="focus-visible:ring-primary-500 absolute right-0 bottom-0 z-10 flex h-11 w-11 translate-x-1/3 translate-y-1/3 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-xl text-gray-700 shadow-md backdrop-blur-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-100 dark:hover:bg-gray-900 dark:focus-visible:ring-offset-gray-900"
+          className="focus-visible:ring-primary-500 hover:text-primary-600 dark:hover:text-primary-300 absolute top-1/2 left-full z-10 ml-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/75 text-gray-600 shadow-lg shadow-gray-900/10 backdrop-blur-md transition-[color,background-color,box-shadow,transform] hover:scale-105 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700/80 dark:bg-gray-900/75 dark:text-gray-200 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900"
         >
-          <span aria-hidden="true">↗</span>
+          <ZoomIn aria-hidden="true" className="h-5 w-5" strokeWidth={1.8} />
         </button>
       </div>
 

@@ -150,33 +150,35 @@ export default function PortraitLightbox({
       <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4 sm:p-6">
         <DialogPanel
           data-testid="portrait-lightbox-panel"
-          className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:p-6 dark:bg-gray-900"
+          className="relative flex max-h-[calc(100dvh-2rem)] w-[min(calc(100vw-2rem),46rem)] flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:p-6 dark:bg-gray-900"
         >
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={onClose}
-            aria-label={t('about.profile.carousel.close_lightbox')}
-            className={`${controlClass} absolute top-3 right-3 z-20`}
-          >
-            <span aria-hidden="true">×</span>
-          </button>
+          <div className="flex items-start justify-between gap-3">
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              aria-label={t('about.profile.carousel.close_lightbox')}
+              className={`${controlClass} order-2`}
+            >
+              <span aria-hidden="true">×</span>
+            </button>
 
-          <DialogTitle className="pr-14 text-lg font-semibold text-gray-900 dark:text-white">
-            {t('about.profile.carousel.lightbox_title', { title })}
-          </DialogTitle>
+            <DialogTitle className="sr-only">
+              {t('about.profile.carousel.lightbox_title', { title })}
+            </DialogTitle>
 
-          <button
-            type="button"
-            onClick={onCycleVariant}
-            aria-label={`${t('about.profile.carousel.change_style')}: ${stateLabel}`}
-            className="focus-visible:ring-primary-500 mt-2 flex min-h-11 w-fit max-w-full items-center gap-2 self-center rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900"
-          >
-            <span>{stateLabel}</span>
-            <span aria-hidden="true">·</span>
-            <span>{t('about.profile.carousel.change_style')}</span>
-            <span aria-hidden="true">↻</span>
-          </button>
+            <button
+              type="button"
+              onClick={onCycleVariant}
+              aria-label={`${t('about.profile.carousel.change_style')}: ${stateLabel}`}
+              className="focus-visible:ring-primary-500 order-1 flex min-h-11 max-w-full min-w-0 items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900"
+            >
+              <span className="truncate">{stateLabel}</span>
+              <span aria-hidden="true">·</span>
+              <span>{t('about.profile.carousel.change_style')}</span>
+              <span aria-hidden="true">↻</span>
+            </button>
+          </div>
 
           <div className="mt-3 grid min-h-64 grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-center gap-2 sm:gap-4">
             <button
@@ -188,7 +190,10 @@ export default function PortraitLightbox({
               <span aria-hidden="true">‹</span>
             </button>
 
-            <div className="relative h-[min(62dvh,42rem)] min-h-64 min-w-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-950">
+            <div
+              data-testid="portrait-lightbox-image-region"
+              className="relative aspect-square w-full min-w-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-950"
+            >
               {imageUnavailable ? (
                 <div className="flex h-full items-center justify-center p-6 text-center text-sm font-medium text-gray-600 dark:text-gray-300">
                   {t('about.profile.carousel.image_unavailable')}

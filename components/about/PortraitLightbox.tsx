@@ -152,13 +152,16 @@ export default function PortraitLightbox({
           data-testid="portrait-lightbox-panel"
           className="relative flex max-h-[calc(100dvh-2rem)] w-[min(calc(100vw-2rem),46rem)] flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:p-6 dark:bg-gray-900"
         >
-          <div className="flex items-start justify-between gap-3">
+          <div
+            data-testid="portrait-lightbox-toolbar"
+            className="grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-start gap-3"
+          >
             <button
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
               aria-label={t('about.profile.carousel.close_lightbox')}
-              className={`${controlClass} order-2`}
+              className={`${controlClass} col-start-3 row-start-1`}
             >
               <span aria-hidden="true">×</span>
             </button>
@@ -171,9 +174,9 @@ export default function PortraitLightbox({
               type="button"
               onClick={onCycleVariant}
               aria-label={`${t('about.profile.carousel.change_style')}: ${stateLabel}`}
-              className="focus-visible:ring-primary-500 order-1 flex min-h-11 max-w-full min-w-0 items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900"
+              className="focus-visible:ring-primary-500 col-start-2 row-start-1 flex min-h-11 max-w-full min-w-0 items-center gap-1.5 justify-self-center rounded-full border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-medium whitespace-nowrap text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:gap-2 sm:px-4 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900"
             >
-              <span className="truncate">{stateLabel}</span>
+              <span className="shrink-0">{stateLabel}</span>
               <span aria-hidden="true">·</span>
               <span>{t('about.profile.carousel.change_style')}</span>
               <span aria-hidden="true">↻</span>
@@ -250,7 +253,7 @@ export default function PortraitLightbox({
                 >
                   <span
                     aria-hidden="true"
-                    className={`h-3 w-3 rounded-full transition-colors ${
+                    className={`h-2 w-2 rounded-full transition-colors ${
                       isActive
                         ? 'bg-primary-500 dark:bg-primary-400'
                         : 'bg-gray-300 group-hover:bg-gray-400 dark:bg-gray-600 dark:group-hover:bg-gray-500'

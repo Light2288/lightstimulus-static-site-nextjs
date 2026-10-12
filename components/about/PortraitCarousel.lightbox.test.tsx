@@ -84,7 +84,7 @@ function CarouselWithLanguageSwitch() {
 afterEach(() => resetMatchMedia())
 
 describe('PortraitCarousel lightbox shell', () => {
-  it('renders a polished side-aligned zoom control without activating the portrait', async () => {
+  it('renders a compact lower-right zoom control without activating the portrait', async () => {
     const { user } = renderCarousel()
     const portraitButton = await screen.findByRole('button', {
       name: /Guitar session.*Original.*Cycle/i,
@@ -94,8 +94,9 @@ describe('PortraitCarousel lightbox shell', () => {
     })
 
     expect(expandButton).toHaveClass('h-11', 'w-11')
-    expect(expandButton).toHaveClass('left-full', 'top-1/2', 'ml-3', '-translate-y-1/2')
-    expect(expandButton.querySelector('svg.lucide-zoom-in')).toBeInTheDocument()
+    expect(expandButton).toHaveClass('right-0', 'bottom-5', 'translate-x-1/2')
+    expect(screen.getByTestId('portrait-expand-visual')).toHaveClass('h-9', 'w-9')
+    expect(expandButton.querySelector('svg.lucide-zoom-in')).toHaveClass('h-4', 'w-4')
     expect(portraitButton).not.toContainElement(expandButton)
     expect(portraitButton.parentElement).toContainElement(expandButton)
 
@@ -305,13 +306,26 @@ describe('PortraitCarousel lightbox controls', () => {
       'aspect-square',
       'w-full'
     )
+    expect(screen.getByTestId('portrait-lightbox-toolbar')).toHaveClass(
+      'grid',
+      'grid-cols-[2.75rem_minmax(0,1fr)_2.75rem]'
+    )
+    const styleControl = within(dialog).getByRole('button', { name: 'Change style: Original' })
+    expect(within(styleControl).getByText('Original')).toHaveClass('shrink-0')
+    expect(styleControl).toHaveClass(
+      'col-start-2',
+      'justify-self-center',
+      'whitespace-nowrap',
+      'gap-1.5',
+      'px-3',
+      'sm:px-4'
+    )
     for (const name of ['Close larger view', 'Previous photo', 'Next photo']) {
       expect(within(dialog).getByRole('button', { name })).toHaveClass('h-11', 'w-11')
     }
-    expect(within(dialog).getByRole('button', { name: 'Show Guitar session' })).toHaveClass(
-      'h-11',
-      'w-11'
-    )
+    const activeDot = within(dialog).getByRole('button', { name: 'Show Guitar session' })
+    expect(activeDot).toHaveClass('h-11', 'w-11')
+    expect(activeDot.firstElementChild).toHaveClass('h-2', 'w-2')
   })
 
   it('uses existing light and dark theme classes with visible focus styles', async () => {

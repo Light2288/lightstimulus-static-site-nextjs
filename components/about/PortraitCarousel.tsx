@@ -270,9 +270,14 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
             title,
             state: activeState.label,
           })}
-          className="focus-visible:ring-primary-500 hover:text-primary-600 dark:hover:text-primary-300 absolute top-1/2 left-full z-10 ml-3 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/75 text-gray-600 shadow-lg shadow-gray-900/10 backdrop-blur-md transition-[color,background-color,box-shadow,transform] hover:scale-105 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700/80 dark:bg-gray-900/75 dark:text-gray-200 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-900"
+          className="group focus-visible:ring-primary-500 absolute right-0 bottom-5 z-10 flex h-11 w-11 translate-x-1/2 items-center justify-center rounded-full text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:text-gray-200 dark:focus-visible:ring-offset-gray-900"
         >
-          <ZoomIn aria-hidden="true" className="h-5 w-5" strokeWidth={1.8} />
+          <span
+            data-testid="portrait-expand-visual"
+            className="group-hover:text-primary-600 dark:group-hover:text-primary-300 flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/75 shadow-lg shadow-gray-900/10 backdrop-blur-md transition-[color,background-color,box-shadow,transform] group-hover:scale-105 group-hover:bg-white dark:border-gray-700/80 dark:bg-gray-900/75 dark:group-hover:bg-gray-800"
+          >
+            <ZoomIn aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+          </span>
         </button>
       </div>
 

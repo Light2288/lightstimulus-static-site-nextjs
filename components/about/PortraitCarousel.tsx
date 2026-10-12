@@ -11,6 +11,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import Image from '@/components/Image'
 import { useLanguage } from '@/contexts/LanguageContext'
 import type { Portrait } from './portraitData'
+import PortraitLightbox from './PortraitLightbox'
 
 export type PortraitCarouselProps = {
   portraits: Portrait[]
@@ -44,6 +45,8 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
   const [failureStage, setFailureStage] = useState<'active' | 'original' | 'avatar'>('active')
   const [transitionKind, setTransitionKind] = useState<'photo' | 'variant'>('variant')
   const [transitionDirection, setTransitionDirection] = useState(1)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const expandButtonRef = useRef<HTMLButtonElement>(null)
   const pointerStart = useRef<{ x: number; y: number } | null>(null)
   const suppressClick = useRef(false)
   const activePortrait = portraits[activePhotoIndex]
@@ -250,6 +253,20 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
             )}
           </AnimatePresence>
         </button>
+
+        <button
+          ref={expandButtonRef}
+          type="button"
+          data-testid="portrait-expand-control"
+          onClick={() => setIsLightboxOpen(true)}
+          aria-label={t('about.profile.carousel.view_larger', {
+            title,
+            state: activeState.label,
+          })}
+          className="focus-visible:ring-primary-500 absolute right-0 bottom-0 z-10 flex h-11 w-11 translate-x-1/3 translate-y-1/3 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-xl text-gray-700 shadow-md backdrop-blur-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-100 dark:hover:bg-gray-900 dark:focus-visible:ring-offset-gray-900"
+        >
+          <span aria-hidden="true">↗</span>
+        </button>
       </div>
 
       <div data-testid="portrait-caption" className="mt-1.5 text-center">
@@ -310,6 +327,14 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
       <span role="status" aria-live="polite" className="sr-only">
         {announcement}
       </span>
+      <PortraitLightbox
+        open={isLightboxOpen}
+        title={title}
+        stateLabel={activeState.label}
+        displaySrc={displaySrc}
+        onClose={() => setIsLightboxOpen(false)}
+        onImageError={handleImageError}
+      />
     </div>
   )
 }

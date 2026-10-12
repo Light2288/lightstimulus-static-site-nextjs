@@ -124,7 +124,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('cycles the creative state from either the portrait or the external style control', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
     const styleControl = screen.getByTestId('portrait-style-control')
 
     await user.click(styleControl)
@@ -142,7 +144,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('cycles through all creative states in order and wraps to the original', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
     const expectedStates = [
       ['/static/images/about/portraits/guitar_pixel.png', '16-bit Rock · 2/4'],
       ['/static/images/about/portraits/guitar_anime.png', '90s Anime · 3/4'],
@@ -160,7 +164,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('wraps with previous and next controls and resets every photo to Original', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     await user.click(portraitButton)
     expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('16-bit Rock')
@@ -182,7 +188,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('renders one direct-selection dot per photo and resets on dot selection', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
     const dots = screen.getAllByRole('button', { name: /Show (Guitar session|Family sunset)/ })
 
     expect(dots).toHaveLength(2)
@@ -221,7 +229,7 @@ describe('PortraitCarousel core controls', () => {
 
   it('does not advance automatically after sixty seconds', async () => {
     renderCarousel()
-    await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    await screen.findByRole('button', { name: /Guitar session.*Original.*Cycle/i })
 
     vi.useFakeTimers()
     act(() => vi.advanceTimersByTime(60_000))
@@ -234,7 +242,7 @@ describe('PortraitCarousel core controls', () => {
   it('renders Italian photo and state labels from the active language', async () => {
     const { user } = renderCarousel('it')
     const portraitButton = await screen.findByRole('button', {
-      name: /Sessione con la chitarra.*Originale/i,
+      name: /Sessione con la chitarra.*Originale.*Cambia la versione creativa/i,
     })
 
     expect(screen.getByTestId('portrait-title')).toHaveTextContent('Sessione con la chitarra')
@@ -247,7 +255,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('cycles with Enter and Space while keeping focus on the portrait', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     portraitButton.focus()
     await user.keyboard('{Enter}')
@@ -261,7 +271,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('uses scoped arrow keys to wrap photos, reset state, and preserve focus', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     portraitButton.focus()
     await user.keyboard('{ArrowRight}')
@@ -279,7 +291,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('announces completed photo and state changes in a polite live region', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     await user.click(portraitButton)
     expect(screen.getByRole('status')).toHaveTextContent('16-bit Rock, 2 of 4 for Guitar session.')
@@ -290,7 +304,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('updates visible, accessible, and announced copy without resetting state on language change', async () => {
     const { user } = renderWithProviders(<CarouselWithLanguageSwitch />, { locale: 'en' })
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     await user.click(portraitButton)
     await user.click(screen.getByRole('button', { name: 'Switch to Italian' }))
@@ -307,7 +323,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('treats a 31px horizontal release as one variant tap', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
     fireEvent.pointerUp(portraitButton, { clientX: 69, clientY: 50, pointerId: 1 })
@@ -319,7 +337,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('treats a 32px horizontal-dominant swipe as one photo change and suppresses click', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
     fireEvent.pointerUp(portraitButton, { clientX: 68, clientY: 60, pointerId: 1 })
@@ -331,7 +351,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('does not suppress the next tap when a swipe produces no compatibility click', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
     fireEvent.pointerUp(portraitButton, { clientX: 68, clientY: 50, pointerId: 1 })
@@ -346,7 +368,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('treats vertical-dominant movement as one variant tap instead of a photo swipe', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     fireEvent.pointerDown(portraitButton, { clientX: 100, clientY: 50, pointerId: 1 })
     fireEvent.pointerUp(portraitButton, { clientX: 60, clientY: 100, pointerId: 1 })
@@ -358,7 +382,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('applies three rapid activations without dropping a state update', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     fireEvent.click(portraitButton)
     fireEvent.click(portraitButton)
@@ -370,7 +396,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('falls back from a creative image to its original once and announces the fallback', async () => {
     const { user } = renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     await user.click(portraitButton)
     fireEvent.error(getActiveImage(portraitButton))
@@ -384,7 +412,9 @@ describe('PortraitCarousel core controls', () => {
 
   it('falls back from a failed original to the legacy avatar without retrying it', async () => {
     renderCarousel()
-    const portraitButton = await screen.findByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = await screen.findByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     fireEvent.error(getActiveImage(portraitButton))
     const fallbackImage = expectActiveImage(portraitButton, '/static/images/avatar.png')
@@ -409,7 +439,9 @@ describe('PortraitCarousel core controls', () => {
     mockReducedMotion()
     const { user } = renderCarousel()
     const carousel = await screen.findByTestId('portrait-carousel')
-    const portraitButton = screen.getByRole('button', { name: /Guitar session.*Original/i })
+    const portraitButton = screen.getByRole('button', {
+      name: /Guitar session.*Original.*Cycle/i,
+    })
 
     expect(carousel).toHaveAttribute('data-motion', 'reduced')
     await user.click(portraitButton)

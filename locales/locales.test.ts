@@ -131,6 +131,32 @@ describe('locale parity', () => {
     }
   })
 
+  it('provides matching portrait lightbox strings and interpolation placeholders', () => {
+    const lightboxKeys = [
+      'about.profile.carousel.view_larger',
+      'about.profile.carousel.lightbox_title',
+      'about.profile.carousel.close_lightbox',
+      'about.profile.carousel.lightbox_image_alt',
+      'about.profile.carousel.image_unavailable',
+    ]
+
+    for (const key of lightboxKeys) {
+      expect(flatEn).toHaveProperty(key)
+      expect(flatIt).toHaveProperty(key)
+      expect(placeholders(flatEn[key])).toEqual(placeholders(flatIt[key]))
+    }
+
+    expect(placeholders(flatEn['about.profile.carousel.view_larger'])).toEqual(
+      new Set(['title', 'state'])
+    )
+    expect(placeholders(flatEn['about.profile.carousel.lightbox_title'])).toEqual(
+      new Set(['title'])
+    )
+    expect(placeholders(flatEn['about.profile.carousel.lightbox_image_alt'])).toEqual(
+      new Set(['title', 'state'])
+    )
+  })
+
   it('provides every string the resume page renders', () => {
     for (const flat of [flatEn, flatIt]) {
       expect(flat).toHaveProperty('resume.title')

@@ -2,7 +2,7 @@
 
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { AnimatePresence, motion, useIsPresent } from 'motion/react'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from '@/components/Image'
 import { useLanguage } from '@/contexts/LanguageContext'
 import type { Portrait } from './portraitData'
@@ -15,6 +15,9 @@ export type PortraitLightboxProps = {
   stateLabel: string
   displaySrc?: string
   displayKey: string
+  failureStage: 'active' | 'original' | 'avatar'
+  fallbackAlt: string
+  canRecoverFromImageError: boolean
   transitionKind: 'photo' | 'variant'
   transitionDirection: number
   shouldReduceMotion: boolean
@@ -93,6 +96,9 @@ export default function PortraitLightbox({
   stateLabel,
   displaySrc,
   displayKey,
+  failureStage,
+  fallbackAlt,
+  canRecoverFromImageError,
   transitionKind,
   transitionDirection,
   shouldReduceMotion,
@@ -104,8 +110,22 @@ export default function PortraitLightbox({
 }: PortraitLightboxProps) {
   const { lang, t } = useLanguage()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const [imageUnavailable, setImageUnavailable] = useState(false)
   const motionOffset = transitionKind === 'photo' ? transitionDirection * 20 : 0
   const transitionDuration = shouldReduceMotion ? 0 : transitionKind === 'photo' ? 0.22 : 0.3
+
+  useEffect(() => {
+    setImageUnavailable(false)
+  }, [displayKey, open])
+
+  const handleImageError = () => {
+    if (canRecoverFromImageError) {
+      onImageError()
+      return
+    }
+
+    setImageUnavailable(true)
+  }
 
   return (
     <Dialog
@@ -161,24 +181,34 @@ export default function PortraitLightbox({
             </button>
 
             <div className="relative h-[min(62dvh,42rem)] min-h-64 min-w-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-950">
-              <AnimatePresence initial={false} mode="sync">
-                {displaySrc && (
-                  <LightboxImageFrame
-                    key={displayKey}
-                    src={displaySrc}
-                    alt={t('about.profile.carousel.lightbox_image_alt', {
-                      title,
-                      state: stateLabel,
-                    })}
-                    displayKey={displayKey}
-                    transitionKind={transitionKind}
-                    motionOffset={motionOffset}
-                    transitionDuration={transitionDuration}
-                    shouldReduceMotion={shouldReduceMotion}
-                    onError={onImageError}
-                  />
-                )}
-              </AnimatePresence>
+              {imageUnavailable ? (
+                <div className="flex h-full items-center justify-center p-6 text-center text-sm font-medium text-gray-600 dark:text-gray-300">
+                  {t('about.profile.carousel.image_unavailable')}
+                </div>
+              ) : (
+                <AnimatePresence initial={false} mode="sync">
+                  {displaySrc && (
+                    <LightboxImageFrame
+                      key={displayKey}
+                      src={displaySrc}
+                      alt={
+                        failureStage === 'avatar'
+                          ? fallbackAlt
+                          : t('about.profile.carousel.lightbox_image_alt', {
+                              title,
+                              state: stateLabel,
+                            })
+                      }
+                      displayKey={displayKey}
+                      transitionKind={transitionKind}
+                      motionOffset={motionOffset}
+                      transitionDuration={transitionDuration}
+                      shouldReduceMotion={shouldReduceMotion}
+                      onError={handleImageError}
+                    />
+                  )}
+                </AnimatePresence>
+              )}
             </div>
 
             <button

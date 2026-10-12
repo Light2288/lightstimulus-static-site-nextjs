@@ -109,6 +109,12 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
   const imageFocalPoint =
     activeVariantIndex === 0 ? activePortrait.originalFocalPoint : activePortrait.focalPoint
   const imageScale = activeVariantIndex === 0 ? activePortrait.originalScale : 1
+  const canRecoverFromImageError =
+    failureStage === 'active'
+      ? activeVariantIndex > 0 || Boolean(fallbackAvatar)
+      : failureStage === 'original'
+        ? Boolean(fallbackAvatar)
+        : false
 
   const resetFailure = () => setFailureStage('active')
 
@@ -335,6 +341,9 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
         stateLabel={activeState.label}
         displaySrc={displaySrc}
         displayKey={displayKey}
+        failureStage={failureStage}
+        fallbackAlt={props.fallbackAlt}
+        canRecoverFromImageError={canRecoverFromImageError}
         transitionKind={transitionKind}
         transitionDirection={transitionDirection}
         shouldReduceMotion={shouldReduceMotion ?? false}

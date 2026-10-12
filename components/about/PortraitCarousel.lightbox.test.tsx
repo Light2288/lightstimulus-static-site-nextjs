@@ -333,3 +333,95 @@ describe('PortraitCarousel lightbox controls', () => {
     expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, 16-bit Rock')
   })
 })
+
+describe('PortraitCarousel lightbox fallback', () => {
+  it('falls back from a failed creative lightbox image to shared Original', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Change style: Original' }))
+
+    fireEvent.error(within(dialog).getByRole('img', { name: 'Guitar session, 16-bit Rock' }))
+
+    await waitFor(() =>
+      expect(within(dialog).getByRole('img')).toHaveAccessibleName('Guitar session, Original')
+    )
+    expect(screen.getByTestId('portrait-style-control')).toHaveTextContent('Original')
+  })
+
+  it('falls back from a failed Original to the legacy avatar', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    fireEvent.error(within(dialog).getByRole('img', { name: 'Guitar session, Original' }))
+
+    await waitFor(() =>
+      expect(within(dialog).getByRole('img')).toHaveAccessibleName('Davide Aliti')
+    )
+    expect(within(dialog).getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringContaining('avatar.png')
+    )
+  })
+
+  it('shows localized unavailable content when the final avatar fails', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+    fireEvent.error(within(dialog).getByRole('img'))
+    const avatar = await within(dialog).findByRole('img', { name: 'Davide Aliti' })
+
+    fireEvent.error(avatar)
+
+    expect(await within(dialog).findByText('This image is unavailable.')).toBeInTheDocument()
+    expect(within(dialog).queryByRole('img')).not.toBeInTheDocument()
+    expect(within(dialog).getByText('Larger view of Guitar session')).toBeInTheDocument()
+    expect(within(dialog).getByRole('button', { name: 'Next photo' })).toBeInTheDocument()
+  })
+
+  it('shows unavailable content when Original fails without an avatar', async () => {
+    const { user } = renderWithProviders(
+      <PortraitCarousel portraits={portraits} fallbackAlt="Davide Aliti" />,
+      { locale: 'it' }
+    )
+    await user.click(
+      await screen.findByRole('button', {
+        name: 'Visualizza ingrandita: Sessione con la chitarra, Originale',
+      })
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    fireEvent.error(within(dialog).getByRole('img'))
+
+    expect(
+      await within(dialog).findByText('Questa immagine non è disponibile.')
+    ).toBeInTheDocument()
+    expect(within(dialog).queryByRole('img')).not.toBeInTheDocument()
+  })
+
+  it('clears terminal failure after selecting a new photo or style source', async () => {
+    const { user } = renderCarousel()
+    await user.click(
+      await screen.findByRole('button', { name: 'View larger: Guitar session, Original' })
+    )
+    const dialog = await screen.findByRole('dialog')
+    fireEvent.error(within(dialog).getByRole('img'))
+    const avatar = await within(dialog).findByRole('img', { name: 'Davide Aliti' })
+    fireEvent.error(avatar)
+    await within(dialog).findByText('This image is unavailable.')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Next photo' }))
+
+    await waitFor(() =>
+      expect(within(dialog).getByRole('img')).toHaveAccessibleName('Family sunset, Original')
+    )
+    expect(within(dialog).queryByText('This image is unavailable.')).not.toBeInTheDocument()
+  })
+})

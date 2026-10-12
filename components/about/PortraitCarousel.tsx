@@ -8,9 +8,11 @@ import {
   useState,
 } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { ZoomIn } from 'lucide-react'
 import Image from '@/components/Image'
 import { useLanguage } from '@/contexts/LanguageContext'
 import type { Portrait } from './portraitData'
+import PortraitLightbox from './PortraitLightbox'
 
 export type PortraitCarouselProps = {
   portraits: Portrait[]
@@ -44,6 +46,8 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
   const [failureStage, setFailureStage] = useState<'active' | 'original' | 'avatar'>('active')
   const [transitionKind, setTransitionKind] = useState<'photo' | 'variant'>('variant')
   const [transitionDirection, setTransitionDirection] = useState(1)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const expandButtonRef = useRef<HTMLButtonElement>(null)
   const pointerStart = useRef<{ x: number; y: number } | null>(null)
   const suppressClick = useRef(false)
   const activePortrait = portraits[activePhotoIndex]
@@ -106,6 +110,12 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
   const imageFocalPoint =
     activeVariantIndex === 0 ? activePortrait.originalFocalPoint : activePortrait.focalPoint
   const imageScale = activeVariantIndex === 0 ? activePortrait.originalScale : 1
+  const canRecoverFromImageError =
+    failureStage === 'active'
+      ? activeVariantIndex > 0 || Boolean(fallbackAvatar)
+      : failureStage === 'original'
+        ? Boolean(fallbackAvatar)
+        : false
 
   const resetFailure = () => setFailureStage('active')
 
@@ -250,6 +260,25 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
             )}
           </AnimatePresence>
         </button>
+
+        <button
+          ref={expandButtonRef}
+          type="button"
+          data-testid="portrait-expand-control"
+          onClick={() => setIsLightboxOpen(true)}
+          aria-label={t('about.profile.carousel.view_larger', {
+            title,
+            state: activeState.label,
+          })}
+          className="group focus-visible:ring-primary-500 absolute right-0 bottom-5 z-10 flex h-11 w-11 translate-x-1/2 items-center justify-center rounded-full text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:text-gray-200 dark:focus-visible:ring-offset-gray-900"
+        >
+          <span
+            data-testid="portrait-expand-visual"
+            className="group-hover:text-primary-600 dark:group-hover:text-primary-300 flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/75 shadow-lg shadow-gray-900/10 backdrop-blur-md transition-[color,background-color,box-shadow,transform] group-hover:scale-105 group-hover:bg-white dark:border-gray-700/80 dark:bg-gray-900/75 dark:group-hover:bg-gray-800"
+          >
+            <ZoomIn aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+          </span>
+        </button>
       </div>
 
       <div data-testid="portrait-caption" className="mt-1.5 text-center">
@@ -310,6 +339,26 @@ export default function PortraitCarousel(props: PortraitCarouselProps) {
       <span role="status" aria-live="polite" className="sr-only">
         {announcement}
       </span>
+      <PortraitLightbox
+        open={isLightboxOpen}
+        portraits={portraits}
+        activePhotoIndex={activePhotoIndex}
+        title={title}
+        stateLabel={activeState.label}
+        displaySrc={displaySrc}
+        displayKey={displayKey}
+        failureStage={failureStage}
+        fallbackAlt={props.fallbackAlt}
+        canRecoverFromImageError={canRecoverFromImageError}
+        transitionKind={transitionKind}
+        transitionDirection={transitionDirection}
+        shouldReduceMotion={shouldReduceMotion ?? false}
+        onClose={() => setIsLightboxOpen(false)}
+        onCycleVariant={cycleVariant}
+        onNavigatePhoto={navigatePhoto}
+        onSelectPhoto={selectPhoto}
+        onImageError={handleImageError}
+      />
     </div>
   )
 }

@@ -1,0 +1,155 @@
+---
+title:
+  en: Implementing the Tachyon Pet for Codex
+  it: Implementare Tachyon, il pet per Codex
+summary:
+  en: >
+    Tachyon started as a cyber horseshoe crab and became a lesson in sprite contracts, broken frame boundaries, visual QA, and the suspicious importance of completely empty pixels.
+  it: >
+    Tachyon è nato come limulo cyber ed è diventato una lezione sui contratti degli sprite, sui confini dei frame, sulla QA visuale e sull'importanza sospetta dei pixel completamente vuoti.
+date: 2026-10-12
+lastmod: 2026-10-15
+topic_key: implementing-the-tachyon-pet-for-codex
+tags:
+  - id: codex
+    label:
+      en: Codex
+      it: Codex
+  - id: digital-pets
+    label:
+      en: Digital pets
+      it: Pet digitali
+  - id: sprite-sheets
+    label:
+      en: Sprite sheets
+      it: Sprite sheet
+  - id: visual-qa
+    label:
+      en: Visual QA
+      it: QA visuale
+draft: false
+images:
+  - /static/images/tachyon/tachyon-cover.png
+---
+
+<Lang value="en">
+
+Tachyon began with a small request: create a desktop pet resembling a technological limulus, or horseshoe crab. The design came back as a compact cyber creature with graphite armor, cyan sensor eyes, mechanical legs, and a cable-like tail. Cute, specific, and apparently determined to teach me more about sprite atlases than I had planned to learn.
+
+The first design image was only a reference. Codex needed a package containing metadata and a binary spritesheet, so I turned the concept into `pet.json` plus `spritesheet.webp`. That sounded like the easy part. This was optimistic in the way that labeling a folder `FINAL` is optimistic.
+
+## The package worked, except for the working part
+
+The first package used a legacy atlas with eight columns and nine animation rows. When I loaded it in the desktop app, an upgrade button appeared because the current pet format expected two additional rows for sixteen look directions and a manifest declaring sprite version 2.
+
+The obvious plan was to preserve the existing nine rows, add the two directional rows, update the manifest, and go home with the quiet satisfaction of somebody who had changed one integer. Visual inspection ruined this excellent plan.
+
+The old atlas had real defects. Some frames crossed cell boundaries, so the renderer sliced Tachyon into unrelated upper and lower fragments during animation. A contact sheet also exposed detached effects, incomplete bodies, inconsistent proportions, and poses that did not match their named states. The jump sometimes began with two tails and never convincingly left the ground. The waiting animation looked more like a jump. Running barely moved. Looking directions changed the character's scale and perspective. It was a remarkably efficient collection of problems for one small crustacean.
+
+This mattered because an atlas can have the expected outer dimensions and still be wrong inside. The renderer does not understand that a tail continued into the neighboring cell for artistic reasons. It sees a grid, extracts rectangles, and displays exactly the fragments I gave it (with the calm professionalism of a machine documenting my mistake).
+
+<figure>
+  <Image
+    src="/static/images/tachyon/tachyon-before-after.gif"
+    alt="Tachyon before and after the sprite atlas repair"
+    width={1000}
+    height={420}
+  />
+  <figcaption className="text-center text-sm">
+    Before and after the atlas repair: the broken legacy animation compared with the rebuilt
+    Tachyon.
+  </figcaption>
+</figure>
+
+## Rebuilding around visual invariants
+
+The repair became a full atlas pass rather than a schema upgrade. I treated the good running-right sequence as the reference for Tachyon's proportions and cyan body details, then rebuilt running-left from that reference. The jump became visibly airborne without the second tail. Waiting became a restrained bob instead of an accidental launch, while the generic running state gained actual motion.
+
+The look-direction frames needed their own correction. They were scaled down to match the normal character proportions and kept within the same visual identity. The acceptable failed animation stayed. Waving and review were retained, while their unused cells were cleared. The final run also cleared every unused sprite cell to full transparency, removing invisible pixel data that validation had flagged.
+
+That last point is less cosmetic than it sounds. Transparent pixels can still carry RGB values, and unused atlas cells can still contain non-transparent debris. Neither necessarily shows up in a casual preview, but both make a poor asset contract. A sprite sheet is not only the character one can see. It is also the geometry, padding, alpha channel, and boring empty regions around it.
+
+The repaired package was reported as a 1536 by 2288 RGBA WebP, arranged as an 8 by 11 atlas. The package iteration was called Tachyon v3, but the sprite schema remained version 2. Those are separate version numbers: one describes my third pass over the artifact, while the other tells the desktop loader which atlas contract to use.
+
+## The deliberately boring manifest
+
+After all that visual work, the final readable contract is pleasantly small:
+
+```json:pet.json
+{
+  "id": "tachyon_v2",
+  "displayName": "Tachyon",
+  "description": "A compact cyber horseshoe crab with armored graphite plating, cyan sensor eyes, tiny mechanical legs, and a segmented cable-like tail.",
+  "spriteVersionNumber": 2,
+  "spritesheetPath": "spritesheet.webp"
+}
+```
+
+The manifest names the pet, preserves its visual brief, declares the sprite contract, and points at the binary asset. The complexity belongs in the atlas, but the atlas is only trustworthy after both mechanical validation and visual review. Dimensions caught the format. Contact sheets and animation previews caught the character being bisected, duplicated, resized, and occasionally asked to jump without jumping.
+
+This is still a short implementation story, even after the repair, because the useful result is not proportional to the number of paragraphs I can force out of it. I built a recognizable Codex pet, rebuilt its broken atlas, validated the package, and stopped before the manifest became a small constitution. Given my usual instincts around configuration files, that last part may be the most surprising result.
+
+If you want to inspect the small constitution I heroically avoided writing, [Tachyon is waiting in its repository](https://github.com/Light2288/tachyon-pet-codex) with all body parts now assigned to the correct frames.
+
+</Lang>
+
+<Lang value="it">
+
+Tachyon è partito da una richiesta piccola: creare un pet desktop che somigliasse a un limulo tecnologico. Il design è tornato indietro sotto forma di creatura cyber compatta, con corazza in grafite, occhi-sensore ciano, zampette meccaniche e una coda simile a un cavo. Carino, riconoscibile e apparentemente deciso a insegnarmi sugli sprite atlas molto più di quanto avessi programmato.
+
+La prima immagine era solo un riferimento visivo. A Codex serviva un package con i metadata e una spritesheet binaria, quindi ho trasformato il concept in `pet.json` più `spritesheet.webp`. Sembrava la parte facile. Lo stesso genere di ottimismo che porta a chiamare una cartella `FINAL`, venti minuti prima di creare `FINAL-2`, `FINAL-vera` e `FINAL-vera-questa`, tutte sul desktop accanto a un PDF della dichiarazione dei redditi.
+
+## Il package funzionava, a parte il funzionamento
+
+Il primo package usava un atlas legacy con otto colonne e nove righe di animazione. Quando l'ho caricato nell'app desktop è comparso un pulsante di upgrade, perché il formato corrente dei pet richiedeva altre due righe per sedici look directions e un manifest con la versione 2 degli sprite.
+
+Il piano più ovvio era conservare le nove righe esistenti, aggiungere le due direzionali, aggiornare il manifest e tornare a casa con la placida soddisfazione di chi ha modificato un integer. La revisione visuale ha demolito questo ottimo programma.
+
+Il vecchio atlas aveva difetti reali. Alcuni frame superavano i confini delle celle, così durante l'animazione il renderer affettava Tachyon in frammenti superiori e inferiori che non avevano più alcun rapporto tra loro. Una contact sheet ha mostrato anche effetti distaccati, corpi incompleti, proporzioni incoerenti e pose che non corrispondevano allo stato dichiarato. L'animazione del salto a volte partiva con due code e Tachyon non riusciva mai a staccarsi da terra in modo credibile. L'animazione di attesa sembrava più un salto. Durante l'animazione della corsa sembrava muoveva appena. Le look directions cambiavano scala e prospettiva del personaggio. Una raccolta mostruosamente efficiente di problemi per un crostaceo così piccolo.
+
+Era importante perché un atlas può avere le dimensioni esterne corrette ed essere comunque sbagliato all'interno. Il renderer non sa che, per ragioni artistiche, una coda continua nella cella vicina. Vede una griglia, estrae rettangoli e mostra esattamente i frammenti che gli ho consegnato (con l'imperturbabile professionalità di una macchina che verbalizza il mio errore e mette in copia l'ufficio del personale).
+
+<figure>
+  <Image
+    src="/static/images/tachyon/tachyon-before-after.gif"
+    alt="Tachyon prima e dopo la riparazione dello sprite atlas"
+    width={1000}
+    height={420}
+  />
+  <figcaption className="text-center text-sm">
+    Prima e dopo la riparazione dell'atlas: l'animazione legacy difettosa a confronto con Tachyon
+    ricostruito.
+  </figcaption>
+</figure>
+
+## Ricostruire intorno agli invarianti visivi
+
+Il repair è diventato una revisione completa dell'atlas, non più un semplice upgrade dello schema. Ho usato la sequenza `running-right`, che era corretta, come riferimento per le proporzioni di Tachyon e per i dettagli ciano del corpo, poi ho ricostruito `running-left` da quella base. Il salto è diventato chiaramente aereo, senza la seconda coda. L'attesa si è trasformato in un movimento contenuto invece di un lancio accidentale, mentre lo stato generico di running ha finalmente guadagnato una corsa vera.
+
+Anche i frame delle look directions richiedevano una correzione dedicata. Li ho ridimensionati per farli combaciare con le proporzioni normali del personaggio, mantenendo la stessa identità visiva. L'animazione failed, già accettabile, è rimasta. Waving e review sono state conservate, ma ho ripulito le celle inutilizzate. Il passaggio finale ha inoltre portato ogni cella vuota alla trasparenza completa, eliminando i dati invisibili dei pixel segnalati dalla validation.
+
+Quest'ultimo punto è meno cosmetico di quanto sembri. I pixel trasparenti possono conservare valori RGB e le celle inutilizzate dell'atlas possono contenere residui non trasparenti. Non è detto che emergano in una preview veloce, ma rendono fragile il contratto dell'asset. Una sprite sheet non è soltanto il personaggio visibile: comprende anche geometria, padding, canale alpha e tutte quelle noiosissime zone vuote che, con notevole spirito sindacale, pretendono comunque di essere trattate correttamente.
+
+Il package riparato è stato verificato come WebP RGBA da 1536 per 2288 pixel, organizzato in un atlas 8 per 11. L'iterazione del package si chiamava Tachyon v3, mentre lo schema degli sprite restava alla versione 2. Sono due numeri distinti: il primo descrive il mio terzo giro sul manufatto, il secondo comunica al loader desktop quale contratto dell'atlas usare.
+
+## Il manifest volutamente noioso
+
+Dopo tutto quel lavoro visuale, il contratto leggibile finale è piacevolmente piccolo:
+
+```json:pet.json
+{
+  "id": "tachyon_v2",
+  "displayName": "Tachyon",
+  "description": "A compact cyber horseshoe crab with armored graphite plating, cyan sensor eyes, tiny mechanical legs, and a segmented cable-like tail.",
+  "spriteVersionNumber": 2,
+  "spritesheetPath": "spritesheet.webp"
+}
+```
+
+Il manifest dà un nome al pet, conserva il brief visuale, dichiara il contratto degli sprite e punta all'asset binario. La complessità appartiene all'atlas, ma l'atlas diventa affidabile solo dopo validation meccanica e revisione visuale. Le dimensioni hanno verificato il formato. Contact sheet e preview delle animazioni hanno scoperto che il personaggio veniva affettato, duplicato, ridimensionato e, in qualche occasione, invitato a saltare senza saltare.
+
+Resta una storia di implementazione breve, anche dopo il repair, perché l'utilità del risultato non è proporzionale al numero di paragrafi che riesco a estorcergli. Ho costruito un pet Codex riconoscibile, rifatto il suo atlas rotto, validato il package e mi sono fermato prima che il manifest diventasse una piccola costituzione. Considerata la mia inclinazione verso i file di configurazione, quest'ultima parte potrebbe essere il risultato più sorprendente.
+
+Per ispezionare la piccola costituzione che ho eroicamente evitato di scrivere, [Tachyon aspetta nel suo repository](https://github.com/Light2288/tachyon-pet-codex), con tutte le parti del corpo finalmente assegnate ai frame corretti.
+
+</Lang>

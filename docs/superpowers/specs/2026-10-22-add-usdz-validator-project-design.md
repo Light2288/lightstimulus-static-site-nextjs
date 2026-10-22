@@ -4,6 +4,7 @@
 **Type:** feature
 **Status:** APPROVED
 **Approval:** The user explicitly approved this written specification with “spec approved” on 2026-10-22. Implementation-plan approval remains a separate gate.
+**Approved clarification:** After implementation, the user clarified that v0.1 is an initial demo that can be extended, then approved presenting the project as `in-progress` and describing v0.1 as an initial working demo in both languages. This supersedes the original `completed` metadata choice.
 **Provenance:** User request to add `/Users/davide/Personal/Projects/usdz-validator` to the portfolio; user-confirmed proposal; native interactive artwork clarification; specification presented in chat on 2026-10-22; user instruction to write the specification and obtain separate specification and plan approvals before implementation. Source evidence: the source repository's `README.md`, `Package.swift`, `docs/cli.md`, `docs/inspection-boundary.md`, `docs/verification/release-summary.md`, and validation implementation; the site's `contentlayer.config.ts`, existing `data/projects/*.mdx`, project components, homepage, search/tag generators, sitemap, and image pipeline; GitHub verification of the published v0.1.0 release.
 
 ## Problem
@@ -33,7 +34,7 @@ Add `data/projects/usdz-validator.mdx`, relative to the site repository root. Fo
 | Title, both languages              | USDZ Validation Kit                                                       |
 | Date                               | `2026-10-22`, the release date in Europe/Rome                             |
 | Project type                       | `product`                                                                 |
-| Status                             | `completed`, describing the delivered v0.1 scope                          |
+| Status                             | `in-progress`, with v0.1 described as an initial working demo             |
 | Cover image, once the asset exists | `/static/images/projects/usdz-validator.png`                              |
 | Stack                              | Swift 6, Swift Package Manager, Foundation, Swift Argument Parser, XCTest |
 | `links.github`                     | `https://github.com/Light2288/usdz-validator`                             |

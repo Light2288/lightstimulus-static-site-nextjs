@@ -10,14 +10,22 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-26-update-usdz-validator-v0-2.md`
 
-**Slug:** `update-usdz-validator-v0-2`  
-**Status:** APPROVED  
-**Created:** 2026-10-26  
-**Updated:** 2026-10-26  
-**Execution tier:** full  
-**Implementation model role:** full  
-**Execution method:** Native, selected through the interactive control.  
-**Provenance:** Approved specification, current site inspection at `a010330d1a9554197f3548a483610c5632f34195`, and validator evidence at `dad53f0`. Presented separately in chat, then explicitly approved by the user submitting this exact plan with “PLEASE IMPLEMENT THIS PLAN” on 2026-10-26. The specification was separately approved before planning.  
+**Slug:** `update-usdz-validator-v0-2`
+
+**Status:** APPROVED
+
+**Created:** 2026-10-26
+
+**Updated:** 2026-10-26
+
+**Execution tier:** full
+
+**Implementation model role:** full
+
+**Execution method:** Native, selected through the interactive control.
+
+**Provenance:** Approved specification, current site inspection at `a010330d1a9554197f3548a483610c5632f34195`, and validator evidence at `dad53f0`. Presented separately in chat, then explicitly approved by the user submitting this exact plan with “PLEASE IMPLEMENT THIS PLAN” on 2026-10-26. The specification was separately approved before planning.
+
 **Approval:** Both artifacts are approved; Stage 4 implementation is authorized. Native full-tier execution does not switch the parent model. Managed final-review roles resolve from the current AGENTS instructions: light `gpt-6-luna`, full `gpt-6.1-sol`.
 
 ## Global Constraints
@@ -83,7 +91,7 @@ The final checks must specifically address:
 
 - [x] **Step 7: Inspect the browser matrix.** Start the existing development server with `npm run dev`. At 1440×900 and 390×844, inspect English and Italian in light and dark themes. Check the completed label, summaries, six sections, LZ4, release/repository/documentation links, artwork loading/cropping, and readable wrapping. Exercise listing filters and localized search; confirm the homepage order and another existing project page. Expected: all eight viewport/language/theme combinations render correctly, links target the approved URLs, and no affected image requests fail. Stop only the server started for this work.
 
-- [ ] **Step 8: Commit and run the required final review.** Review the complete diff and commit the verified content with a conventional message. Invoke `personal-workflows:code-review` once in integrated mode: specification review first, then quality review using the unchanged review package. Address findings within scope and repeat affected checks when changes warrant it. Record verification and review outcomes in the plan, commit workflow bookkeeping, and report the local branch and commits. Do not push or merge.
+- [x] **Step 8: Commit and run the required final review.** Review the complete diff and commit the verified content with a conventional message. Invoke `personal-workflows:code-review` once in integrated mode: specification review first, then quality review using the unchanged review package. Address findings within scope and repeat affected checks when changes warrant it. Record verification and review outcomes in the plan, commit workflow bookkeeping, and report the local branch and commits. Do not push or merge.
 
 ### Acceptance Traceability
 
@@ -110,4 +118,8 @@ The final checks must specifically address:
 - Browser checks passed at **1440×900 / 390×844**, English/Italian, light/dark: six sections, summaries, completed labels, stack, links, image crops/loading and no horizontal overflow. All five filter links return the project; Italian and English search display the updated summaries and resolve to its route. Homepage order and the existing Micelio page were checked. No browser error logs were captured. Development warnings include an image fill-position warning during styling and the same optional animation dependency warning; the artwork renders correctly.
 - Screenshots and matrix/filter receipts are retained outside the repository under `/Users/davide/.codex/visualizations/2026/10/22/01a1630f-707e-71c2-b229-61b8ce98f2cc/usdz-v0-2/`. Initial Italian/dark preferences were restored, temporary viewport overrides reset, the temporary tab closed, and only this task’s development server stopped.
 - Scratch verification harness corrections: corrected the Node subprocess options object; counted homepage cards through heading links rather than the two links per card; scoped browser title queries to articles because the browser locator API does not support a heading-level filter. Corrected checks passed; no product changes were needed for these harness issues.
-- Sequential final review: pending. No push, merge, deployment, artwork changes, or validator test runs were performed.
+- Sequential final review: **SPEC REVIEW: PASS** on managed light `gpt-6-luna`, then **QUALITY REVIEW: PASS** on managed full `gpt-6.1-sol`; both reported no findings and verified the unchanged package identities. Reviewed product/workflow state: `5d5576efee955f55c29c17ea6318f99bb4c126dc` (content commit); approved artifacts commit: `9b91722`.
+- `GATE_RUN_ID`: `841e084b-06c5-4937-9ef4-79e40e48523a`; `REVIEWED_STATE_ID`: `5d5576efee955f55c29c17ea6318f99bb4c126dc:4bef9298-cdc7-4c53-b9af-66863fdeb578`; `PACKAGE_SHA256`: `04a07234217266ddb09b6df0ca6a1941f6bdd7af2d49070c3634100336cca554`. The package, both complete reports and test/build receipts are archived alongside the screenshots outside the repository. These identities bind the reviewed state; subsequent workflow completion bookkeeping does not alter product content.
+- The native completion helper ran the exact focused command after commit formatting: exit 0, **13 files / 280 tests passed**. All AC-01 through AC-08 are satisfied. No rulings, review fixes, or deferred minor findings were recorded. The branch remains local, as authorized; no push, merge, deployment, artwork changes, or validator test runs were performed.
+
+**Implementation status:** Complete. Both final review stages passed; the local branch is retained for the maintainer.

@@ -1,11 +1,17 @@
 # Specification — Update USDZ Validation Kit for v0.2
 
-**Slug:** `update-usdz-validator-v0-2`  
-**Type:** chore  
-**Status:** APPROVED  
-**Created:** 2026-10-26  
-**Updated:** 2026-10-26  
-**Stage:** 4 — Implementation authorized after separate plan approval  
+**Slug:** `update-usdz-validator-v0-2`
+
+**Type:** chore
+
+**Status:** APPROVED
+
+**Created:** 2026-10-26
+
+**Updated:** 2026-10-26
+
+**Stage:** 4 — Implementation complete; verification and final reviews recorded in the plan
+
 **Provenance:** User request to reflect version 0.2 and consider the project complete for now; scope confirmed with “continue.” Evidence includes the source repository at `/Users/davide/Personal/Projects/usdz-validator`, commit `dad53f0`, its Swift implementation, dependency manifest, inspection boundaries, report contracts, and recorded verification. GitHub independently confirms published, non-prerelease v0.2.0 on 2026-10-25. This specification was presented in chat in Plan mode and approved when the user submitted the exact specification with “PLEASE IMPLEMENT THIS PLAN” on 2026-10-26. Under the mandatory approval workflow, that approval authorizes implementation planning only; no separate implementation plan had been presented or approved at that specification-approval gate.
 
 ## Problem and desired outcome

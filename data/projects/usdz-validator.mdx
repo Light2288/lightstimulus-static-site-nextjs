@@ -4,13 +4,13 @@ title:
   it: USDZ Validation Kit
 
 summary:
-  en: A Swift library and macOS command-line tool for checking USDZ packaging, package-local references, and delivery budgets, with explicit validation coverage and text, JSON, and SARIF reports.
-  it: Una libreria Swift e uno strumento da riga di comando per macOS per verificare la struttura dei pacchetti USDZ, i riferimenti interni e i limiti di dimensione degli asset, con copertura delle verifiche esplicita e report testuali, JSON e SARIF.
+  en: A Swift library and macOS command-line tool for checking USDZ packaging, supported package-local USDA and USDC references, and delivery budgets, with explicit validation coverage and text, JSON, and SARIF reports.
+  it: Una libreria Swift e uno strumento da riga di comando per macOS per verificare la struttura dei pacchetti USDZ, i riferimenti interni USDA e USDC supportati e i limiti di dimensione degli asset, con copertura delle verifiche esplicita e report testuali, JSON e SARIF.
 
 date: 2026-10-22
 
 projectType: product
-status: in-progress
+status: completed
 coverImage: /static/images/projects/usdz-validator.png
 
 tags:
@@ -41,6 +41,7 @@ stack:
   - Foundation
   - Swift Argument Parser
   - XCTest
+  - LZ4
 
 links:
   github: https://github.com/Light2288/usdz-validator
@@ -53,7 +54,7 @@ links:
 
 **USDZ Validation Kit** is a Swift library and macOS command-line tool for inspecting packaged 3D assets before delivery. It checks USDZ packaging, supported package-local references, and configurable file and texture budgets, then produces a report that separates observed defects from checks it could not complete.
 
-The project provides the reusable `USDZValidation` library and the `usdz-validator` executable. Native inspection reads one local file without extracting its contents, requiring USD tools, or accessing the network. This makes the same checks available to a developer at the terminal or to a Swift application integrating the library. The [v0.1.0 release](https://github.com/Light2288/usdz-validator/releases/tag/v0.1.0) is an initial working demo, distributed under the MIT license.
+The project provides the reusable `USDZValidation` library and the `usdz-validator` executable. Native inspection reads one local file, read-only, without extraction, USD tools, native subprocesses, or network access. This makes the same checks available to a developer at the terminal or to a Swift application integrating the library. The [v0.2.0 release](https://github.com/Light2288/usdz-validator/releases/tag/v0.2.0), published October 25, 2026 under the MIT license, delivers the current project scope, including supported native USDA and binary-USDC reference inspection.
 
 ### Motivation
 
@@ -65,9 +66,9 @@ USDZ Validation Kit makes those packaging checks explicit while keeping their li
 
 The project separates inspection from command-line operation:
 
-- **Reusable library:** `USDZValidation` owns configuration, file snapshots, validation, findings, coverage, gate policy, and report encoding. It has no third-party dependencies and does not write to standard output or terminate the caller's process.
+- **Reusable library:** `USDZValidation` owns configuration, file snapshots, validation, findings, coverage, gate policy, and report encoding. It privately compiles a pinned **LZ4 1.10.0 C target** for bounded crate-metadata decoding, without requiring a host-installed LZ4 library. The library does not write to standard output or terminate the caller's process.
 - **Thin CLI:** `usdz-validator` uses Swift Argument Parser to expose validation and rule-catalogue commands. It selects a profile, loads explicit budget configuration, and sends the report to standard output or a local file.
-- **Bounded native pipeline:** Archive indexing and an in-memory package namespace establish which members can be inspected. Subsequent checks examine stored payloads, supported lexical USDA references, encoded-byte budgets, and supported texture headers under fixed resource limits.
+- **Bounded native pipeline:** Archive indexing and an in-memory package namespace establish which members can be inspected. Subsequent checks examine stored payloads, lexical USDA references, supported binary-USDC references through a shared package-local resolver, encoded-byte budgets, and supported texture headers under fixed resource limits. Bounded internal crate-metadata decoding is the sole decompression exception; ZIP members remain stored-only.
 - **Reports and optional checker:** Text, versioned JSON, and SARIF encoders expose the result. An explicitly requested adapter can run a supported installed Apple `usdchecker`, recording its outcome separately from native findings and coverage.
 
 ### Key Features
@@ -75,23 +76,28 @@ The project separates inspection from command-line operation:
 - **Package structure:** Checks supported ZIP metadata, stored-file sizes, 64-byte payload alignment, and CRC-32 checksums. Unsafe indexing prerequisites stop dependent inspection rather than producing speculative findings.
 - **Package-local paths:** Rejects unsafe member names and conflicting entries, then resolves supported asset paths inside the package without reading authored references from the host filesystem.
 - **Lexical USDA references:** Recognizes supported asset literals while distinguishing comments and strings. Missing package-local targets can be reported without claiming to parse full USD grammar or composition.
+- **Conditional USDC references:** Automatically inspects eligible binary layers in the supported subsets of exact crate versions **0.8.0, 0.9.0, and 0.10.0**. Supported asset values, sublayers, references/payloads, nested dictionaries, and time samples feed the same package-local resolver as USDA. Unsupported representations retain explicit coverage gaps.
+- **Safety envelope 3:** Admitted numeric-array bodies remain opaque: their elements are not decoded or validated. Bounded count headers and accounting for actual traversal, reads, allocations, and metadata decoding remain enforced, with unchanged numerical resource ceilings.
 - **Delivery budgets:** Configurable thresholds cover archive size, individual file size, file count, individual and total encoded texture bytes, and supported texture dimensions. Encoded-byte totals do not estimate decoded image or GPU memory; dimension checks inspect supported headers without decoding pixels.
 - **Reports for automation:** Text, JSON, and SARIF reports preserve stable finding identities and explicit coverage information. Warning thresholds and incomplete-coverage acceptance configure the gate without removing findings or changing what was checked.
+- **Report compatibility:** Schema major 1 remains in use. The updated report schema accepts safety-envelope versions 1, 2, and 3; consumers using an older strict schema that accepts only 1/2 must update it for envelope-3 reports.
 - **Versioned profiles:** `general-v1` selects the native checks; `apple-portable-v1` adds a warning-only advisory subset. Neither profile certifies compatibility with an Apple renderer.
 
 ### Verification
 
-The project's [recorded v0.1 verification](https://github.com/Light2288/usdz-validator/blob/main/docs/verification/release-summary.md) includes debug, release, and Address Sanitizer test suites, dedicated CLI process checks, schema validation, executable examples, golden report comparisons, adversarial checks, and resource measurements. These records document the validator's verification on its recorded host and corpus.
+The project's [recorded v0.2 verification](https://github.com/Light2288/usdz-validator/blob/main/docs/verification/release-summary.md) reports **19/19 required gates passed**. Debug, release, and Address Sanitizer suites each recorded **338 cases**, zero failures, and **11 documented opt-in skips**. Dedicated CLI checks, independent fixtures, schema validation, golden report comparisons, and resource measurements complement those suites. These are retained validator results; they were not rerun for this portfolio update.
 
-Original fixtures and fixed expected reports exercise malformed containers, path handling, coverage gaps, and output contracts. Separate real-asset checks document both success and failure from the optional installed checker, while retaining native binary-reference coverage gaps. Resource measurements are evidence for the measured cases, not universal memory or timing guarantees; minimum-target and cross-host verification remain deferred.
+Private-corpus verification independently matched **59 authored-reference occurrences across five original assets**, with complete requested native coverage and default gate acceptance. The private assets remain local. Resource measurements apply only to the recorded host and corpus, not universal memory or timing guarantees. Installed-checker smoke was unrequested/skipped for current v0.2 acceptance; minimum-target, other-host, and cross-host verification remain deferred.
 
 ### Current Limits
 
-Native reference inspection is lexical and package-local. It does not parse binary-USDC dependencies or perform complete USD composition or conformance validation. A successful optional checker run does not complete native USDC reference coverage. Exit `0` means the configured gate accepted the result; `--allow-incomplete` accepts native coverage gaps without changing that coverage.
+Native reference inspection is package-local: lexical for USDA and conditional for the supported USDC subset. Unsupported crate versions, value representations, reference expressions/templates, and ambiguous layouts retain explicit coverage gaps. Complete reference coverage concerns only the declared supported policy; it does not establish geometry validity or resolve composed dependencies. Native inspection does not perform stage composition or host-filesystem reference resolution.
+
+A successful optional checker run cannot upgrade native coverage. Exit `0` means the configured gate accepted the result; `--allow-incomplete` accepts native coverage gaps without changing that coverage.
 
 The optional `--usdchecker` path is for trusted input and supports the pinned installed Apple USD Tools version 0.25.11. Its parsers and resolvers may access filesystem or network resources beyond the native package boundary; it does not have an external filesystem/network sandbox.
 
-The recorded verified environment is macOS 27.0.1, Xcode 27.1, and Swift 6.4 on arm64. The package declares Swift 6 tools and a macOS 15 deployment target, but macOS 15 / Xcode 16 / Swift 6.0 compatibility remains intended and unverified. Intel and non-macOS execution are outside v0.1 support.
+The recorded verified environment is macOS 27.0.1, Xcode 27.1, and Swift 6.4 on arm64. The package declares Swift 6 tools and a macOS 15 deployment target, but macOS 15 / Xcode 16 / Swift 6.0 compatibility remains intended and unverified. Intel and non-macOS execution are outside v0.2 support. Release publication and completion of the current project scope do not establish minimum-target, other-host, or cross-host compatibility.
 
 The kit does not repair, convert, render, or preview assets. Passing a gate is not certification of complete USD conformance, Apple renderer compatibility, or asset security.
 
@@ -103,7 +109,7 @@ The kit does not repair, convert, render, or preview assets. Passing a gate is n
 
 **USDZ Validation Kit** è una libreria Swift e uno strumento da riga di comando per macOS per ispezionare asset 3D prima della consegna. Verifica la struttura dei pacchetti USDZ, i riferimenti interni supportati e i limiti configurabili per file e texture, producendo un report che distingue i difetti osservati dalle verifiche che non è stato possibile completare.
 
-Il progetto offre la libreria riutilizzabile `USDZValidation` e l'eseguibile `usdz-validator`. L'ispezione nativa legge un singolo file locale senza estrarne il contenuto, richiedere strumenti USD o accedere alla rete. Le stesse verifiche sono quindi disponibili sia a uno sviluppatore dal terminale sia a un'applicazione Swift che integra la libreria. La [versione v0.1.0](https://github.com/Light2288/usdz-validator/releases/tag/v0.1.0) è una prima demo funzionante, distribuita con licenza MIT.
+Il progetto offre la libreria riutilizzabile `USDZValidation` e l'eseguibile `usdz-validator`. L'ispezione nativa legge un singolo file locale in sola lettura, senza estrarne il contenuto, richiedere strumenti USD, avviare sottoprocessi nativi o accedere alla rete. Le stesse verifiche sono quindi disponibili sia a uno sviluppatore dal terminale sia a un'applicazione Swift che integra la libreria. La [versione v0.2.0](https://github.com/Light2288/usdz-validator/releases/tag/v0.2.0), pubblicata il 25 ottobre 2026 con licenza MIT, completa l'ambito attuale del progetto, includendo l'ispezione nativa dei riferimenti USDA e USDC binari supportati.
 
 ### Motivazione
 
@@ -115,9 +121,9 @@ USDZ Validation Kit rende esplicite queste verifiche sulla struttura dei pacchet
 
 Il progetto separa l'ispezione dalle operazioni da riga di comando:
 
-- **Libreria riutilizzabile:** `USDZValidation` gestisce configurazione, snapshot del file, validazione, segnalazioni, copertura, politica di accettazione e codifica dei report. Non ha dipendenze di terze parti, non scrive sullo standard output e non termina il processo chiamante.
+- **Libreria riutilizzabile:** `USDZValidation` gestisce configurazione, snapshot del file, validazione, segnalazioni, copertura, politica di accettazione e codifica dei report. Compila internamente un **target C privato con LZ4 1.10.0**, fissato a questa versione, per decodificare i metadati crate entro limiti prestabiliti, senza richiedere una libreria LZ4 installata sul sistema. La libreria non scrive sullo standard output e non termina il processo chiamante.
 - **CLI essenziale:** `usdz-validator` usa Swift Argument Parser per esporre i comandi di validazione e del catalogo delle regole. Seleziona un profilo, carica una configurazione esplicita dei limiti e invia il report allo standard output o a un file locale.
-- **Pipeline nativa con limiti di risorse:** L'indicizzazione dell'archivio e uno spazio dei nomi del pacchetto mantenuto in memoria stabiliscono quali voci possono essere ispezionate. Le verifiche successive esaminano i contenuti memorizzati, i riferimenti lessicali USDA supportati, i limiti sui byte codificati e le intestazioni delle texture supportate, rispettando limiti fissi di risorse.
+- **Pipeline nativa con limiti di risorse:** L'indicizzazione dell'archivio e uno spazio dei nomi del pacchetto mantenuto in memoria stabiliscono quali voci possono essere ispezionate. Le verifiche successive esaminano i contenuti memorizzati, i riferimenti lessicali USDA e quelli USDC binari supportati tramite un resolver condiviso limitato al pacchetto, i limiti sui byte codificati e le intestazioni delle texture supportate, rispettando limiti fissi di risorse. La decodifica limitata dei metadati interni crate è l'unica eccezione alla mancata decompressione; le voci ZIP devono restare non compresse.
 - **Report e verificatore opzionale:** I codificatori di testo, JSON con schema versionato e SARIF espongono il risultato. Un adattatore richiesto esplicitamente può eseguire una versione supportata di `usdchecker` di Apple installata sul sistema, registrandone l'esito separatamente dalle segnalazioni e dalla copertura native.
 
 ### Funzionalità principali
@@ -125,23 +131,28 @@ Il progetto separa l'ispezione dalle operazioni da riga di comando:
 - **Struttura del pacchetto:** Verifica i metadati ZIP supportati, le dimensioni dei file memorizzati, l'allineamento dei contenuti a 64 byte e i checksum CRC-32. Se mancano i prerequisiti per un'indicizzazione sicura, le ispezioni dipendenti si interrompono senza produrre segnalazioni speculative.
 - **Percorsi interni:** Rifiuta nomi delle voci non sicuri e voci in conflitto, quindi risolve i percorsi degli asset supportati all'interno del pacchetto senza leggere i riferimenti dichiarati dal filesystem del sistema ospitante.
 - **Riferimenti lessicali USDA:** Riconosce i riferimenti letterali agli asset supportati, distinguendo commenti e stringhe. Può segnalare destinazioni interne mancanti senza pretendere di interpretare l'intera grammatica USD o la composizione.
+- **Riferimenti USDC condizionali:** Ispeziona automaticamente i layer binari idonei nei sottoinsiemi supportati delle esatte versioni crate **0.8.0, 0.9.0 e 0.10.0**. Valori di tipo asset, sublayer, riferimenti/payload, dizionari annidati e campioni temporali supportati usano lo stesso resolver interno al pacchetto di USDA. Le rappresentazioni non supportate mantengono lacune esplicite di copertura.
+- **Limiti di sicurezza, versione 3:** I corpi degli array numerici ammessi restano opachi: i loro elementi non vengono decodificati né validati. Restano applicate le verifiche sulle intestazioni dei conteggi e la contabilizzazione di attraversamenti, letture, allocazioni e decodifica dei metadati effettivi, con gli stessi limiti numerici sulle risorse.
 - **Limiti per la consegna:** Soglie configurabili riguardano dimensione dell'archivio, dimensione del singolo file, numero di file, byte codificati delle singole texture e del loro totale, e dimensioni delle texture supportate. I totali dei byte codificati non stimano la memoria delle immagini decodificate o della GPU; le verifiche dimensionali esaminano le intestazioni supportate senza decodificare i pixel.
 - **Report per l'automazione:** I report testuali, JSON e SARIF mantengono identificativi stabili delle segnalazioni e informazioni esplicite sulla copertura. Le soglie di avviso e l'accettazione di una copertura incompleta configurano la decisione finale senza eliminare segnalazioni né modificare ciò che è stato verificato.
+- **Compatibilità dei report:** Resta in uso la versione principale 1 dello schema. Lo schema aggiornato dei report accetta le versioni 1, 2 e 3 dei limiti di sicurezza; chi usa uno schema precedente restrittivo che accetta solo 1/2 deve aggiornarlo per i report della versione 3.
 - **Profili versionati:** `general-v1` seleziona le verifiche native; `apple-portable-v1` aggiunge un sottoinsieme di raccomandazioni sotto forma di avvisi. Nessuno dei due profili certifica la compatibilità con un renderer Apple.
 
 ### Verifica
 
-La [verifica registrata per la versione v0.1](https://github.com/Light2288/usdz-validator/blob/main/docs/verification/release-summary.md) comprende suite di test debug, release e Address Sanitizer, verifiche dedicate dei processi CLI, validazione degli schemi, esempi eseguibili, confronti con report attesi, verifiche su input avversi e misurazioni delle risorse. Questi risultati documentano la verifica del validatore sul sistema e sul corpus registrati.
+La [verifica registrata per la versione v0.2](https://github.com/Light2288/usdz-validator/blob/main/docs/verification/release-summary.md) riporta **19/19 verifiche obbligatorie superate**. Le suite debug, release e Address Sanitizer hanno registrato ciascuna **338 casi**, zero errori e **11 esclusioni documentate per test da abilitare esplicitamente**. Verifiche CLI dedicate, fixture indipendenti, validazione degli schemi, confronti con report attesi e misurazioni delle risorse completano queste suite. Sono risultati conservati della verifica del validatore, non rieseguiti per questo aggiornamento del portfolio.
 
-Fixture originali e report attesi prefissati verificano contenitori malformati, gestione dei percorsi, lacune di copertura e contratti di output. Verifiche separate su asset reali documentano esiti sia positivi sia negativi del verificatore opzionale installato, mantenendo esplicite le lacune native sui riferimenti binari. Le misurazioni delle risorse costituiscono evidenza per i casi misurati, senza garantire universalmente memoria o tempi di esecuzione; la verifica dell'ambiente minimo e quella tra sistemi diversi restano rinviate.
+La verifica sul corpus privato ha riscontrato in modo indipendente **59 occorrenze di riferimenti dichiarati in cinque asset originali**, con copertura nativa completa delle verifiche richieste e accettazione secondo la politica predefinita. Gli asset privati restano locali. Le misurazioni delle risorse valgono solo per il sistema e il corpus registrati, senza garantire universalmente memoria o tempi di esecuzione. Lo smoke test del verificatore installato non è stato richiesto ed è rimasto escluso dall'accettazione corrente della versione v0.2; le verifiche dell'ambiente minimo, di altri sistemi e del confronto tra sistemi restano rinviate.
 
 ### Limiti attuali
 
-L'ispezione nativa dei riferimenti è lessicale e limitata al pacchetto. Non interpreta le dipendenze binarie USDC e non esegue una validazione completa della composizione o della conformità USD. Un esito positivo del verificatore opzionale non completa la copertura nativa dei riferimenti USDC. Il codice di uscita `0` indica che la politica configurata ha accettato il risultato; `--allow-incomplete` accetta le lacune della copertura nativa senza modificarla.
+L'ispezione nativa dei riferimenti è limitata al pacchetto: lessicale per USDA e condizionale per il sottoinsieme USDC supportato. Versioni crate, rappresentazioni dei valori, espressioni/template nei riferimenti e strutture ambigue non supportati mantengono lacune esplicite di copertura. La copertura completa dei riferimenti riguarda solo la politica supportata dichiarata; non dimostra la validità della geometria né risolve le dipendenze della scena composta. L'ispezione nativa non esegue la composizione degli stage né risolve i riferimenti sul filesystem del sistema ospitante.
+
+Un esito positivo del verificatore opzionale non può migliorare la copertura nativa. Il codice di uscita `0` indica che la politica configurata ha accettato il risultato; `--allow-incomplete` accetta le lacune della copertura nativa senza modificarla.
 
 L'opzione `--usdchecker` è destinata a input attendibili e supporta la versione installata prefissata di Apple USD Tools 0.25.11. I suoi parser e resolver possono accedere a risorse del filesystem o della rete oltre il confine del pacchetto nativo; l'esecuzione esterna non dispone di una sandbox per filesystem e rete.
 
-L'ambiente verificato registrato è macOS 27.0.1, Xcode 27.1 e Swift 6.4 su arm64. Il pacchetto dichiara strumenti Swift 6 e un deployment target macOS 15, ma la compatibilità con macOS 15 / Xcode 16 / Swift 6.0 resta prevista e non verificata. L'esecuzione su Intel e su sistemi diversi da macOS non rientra nel supporto della versione v0.1.
+L'ambiente verificato registrato è macOS 27.0.1, Xcode 27.1 e Swift 6.4 su arm64. Il pacchetto dichiara strumenti Swift 6 e un deployment target macOS 15, ma la compatibilità con macOS 15 / Xcode 16 / Swift 6.0 resta prevista e non verificata. L'esecuzione su Intel e su sistemi diversi da macOS non rientra nel supporto della versione v0.2. La pubblicazione della release e il completamento dell'ambito attuale del progetto non dimostrano la compatibilità con l'ambiente minimo, con altri sistemi o tra sistemi diversi.
 
 Il kit non ripara, converte, renderizza o mostra anteprime degli asset. L'accettazione di un risultato non certifica la piena conformità USD, la compatibilità con i renderer Apple o la sicurezza degli asset.
 

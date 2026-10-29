@@ -9,6 +9,7 @@ import {
   waitFor,
 } from '../../test/renderWithProviders'
 import * as languageContext from '@/contexts/LanguageContext'
+import { mockFetch, restoreFetch } from '../../test/mockFetch'
 
 class ViewerStub extends HTMLElement {
   cameraOrbit = '45deg 65deg auto'
@@ -74,6 +75,25 @@ afterEach(() => {
 })
 
 describe('USDZAssetDemo', () => {
+  it('preserves the loaded viewer through the real search provider on language change', async () => {
+    mockFetch({ body: '[]' })
+    try {
+      const { user } = renderWithProviders(
+        <>
+          <Subject />
+          <LanguageButton />
+        </>,
+        { withSearch: true }
+      )
+      const viewer = await activate()
+      fireEvent(viewer, new Event('load'))
+      await user.click(screen.getByRole('button', { name: 'Switch language' }))
+      expect(document.querySelector('model-viewer')).toBe(viewer)
+      expect(screen.getByRole('status')).toHaveTextContent('Modello 3D pronto')
+    } finally {
+      restoreFetch()
+    }
+  })
   it('renders the poster and canonical evidence without loading the engine/model', () => {
     renderWithProviders(<Subject />)
     expect(screen.getByRole('img', { name: /Static preview/ })).toBeInTheDocument()

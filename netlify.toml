@@ -2,6 +2,16 @@
 command = "npm ci && npm run build"
 publish = "out"
 
+[[headers]]
+for = "/static/models/usdz-validator/layered-cube/model.glb"
+[headers.values]
+Content-Type = "model/gltf-binary"
+
+[[headers]]
+for = "/static/models/usdz-validator/layered-cube/model.usdz"
+[headers.values]
+Content-Type = "model/vnd.usdz+zip"
+
 [[redirects]]
 from = "/*"
 to = "/index.html"

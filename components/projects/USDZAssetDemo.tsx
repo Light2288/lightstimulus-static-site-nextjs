@@ -14,6 +14,7 @@ const initialOrbit = '45deg 65deg auto'
 const cameraTarget = '0m 0m 0m'
 const assetHash = '89ee36e574d27275387367e67199a24ab7b4d356325f2b5f1fdfa60f1f2297a3'
 const loadTimeout = 30_000
+let modelRequest = 0
 
 export default function USDZAssetDemo(): React.JSX.Element {
   const { lang, t } = useLanguage()
@@ -22,6 +23,7 @@ export default function USDZAssetDemo(): React.JSX.Element {
   const [hydrated, setHydrated] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
   const [renderAttempt, setRenderAttempt] = useState<number | null>(null)
+  const [modelSource, setModelSource] = useState(`${modelDirectory}/model.glb`)
   const viewerRef = useRef<ModelViewerElement | null>(null)
   const attemptRef = useRef(0)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -94,6 +96,10 @@ export default function USDZAssetDemo(): React.JSX.Element {
     const attempt = ++attemptRef.current
     clearTimer()
     setRenderAttempt(null)
+    // model-viewer caches failed and stalled loads by URL across element instances.
+    // Retries and return navigation need fresh entries for the same asset bytes.
+    const request = ++modelRequest
+    setModelSource(`${modelDirectory}/model.glb${request > 1 ? `?attempt=${request}` : ''}`)
     setStatus('loading')
     timeoutRef.current = setTimeout(() => failAttempt(attempt), loadTimeout)
     try {
@@ -140,7 +146,7 @@ export default function USDZAssetDemo(): React.JSX.Element {
               <model-viewer
                 key={renderAttempt}
                 ref={viewerRef}
-                src={`${modelDirectory}/model.glb`}
+                src={modelSource}
                 alt={t('projects.usdzDemo.modelAlt')}
                 aria-describedby={instructionsId}
                 camera-controls

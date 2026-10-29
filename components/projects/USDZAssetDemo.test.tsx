@@ -161,9 +161,24 @@ describe('USDZAssetDemo', () => {
     await waitFor(() => expect(document.querySelector('model-viewer')).not.toBeNull())
     const viewer = document.querySelector('model-viewer')!
     expect(viewer).not.toBe(oldViewer)
+    expect(viewer.getAttribute('src')).not.toBe(oldViewer.getAttribute('src'))
+    expect(viewer.getAttribute('src')).toMatch(/model\.glb\?attempt=\d+$/)
     fireEvent(oldViewer, new Event('load'))
     expect(screen.getByRole('status')).toHaveTextContent('Loading 3D model')
     fireEvent(viewer, new Event('load'))
+    expect(screen.getByRole('status')).toHaveTextContent('3D model ready')
+  })
+
+  it('avoids a failed cache entry when returning after navigation', async () => {
+    const { unmount } = renderWithProviders(<Subject />)
+    const previous = await activate()
+    const previousSource = previous.getAttribute('src')
+    fireEvent(previous, new Event('error'))
+    unmount()
+    renderWithProviders(<Subject />)
+    const next = await activate()
+    expect(next.getAttribute('src')).not.toBe(previousSource)
+    fireEvent(next, new Event('load'))
     expect(screen.getByRole('status')).toHaveTextContent('3D model ready')
   })
 

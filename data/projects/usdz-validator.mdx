@@ -62,6 +62,60 @@ A 3D asset's delivery package can have problems that are independent of how its 
 
 USDZ Validation Kit makes those packaging checks explicit while keeping their limits visible. A finding records an observed problem; coverage describes what was inspected; a separate gate decision determines whether the result meets the selected acceptance policy. That distinction helps callers avoid treating an uninspected dependency as a clean bill of health.
 
+### From project illustration to validated 3D asset
+
+A procedural reconstruction interprets the illustration’s blue frame, pyramid, teal gridded platform, and lower pale-blue platform. The magnifying glass and exterior glow are omitted from the actual 3D model. This is an interpretation of one image, not an exact recovery of hidden geometry or lighting.
+
+The browser displays a converted GLB companion; the USDZ download is the original validated package. Modeling, conversion, and rendering use external demonstration tools, not validator capabilities. Independent geometry/material comparison and browser inspection checked the GLB; its shading can still differ, including the omitted USD index of refraction.
+
+The saved report from October 29, 2026 records validator **0.2.0**, the default **general-v1** policy, and complete requested native coverage with no findings or operational errors. This is package, reference, and budget acceptance, not geometry or visual certification. The report applies to the USDZ, not the GLB; the validator was not rerun for this page. The texture-free example does not demonstrate texture inspection on actual textures.
+
+The [canonical example](https://github.com/Light2288/usdz-validator/tree/main/Examples/layered-cube) includes the source and evidence. After building the CLI, reproduce the validation from the validator repository:
+
+```sh
+.build/release/usdz-validator validate Examples/layered-cube/model.usdz --format json
+```
+
+Assets: MIT · © 2026 USDZ Validation Kit contributors; redistributed license below.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**USDZ Validation Kit** è una libreria Swift e uno strumento da riga di comando per macOS per ispezionare asset 3D prima della consegna. Verifica la struttura dei pacchetti USDZ, i riferimenti interni supportati e i limiti configurabili per file e texture, producendo un report che distingue i difetti osservati dalle verifiche che non è stato possibile completare.
+
+Il progetto offre la libreria riutilizzabile `USDZValidation` e l'eseguibile `usdz-validator`. L'ispezione nativa legge un singolo file locale in sola lettura, senza estrarne il contenuto, richiedere strumenti USD, avviare sottoprocessi nativi o accedere alla rete. Le stesse verifiche sono quindi disponibili sia a uno sviluppatore dal terminale sia a un'applicazione Swift che integra la libreria. La [versione v0.2.0](https://github.com/Light2288/usdz-validator/releases/tag/v0.2.0), pubblicata il 25 ottobre 2026 con licenza MIT, completa l'ambito attuale del progetto, includendo l'ispezione nativa dei riferimenti USDA e USDC binari supportati.
+
+### Motivazione
+
+Il pacchetto di consegna di un asset 3D può presentare problemi indipendenti dall'aspetto della scena: record dell'archivio incoerenti, nomi delle voci non sicuri, riferimenti interni mancanti o texture che superano i limiti previsti. Per queste verifiche sono utili regole ripetibili e report consultabili o utilizzabili da un'automazione.
+
+USDZ Validation Kit rende esplicite queste verifiche sulla struttura dei pacchetti, mantenendone visibili i limiti. Una segnalazione registra un problema osservato; la copertura descrive ciò che è stato ispezionato; una decisione di accettazione separata stabilisce se il risultato soddisfa la politica selezionata. Questa distinzione aiuta chi integra il kit a non considerare una dipendenza non ispezionata come priva di problemi.
+
+### Dall’illustrazione del progetto a un asset 3D validato
+
+Una ricostruzione procedurale interpreta il telaio blu, la piramide, la piattaforma verde acqua a griglia e quella inferiore azzurra dell’illustrazione. La lente di ingrandimento e il bagliore esterno sono omessi dal modello 3D effettivo. È un’interpretazione di una singola immagine, non il recupero esatto di geometria nascosta o illuminazione.
+
+Il browser mostra una versione GLB convertita; il download USDZ è il pacchetto originale validato. Modellazione, conversione e rendering usano strumenti dimostrativi esterni, non capacità del validatore. Confronto indipendente di geometria e materiali e ispezione nel browser hanno verificato il GLB; la resa può comunque differire, anche per l’indice di rifrazione USD omesso.
+
+Il report salvato il 29 ottobre 2026 registra il validatore **0.2.0**, la policy predefinita **general-v1** e copertura nativa richiesta completa, senza rilievi o errori operativi. È accettazione di pacchetto, riferimenti e budget, non certificazione geometrica o visiva. Il report riguarda l’USDZ, non il GLB; il validatore non è stato rieseguito per questa pagina. L’esempio senza texture non dimostra la loro ispezione su dati effettivi.
+
+L’[esempio canonico](https://github.com/Light2288/usdz-validator/tree/main/Examples/layered-cube) contiene sorgente ed evidenza. Dopo aver compilato la CLI, riproduci la validazione dalla repository del validatore:
+
+```sh
+.build/release/usdz-validator validate Examples/layered-cube/model.usdz --format json
+```
+
+Asset: MIT · © 2026 USDZ Validation Kit contributors; licenza redistribuita sotto.
+
+</Lang>
+
+<USDZAssetDemo />
+
+<Lang value="en">
+
 ### System Architecture
 
 The project separates inspection from command-line operation:
@@ -104,18 +158,6 @@ The kit does not repair, convert, render, or preview assets. Passing a gate is n
 </Lang>
 
 <Lang value="it">
-
-### Panoramica
-
-**USDZ Validation Kit** è una libreria Swift e uno strumento da riga di comando per macOS per ispezionare asset 3D prima della consegna. Verifica la struttura dei pacchetti USDZ, i riferimenti interni supportati e i limiti configurabili per file e texture, producendo un report che distingue i difetti osservati dalle verifiche che non è stato possibile completare.
-
-Il progetto offre la libreria riutilizzabile `USDZValidation` e l'eseguibile `usdz-validator`. L'ispezione nativa legge un singolo file locale in sola lettura, senza estrarne il contenuto, richiedere strumenti USD, avviare sottoprocessi nativi o accedere alla rete. Le stesse verifiche sono quindi disponibili sia a uno sviluppatore dal terminale sia a un'applicazione Swift che integra la libreria. La [versione v0.2.0](https://github.com/Light2288/usdz-validator/releases/tag/v0.2.0), pubblicata il 25 ottobre 2026 con licenza MIT, completa l'ambito attuale del progetto, includendo l'ispezione nativa dei riferimenti USDA e USDC binari supportati.
-
-### Motivazione
-
-Il pacchetto di consegna di un asset 3D può presentare problemi indipendenti dall'aspetto della scena: record dell'archivio incoerenti, nomi delle voci non sicuri, riferimenti interni mancanti o texture che superano i limiti previsti. Per queste verifiche sono utili regole ripetibili e report consultabili o utilizzabili da un'automazione.
-
-USDZ Validation Kit rende esplicite queste verifiche sulla struttura dei pacchetti, mantenendone visibili i limiti. Una segnalazione registra un problema osservato; la copertura descrive ciò che è stato ispezionato; una decisione di accettazione separata stabilisce se il risultato soddisfa la politica selezionata. Questa distinzione aiuta chi integra il kit a non considerare una dipendenza non ispezionata come priva di problemi.
 
 ### Architettura del sistema
 

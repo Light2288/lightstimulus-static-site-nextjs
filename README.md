@@ -1,7 +1,7 @@
 # 💡 Light Stimulus
 
 <div align="center">
-  <img src="data/logo.svg" alt="Light Stimulus Logo" width="200"/>
+  <img src="public/static/logo/logo.svg" alt="Light Stimulus Logo" width="200"/>
   
   **Exploring AR, XR, AI, and Computer Vision Through Code**
   

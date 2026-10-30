@@ -1,0 +1,178 @@
+---
+title:
+  en: From a Project Illustration to a Validated 3D Asset
+  it: Dall’illustrazione di un progetto a un asset 3D validato
+summary:
+  en: >
+    I turned my project illustration into an editable 3D cube, validated its USDZ package,
+    and built a browser demonstration. Each step needed its own evidence, including the parts a convincing rendering could not prove.
+  it: >
+    Ho trasformato l’illustrazione del mio progetto in un cubo 3D modificabile, validato il pacchetto USDZ
+    e costruito una demo per il browser. Ogni passaggio richiedeva prove proprie, anche dove un rendering convincente non bastava.
+date: 2026-10-30
+lastmod: 2026-10-30
+topic_key: from-project-illustration-to-validated-3d-asset
+tags:
+  - id: usdz
+    label:
+      en: USDZ
+      it: USDZ
+  - id: 3d-assets
+    label:
+      en: 3D Assets
+      it: Asset 3D
+  - id: validation
+    label:
+      en: Validation
+      it: Validazione
+  - id: developer-tools
+    label:
+      en: Developer Tools
+      it: Strumenti per sviluppatori
+draft: false
+images: []
+---
+
+<Lang value="en">
+
+The project illustration for [USDZ Validation Kit](https://github.com/Light2288/usdz-validator) had a blue cube frame, a pyramid, and two platforms suspended inside it. I wanted to grab it and turn it around. A perfectly reasonable reaction to a picture, provided I was willing to supply the missing third dimension myself.
+
+That became the experiment: turn the layered cube into an editable, rotatable asset, validate its USDZ package, then make it usable in a portfolio demonstration.
+
+At each step, I needed to answer a different question. A rendering helped me judge the model’s appearance from one camera angle, but the geometry and the USDZ delivery package needed separate inspection. After conversion, I also had to examine the browser model and try its controls. A good result at one step could not stand in for evidence about the others.
+
+## Building the parts the picture could not show
+
+I used a procedural Python reconstruction to interpret the illustration: blue frame, pyramid, teal gridded platform, pale-blue lower platform, and lightly translucent side panels. The magnifying glass and exterior glow stayed in the illustration. Keeping the cube alone gave me a coherent object to inspect from every side.
+
+The unseen surfaces needed decisions. A single image could suggest proportions and materials, but it could not supply exact rear geometry, hidden joins, optics, or lighting. I constructed consistent geometry behind the visible composition. Calling that “recovered from the image” would have given my modelling process rather more detective ability than it possessed.
+
+I set the scene’s unit of measurement to meters and used Y as the vertical axis. The cube’s outer dimensions were about 20 cm on each side. Its rounded frame, platform edges, and pyramid details were physical geometry. They needed to hold up as the camera moved.
+
+Refinement made that distinction quite practical. I raised the pyramid from 71.3 mm to 76.3 mm while retaining its footprint. I also thickened the platform bodies from 10 mm to 12 mm and arranged the contents with two 25 mm clear vertical gaps.
+
+That last measurement included the raised grid as part of the middle platform. Measuring only the platform body would have produced a pleasantly tidy number for the wrong empty space (a small but dependable source of self-inflicted satisfaction).
+
+Equal physical gaps could still look unequal in perspective. I needed both measurements and views of the actual package. The October 28 artwork record describes separate imported-geometry inspection, USD load/package checks, rendered previews, and human-confirmed Mac Quick Look rotation. Those observations belong to the artwork process; the Swift validator did not produce them.
+
+## Keeping the model and its receipt together
+
+The accepted candidate became the repository’s [canonical layered-cube example](https://github.com/Light2288/usdz-validator/tree/main/Examples/layered-cube). It contains the original USDZ, an editable, human-readable `source/model.usda`, provenance, and `validation.json`. The original illustration and accepted scene/package bytes were preserved, with SHA-256 identities recorded.
+
+The editable source matters because the result remains something I can change. The public example includes that scene, while the procedural generator and artwork inspection tools remain outside the example.
+
+Creation and packaging had their own tools. Python authored the scene. Apple USD Tools supplied `usdcat` to convert USDA to binary USDC, then `usdzip` to package it. The resulting 530,905-byte USDZ contains one stored `model.usdc` entry, with no textures or external dependencies. Those creation tools are separate from the validator’s native inspection.
+
+The saved native report was captured on **October 29, 2026**, using validator **0.2.0** and the default **general-v1** policy, with schema major 1 and safety envelope 3. It records a passing gate, exit 0, complete requested native coverage, no native findings, and no operational errors. The capture record also reports empty stderr and stdout matching the retained JSON exactly.
+
+After building the CLI, this is the reproduction command, run from the validator repository root:
+
+```sh
+.build/release/usdz-validator validate Examples/layered-cube/model.usdz --format json
+```
+
+The policy used built-in budgets, failed on errors, and did not accept incomplete coverage. Apple advice and the external checker were unrequested.
+
+“Complete” needs its scope attached. Here it covers the requested native container, entry-safety, supported package-local reference, byte-budget, and texture-dimension areas. Since this asset has no textures, it supplies no example of texture checks operating on actual texture data.
+
+That acceptance establishes the declared package/reference/budget result. Full USD conformance, geometry correctness, visual quality, renderer compatibility, and security certification remain separate questions. In particular, the validator does not compose the scene or validate its numeric geometry. My pyramid required its own evidence, however reassuring the JSON looked.
+
+## Giving the browser its own evidence
+
+The portfolio work on October 30 introduced another artifact: a GLB companion converted directly from the original USDZ using `usd2gltf` 0.3.5. The website preserved the original USDZ and report bytes. The retained native report still concerns that USDZ; it says nothing about the GLB.
+
+I checked the conversion independently. The comparator read the original through OpenUSD and separately decoded the GLB’s actual vertex and index buffers. The recorded comparison matched **14 mesh identities** and **35,694 oriented triangles**. Maximum observed world-space positional difference was **0 m**, within a tolerance of **1 × 10⁻⁶ m**.
+
+Material bindings, base colors, roughness, metallic values, and opacity also matched within the recorded material tolerance. The glass retained `BLEND` and alpha approximately **0.1**, and the GLB had no external resources.
+
+Those are useful measurements, with a specific limit: matching exported values does not guarantee identical rendering. The conversion omitted the USD index of refraction, **1.45**. Lighting in the browser’s neutral environment also changed the apparent colors relative to the historical SceneKit previews. Front, rear, and side browser inspections added visual evidence that the frame, pyramid, grid, platforms, and translucent panels remained readable.
+
+I kept those October 30 observations separate from the October 28 artwork checks and October 29 native report. Otherwise, three different jobs could quietly acquire one very impressive, very ambiguous “validated” label.
+
+## Making rotation survive an actual page
+
+The portfolio viewer loads its rendering code and GLB after explicit activation. Before that, it presents a poster, report details, and downloads. The recorded browser checks observed no model or engine requests during scrolling, language changes, or ordinary route prefetching.
+
+Once activated, it provides rotation, zoom, keyboard controls, and camera reset. The poster, report details, and downloads also remain available when loading fails or JavaScript is unavailable.
+
+Integration supplied a suitably ordinary complication: changing language remounted the page through the existing search provider, destroying the viewer and its camera state. Keeping the page subtree mounted and updating the localized search actions fixed that. Apparently, rotating a cube also required negotiating with the search box.
+
+The later website record reports successful local static-export and browser checks, including controls, language switching, retries, loading failures, and access without JavaScript. Those browser observations used Chrome with software WebGL. They establish neither Safari or hardware-GPU appearance nor device-level mobile Quick Look compatibility. Live hosting delivery also remained unverified in that record.
+
+I now have an editable scene, its original USDZ and native receipt, and a separately checked browser model integrated into the portfolio implementation. The canonical repository example makes the source, package, and report available together.
+
+For another asset, I would keep the same separation: inspect the geometry, check the delivery package, compare the conversion, and exercise the page that presents it. Keeping each result tied to its artifact made this cube much easier to explain. It also lets me change the next pyramid without asking a screenshot to serve as a test report.
+
+</Lang>
+
+<Lang value="it">
+
+Nell’illustrazione di [USDZ Validation Kit](https://github.com/Light2288/usdz-validator) c’erano un telaio cubico blu, una piramide e due piattaforme sospese al suo interno. Volevo vedere quel cubo in 3D, ruotarlo e osservarlo da ogni lato. Una reazione del tutto ragionevole davanti a un’immagine, a patto di essere disposto a costruirmi da solo la terza dimensione mancante.
+
+L’esperimento è nato così: trasformare quel cubo a strati in un asset modificabile e ruotabile, validarne il pacchetto USDZ e renderlo utilizzabile in una demo del portfolio.
+
+Ogni passaggio poneva una domanda diversa. Il rendering mi aiutava a giudicare l’aspetto del modello da una certa inquadratura, ma geometria e pacchetto USDZ richiedevano verifiche specifiche. Dopo la conversione dovevo esaminare anche il modello nel browser e provare i suoi controlli. Un buon risultato in una fase non bastava a dimostrare che funzionasse tutto il resto.
+
+## Costruire le parti che l’immagine non mostrava
+
+Ho usato uno script Python per generare la geometria dei vari elementi dell’illustrazione: telaio blu, piramide, piattaforma verde acqua con griglia, piattaforma inferiore azzurra e pannelli laterali leggermente traslucidi. La lente di ingrandimento e il bagliore esterno sono rimasti nell’illustrazione. Limitarmi al cubo mi ha dato un oggetto coerente da ispezionare da ogni lato.
+
+Per le superfici nascoste ho dovuto fare delle scelte. Una singola immagine poteva suggerire proporzioni e materiali, ma non forniva la geometria esatta del retro, le giunzioni nascoste, le proprietà ottiche o l’illuminazione. Ho costruito una geometria coerente dietro la composizione visibile. Definirla “recuperata dall’immagine” avrebbe attribuito al mio processo capacità investigative piuttosto generose, da geometra che ricostruisce il retro di un condominio dalla foto del citofono.
+
+Ho impostato i metri come unità di misura della scena e l’asse Y come verticale. Le dimensioni esterne del cubo erano di circa 20 cm per lato. Gli arrotondamenti del telaio, dei bordi delle piattaforme e dei dettagli della piramide erano geometria vera. Dovevano reggere anche quando la camera si spostava.
+
+Il lavoro sulle proporzioni ha reso la questione molto concreta. Ho aumentato l’altezza della piramide da 71,3 mm a 76,3 mm, conservando l’ingombro della base. Ho anche portato lo spessore dei corpi delle piattaforme da 10 mm a 12 mm e disposto gli elementi lasciando due spazi liberi verticali da 25 mm.
+
+Quest’ultima misura includeva la griglia rialzata come parte della piattaforma centrale. Misurando la distanza dal piano della piattaforma, senza contare la griglia, avrei sovrastimato lo spazio libero (un errore misurato con grande precisione).
+
+Spazi fisicamente uguali potevano comunque sembrare diversi in prospettiva. Mi servivano sia le misure sia le viste del pacchetto effettivo. La documentazione del 28 ottobre riporta ispezioni separate della geometria importata, verifiche di caricamento USD e del pacchetto, anteprime renderizzate e rotazione in Quick Look su Mac confermata manualmente. Sono osservazioni del processo di modellazione; non le ha prodotte il validatore Swift.
+
+## Tenere insieme il modello e il suo report
+
+Il candidato accettato è diventato l’[esempio canonico del cubo a strati](https://github.com/Light2288/usdz-validator/tree/main/Examples/layered-cube) nella repository. Contiene l’USDZ originale, il file modificabile e leggibile `source/model.usda`, la documentazione di provenienza e `validation.json`. L’illustrazione originale e i byte della scena e del pacchetto accettati sono stati conservati, registrandone gli hash SHA-256.
+
+Il sorgente modificabile conta perché il risultato resta qualcosa su cui posso intervenire. L’esempio pubblico include quella scena; il generatore procedurale e gli strumenti di ispezione usati durante la modellazione restano esterni all’esempio.
+
+Creazione e packaging avevano strumenti propri. Python ha generato la scena. Gli Apple USD Tools hanno fornito `usdcat` per convertire l’USDA in USDC binario, poi `usdzip` per creare il pacchetto. L’USDZ risultante, di 530.905 byte, contiene una sola voce non compressa, `model.usdc`, senza texture né dipendenze esterne. Questi strumenti di creazione sono separati dall’ispezione nativa del validatore.
+
+Il report nativo conservato è stato acquisito il **29 ottobre 2026**, usando il validatore **0.2.0** e la policy predefinita **general-v1**, con versione principale dello schema 1 e safety envelope 3. Registra gate superato, exit code 0, copertura completa delle verifiche native richieste, nessuna segnalazione nativa e nessun errore operativo. La documentazione dell’acquisizione riporta anche stderr vuoto e stdout identico al JSON conservato.
+
+Dopo aver compilato la CLI, il comando per riprodurre la validazione, dalla root della repository del validatore, è questo:
+
+```sh
+.build/release/usdz-validator validate Examples/layered-cube/model.usdz --format json
+```
+
+La policy applicava i limiti predefiniti, bloccava l’accettazione in presenza di errori e non accettava copertura incompleta. Le raccomandazioni Apple e il verificatore esterno non erano richiesti.
+
+La copertura “completa” si riferisce ai controlli richiesti dalla policy. Qui riguarda le aree native richieste: struttura del contenitore, sicurezza delle voci, riferimenti interni al pacchetto supportati, limiti sui byte e dimensioni delle texture. Dato che questo asset non contiene texture, non dimostra verifiche delle texture su dati effettivi.
+
+L’accettazione stabilisce quel risultato per pacchetto, riferimenti e limiti dichiarati. Conformità USD completa, correttezza geometrica, qualità visiva, compatibilità con i renderer e certificazione di sicurezza restano questioni separate. In particolare, il validatore non compone la scena e non valida la sua geometria numerica. La mia piramide aveva bisogno di prove proprie, per quanto rassicurante fosse il JSON.
+
+## Dare al browser le sue prove
+
+Il lavoro sul portfolio del 30 ottobre ha introdotto un altro asset: una versione GLB ottenuta direttamente dall’USDZ originale con `usd2gltf` 0.3.5. Il sito ha conservato i byte originali dell’USDZ e del report. Quel report nativo continua a riguardare l’USDZ; non dice nulla sul GLB.
+
+Ho verificato la conversione in modo indipendente. Lo strumento di confronto leggeva l’originale tramite OpenUSD e decodificava separatamente i buffer effettivi di vertici e indici del GLB. Il confronto registrato ha riscontrato corrispondenza per **14 mesh identificate per nome** e **35.694 triangoli orientati**. La massima differenza di posizione osservata nello spazio globale era **0 m**, entro una tolleranza di **1 × 10⁻⁶ m**.
+
+Corrispondevano anche associazioni dei materiali, colori di base, roughness, valori metallici e opacità, entro la tolleranza registrata per i materiali. Il vetro conservava `BLEND` e alpha di circa **0,1**, e il GLB non aveva risorse esterne.
+
+Sono misure utili, con un limite preciso: la corrispondenza dei valori esportati non garantisce rendering identici. La conversione ometteva l’indice di rifrazione USD, **1,45**. Anche l’illuminazione dell’ambiente neutro nel browser modificava i colori percepiti rispetto alle precedenti anteprime SceneKit. Le ispezioni nel browser da davanti, da dietro e di lato hanno aggiunto la conferma visiva che telaio, piramide, griglia, piattaforme e pannelli traslucidi restavano leggibili.
+
+Ho tenuto quelle osservazioni del 30 ottobre separate dalle verifiche di modellazione del 28 e dal report nativo del 29. Altrimenti tre lavori diversi avrebbero potuto ritrovarsi sotto un’unica etichetta “validato”, molto autorevole e altrettanto ambigua.
+
+## Far sopravvivere la rotazione a una pagina vera
+
+Il viewer del portfolio carica il codice di rendering e il GLB dopo un’attivazione esplicita. Prima presenta un’immagine statica di anteprima, i dettagli del report e i download. Le verifiche registrate nel browser non hanno osservato richieste del modello o del motore durante lo scorrimento, il cambio lingua o il normale prefetching delle route.
+
+Una volta attivato, offre rotazione, zoom, controlli da tastiera e reset della camera. L’anteprima, i dettagli del report e i download restano disponibili anche se il caricamento fallisce o JavaScript non è disponibile.
+
+Durante l’integrazione è emerso un problema: al cambio lingua, il provider di ricerca esistente rimontava l’intera pagina, facendo perdere al viewer il modello caricato e la posizione della camera. Ho modificato il provider perché aggiornasse le azioni di ricerca nella nuova lingua senza ricreare il resto della pagina. Il viewer poteva così conservare il proprio stato (per far ruotare un cubo, alla fine, ho dovuto sistemare anche la ricerca).
+
+La documentazione successiva del sito riporta verifiche locali riuscite sull’export statico e nel browser, inclusi controlli, cambio lingua, nuovi tentativi di caricamento, errori di caricamento e accesso senza JavaScript. Quelle osservazioni nel browser sono state effettuate con Chrome e WebGL software. Non stabiliscono la resa su Safari o GPU hardware, né la compatibilità con Quick Look su dispositivi mobili reali. Anche la distribuzione tramite hosting live restava non verificata in quella documentazione.
+
+Ora ho una scena modificabile, il suo USDZ originale con il report nativo e un modello per il browser verificato separatamente, integrato nell’implementazione del portfolio. L’esempio canonico nella repository rende disponibili insieme sorgente, pacchetto e report.
+
+Per un altro asset manterrei la stessa separazione: ispezionare la geometria, verificare il pacchetto da consegnare, confrontare la conversione e provare la pagina che lo presenta. Associare ogni verifica alla versione esatta del modello mi ha aiutato a ricostruire il lavoro e a capire cosa fosse stato davvero controllato. E mi permette di rimettere mano alla piramide senza scambiare un’anteprima ben riuscita per la prova che sia tutto a posto.
+
+</Lang>

@@ -1,0 +1,27 @@
+{
+  rootVersion: '0.1.0-beta.48',
+  plinyVersion: '0.1.0-beta.45',
+  sameContext: false
+}
+AssertionError [ERR_ASSERTION]: Yarn must share the provider/modal context
++ actual - expected
+
++ '/private/var/folders/8q/t_gg45z912xghvjmct5p7kkr0000gn/T/usdz-review-yarn-qdj6ejit/node_modules/kbar/lib/index.js'
+- '/private/var/folders/8q/t_gg45z912xghvjmct5p7kkr0000gn/T/usdz-review-yarn-qdj6ejit/node_modules/pliny/node_modules/kbar/lib/index.js'
+
+    at /Users/davide/Personal/Projects/lightstimulus-static-site-nextjs/.superpowers/sdd/2026-10-30-usdz-validator-cover-and-asset-demo/yarn-compat/check.cjs:2:392
+    at Object.<anonymous> (/Users/davide/Personal/Projects/lightstimulus-static-site-nextjs/.superpowers/sdd/2026-10-30-usdz-validator-cover-and-asset-demo/yarn-compat/check.cjs:2:749)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '/private/var/folders/8q/t_gg45z912xghvjmct5p7kkr0000gn/T/usdz-review-yarn-qdj6ejit/node_modules/kbar/lib/index.js',
+  expected: '/private/var/folders/8q/t_gg45z912xghvjmct5p7kkr0000gn/T/usdz-review-yarn-qdj6ejit/node_modules/pliny/node_modules/kbar/lib/index.js',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

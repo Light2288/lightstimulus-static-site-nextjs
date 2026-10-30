@@ -53,12 +53,12 @@
 
 **Acceptance criteria:** AC-01, AC-02, AC-03.
 
-- [ ] Save this plan after leaving Plan mode, record its separate approval, and update specification lifecycle metadata. Inspect local changes, safely fast-forward `main`, create the branch, and commit only the approved workflow documents. Stop on unresolved divergence.
-- [ ] Record baseline hashes for unrelated site images and all external inputs.
-- [ ] Add an asset test asserting the retained cover source has SHA-256 `ee47141de59d396eb9baf75175a1b495108a33a9084dc5421c01d5d593f6e581`; main/responsive images decode; responsive widths are exactly 144/200/640/800/1000 in PNG and WebP; no obsolete cover-stem variants exist.
-- [ ] Run `npm run test -- data/projects/usdzValidatorAssets.test.ts`. Expected: failure against the old cover.
-- [ ] Clear only the old cover family and its old backup, reseed the main input from Firefly, and run `npm run compress-images -- projects`. Confirm unrelated inputs are skipped. Explicitly stage only the required new backup source despite the ignore rule.
-- [ ] Repeat the test; compare baseline hashes and inspect page/card crop previews. Expected: fresh cover family, identical external inputs, unchanged unrelated images, and readable central subject. Commit the verified cover change.
+- [x] Save this plan after leaving Plan mode, record its separate approval, and update specification lifecycle metadata. Inspect local changes, safely fast-forward `main`, create the branch, and commit only the approved workflow documents. Stop on unresolved divergence.
+- [x] Record baseline hashes for unrelated site images and all external inputs.
+- [x] Add an asset test asserting the retained cover source has SHA-256 `ee47141de59d396eb9baf75175a1b495108a33a9084dc5421c01d5d593f6e581`; main/responsive images decode; responsive widths are exactly 144/200/640/800/1000 in PNG and WebP; no obsolete cover-stem variants exist.
+- [x] Run `npm run test -- data/projects/usdzValidatorAssets.test.ts`. Expected: failure against the old cover.
+- [x] Clear only the old cover family and its old backup, reseed the main input from Firefly, and run `npm run compress-images -- projects`. Confirm unrelated inputs are skipped. Explicitly stage only the required new backup source despite the ignore rule.
+- [x] Repeat the test; compare baseline hashes and inspect page/card crop previews. Expected: fresh cover family, identical external inputs, unchanged unrelated images, and readable central subject. Commit the verified cover change.
 
 ### Task 2: Prepare and independently verify the model assets [size: M | risk: other | mechanical: false | clear_pattern: false | objectively_verifiable: true | concerns: none]
 
@@ -73,14 +73,14 @@
 
 **Acceptance criteria:** AC-05, AC-06, AC-07, AC-08, AC-14, AC-15.
 
-- [ ] Extend asset tests to assert canonical USDZ/illustration hashes, report identity/policy, complete responsive image families, and a self-contained GLB.
-- [ ] Write comparator self-tests for changed geometry/bounds, missing meshes, opaque glass, and external resources. Implement independent inspection using OpenUSD for the source and direct GLB JSON/binary decoding for the output.
-- [ ] Compare all 14 named meshes, triangle counts and oriented triangle positions, world-space bounds, meter scale, Y-up orientation, material bindings, colors, roughness, metallic values, and opacity. Use **1×10⁻⁶ m** positional tolerance and **1×10⁻⁶** material-value tolerance; require finite geometry/normals and `BLEND` with approximately **0.1** alpha on the panels. Do not require identical vertex indexing.
-- [ ] Run `python3 scripts/verify-usdz-demo.py --self-test`. Expected: deliberately corrupted cases are rejected.
-- [ ] Provision the isolated pinned tools and convert the canonical USDZ with `usd2gltf -i <canonical-usdz> -o <candidate-glb>`. Use canonical USDA only if packaged input is unsupported, after independently comparing USDA and USDZ.
-- [ ] Run the comparator and inspect the GLB in the pinned viewer from front, rear, and rotated views. Expected: complete geometry and usable translucency. Record culling/shading differences, including unsupported IOR. Do not accept numeric checks alone.
-- [ ] Copy canonical downloads/license unchanged. Generate a square poster from the accepted GLB, copy the canonical illustration, and run `npm run compress-images -- projects/usdz-validator-demo`. Retain their sources and responsive derivatives.
-- [ ] Record exact commands, versions, hashes, numerical results, and visual observations in the provenance README. Run the asset test successfully and commit the accepted assets/checker.
+- [x] Extend asset tests to assert canonical USDZ/illustration hashes, report identity/policy, complete responsive image families, and a self-contained GLB.
+- [x] Write comparator self-tests for changed geometry/bounds, missing meshes, opaque glass, and external resources. Implement independent inspection using OpenUSD for the source and direct GLB JSON/binary decoding for the output.
+- [x] Compare all 14 named meshes, triangle counts and oriented triangle positions, world-space bounds, meter scale, Y-up orientation, material bindings, colors, roughness, metallic values, and opacity. Use **1×10⁻⁶ m** positional tolerance and **1×10⁻⁶** material-value tolerance; require finite geometry/normals and `BLEND` with approximately **0.1** alpha on the panels. Do not require identical vertex indexing.
+- [x] Run `python3 scripts/verify-usdz-demo.py --self-test`. Expected: deliberately corrupted cases are rejected.
+- [x] Provision the isolated pinned tools and convert the canonical USDZ with `usd2gltf -i <canonical-usdz> -o <candidate-glb>`. Use canonical USDA only if packaged input is unsupported, after independently comparing USDA and USDZ.
+- [x] Run the comparator and inspect the GLB in the pinned viewer from front, rear, and rotated views. Expected: complete geometry and usable translucency. Record culling/shading differences, including unsupported IOR. Do not accept numeric checks alone.
+- [x] Copy canonical downloads/license unchanged. Generate a square poster from the accepted GLB, copy the canonical illustration, and run `npm run compress-images -- projects/usdz-validator-demo`. Retain their sources and responsive derivatives.
+- [x] Record exact commands, versions, hashes, numerical results, and visual observations in the provenance README. Run the asset test successfully and commit the accepted assets/checker.
 
 ### Task 3: Implement the accessible, activation-only viewer [size: M | risk: concurrency | mechanical: false | clear_pattern: false | objectively_verifiable: true | concerns: concurrency,performance]
 
@@ -97,15 +97,15 @@
 
 **Acceptance criteria:** AC-09, AC-10, AC-11, AC-12, AC-13, AC-14, AC-16.
 
-- [ ] Add failing component tests for activation-only import, loading/success, import/model/WebGL failure, timeout/retry, unmount and late events, live language switching, reset-view, reduced motion, translated accessibility text, and persistent download/report links.
-- [ ] Run `npm run test -- components/projects/USDZAssetDemo.test.tsx`. Expected: failure before implementation.
-- [ ] Install the pinned browser dependencies. Add type-only custom-element declarations; dynamically import the engine inside the activation path. Do not place it in an eager import or preload.
-- [ ] Render the processed illustration/poster, compact report summary, native `<details>`, ordinary download/license anchors, and separate image-link Quick Look markup. Embed the canonical report at build time.
-- [ ] After activation, check WebGL2 availability, mount the custom element, and attach native load/error listeners. Use an attempt identifier, listener cleanup, and timer cleanup to reject stale completions. Errors restore the poster and expose retry.
-- [ ] Configure camera controls, `touch-action="pan-y"`, disabled panning, neutral built-in lighting, no auto-rotation, and no animated interaction prompt. Reset immediately with `jumpCameraToGoal()`; use zero interpolation under reduced motion.
-- [ ] Translate controls, status, instructions, and the viewer’s directional accessibility announcements through the existing language context. Language updates must not rewrite camera state or remount the element.
-- [ ] Expose the existing `BASE_PATH` value to browser bundles through Next.js configuration. Prefix raw asset URLs exactly once. Add narrowly scoped Netlify MIME declarations for GLB and USDZ; preserve existing redirects and security policy.
-- [ ] Run the component, image-prefix, and locale tests. Expected: passing states/failures, correct prefixes, and parity. Commit the viewer integration.
+- [x] Add failing component tests for activation-only import, loading/success, import/model/WebGL failure, timeout/retry, unmount and late events, live language switching, reset-view, reduced motion, translated accessibility text, and persistent download/report links.
+- [x] Run `npm run test -- components/projects/USDZAssetDemo.test.tsx`. Expected: failure before implementation.
+- [x] Install the pinned browser dependencies. Add type-only custom-element declarations; dynamically import the engine inside the activation path. Do not place it in an eager import or preload.
+- [x] Render the processed illustration/poster, compact report summary, native `<details>`, ordinary download/license anchors, and separate image-link Quick Look markup. Embed the canonical report at build time.
+- [x] After activation, check WebGL2 availability, mount the custom element, and attach native load/error listeners. Use an attempt identifier, listener cleanup, and timer cleanup to reject stale completions. Errors restore the poster and expose retry.
+- [x] Configure camera controls, `touch-action="pan-y"`, disabled panning, neutral built-in lighting, no auto-rotation, and no animated interaction prompt. Reset immediately with `jumpCameraToGoal()`; use zero interpolation under reduced motion.
+- [x] Translate controls, status, instructions, and the viewer’s directional accessibility announcements through the existing language context. Language updates must not rewrite camera state or remount the element.
+- [x] Expose the existing `BASE_PATH` value to browser bundles through Next.js configuration. Prefix raw asset URLs exactly once. Add narrowly scoped Netlify MIME declarations for GLB and USDZ; preserve existing redirects and security policy.
+- [x] Run the component, image-prefix, and locale tests. Expected: passing states/failures, correct prefixes, and parity. Commit the viewer integration.
 
 ### Task 4: Integrate the bilingual MDX section [size: M | risk: none | mechanical: false | clear_pattern: true | objectively_verifiable: false | concerns: none]
 
@@ -115,11 +115,11 @@
 
 **Acceptance criteria:** AC-04, AC-05, AC-09, AC-13, AC-15.
 
-- [ ] Update the registry test to require `USDZAssetDemo`; run `npm run test -- components/MDXComponents.test.ts`. Expected: failure before registration.
-- [ ] Register the component and split the existing language wrappers at the insertion boundary. Preserve existing product prose and metadata.
-- [ ] Add the approved corresponding headings and approximately 150–250 explanatory words per language, including captions and excluding controls/report details. Explicitly identify omitted magnifying glass/glow and distinguish original USDZ, converted GLB, native acceptance, and external artwork tooling.
-- [ ] Include the canonical example, exact reproduction command, retained report date/version/policy, and license attribution.
-- [ ] Verify seven correctly ordered sections per language, one shared widget, equivalent qualifications, and preservation of the original sections. Repeat registry/language tests and commit.
+- [x] Update the registry test to require `USDZAssetDemo`; run `npm run test -- components/MDXComponents.test.ts`. Expected: failure before registration.
+- [x] Register the component and split the existing language wrappers at the insertion boundary. Preserve existing product prose and metadata.
+- [x] Add the approved corresponding headings and approximately 150–250 explanatory words per language, including captions and excluding controls/report details. Explicitly identify omitted magnifying glass/glow and distinguish original USDZ, converted GLB, native acceptance, and external artwork tooling.
+- [x] Include the canonical example, exact reproduction command, retained report date/version/policy, and license attribution.
+- [x] Verify seven correctly ordered sections per language, one shared widget, equivalent qualifications, and preservation of the original sections. Repeat registry/language tests and commit.
 
 ### Task 5: Verify production delivery and complete final reviews [size: M | risk: other | mechanical: false | clear_pattern: true | objectively_verifiable: true | concerns: none]
 
@@ -127,7 +127,7 @@
 
 **Acceptance criteria:** AC-01–AC-18.
 
-- [ ] Run the focused suite:
+- [x] Run the focused suite:
 
   ```sh
   npm run test -- components/projects components/MDXComponents.test.ts components/Image.test.ts components/mdx/Lang.test.tsx contexts/LanguageContext.test.tsx locales/locales.test.ts data/projects/usdzValidatorAssets.test.ts scripts/compressImagesTarget.test.ts components/home/ProjectsPreview.test.tsx layouts/ProjectLayout.test.tsx
@@ -135,12 +135,12 @@
 
   Expected: all selected tests pass.
 
-- [ ] Run `BASE_PATH=/portfolio npm run build`, retain its export for subpath review, then run `npm run build` for the final root export. Expected: both production builds pass with actual Contentlayer compilation and no hydration/custom-element errors.
-- [ ] Serve the actual exported files with clean-URL resolution; do not use `next start`. Use isolated Playwright 1.64.1 with installed Chrome for network assertions and screenshots. Keep QA tooling/artifacts outside public delivery files.
-- [ ] Test `/`, `/projects`, and the project page at **1440×900** and **390×844**, English/Italian, light/dark. Inspect actual cover crops, comparison layout, word counts, section order, controls, overflow, and responsive requests.
-- [ ] Capture network evidence before activation, after activation, and across language changes. Test blocked engine/model responses, HTTP-200 HTML model responses, timeout/retry, unavailable WebGL, navigation during loading, keyboard/touch controls, and reduced motion.
-- [ ] Inspect no-JavaScript output and root/subpath asset responses. Check MIME types plus file signatures/hashes; verify downloads match canonical bytes. Record Quick Look device smoke if available, otherwise mark device behavior unverified.
-- [ ] Recheck external-input and unrelated-image hashes. Ensure no stale cover files or temporary public assets remain.
+- [x] Run `BASE_PATH=/portfolio npm run build`, retain its export for subpath review, then run `npm run build` for the final root export. Expected: both production builds pass with actual Contentlayer compilation and no hydration/custom-element errors.
+- [x] Serve the actual exported files with clean-URL resolution; do not use `next start`. Use isolated Playwright 1.64.1 with installed Chrome for network assertions and screenshots. Keep QA tooling/artifacts outside public delivery files.
+- [x] Test `/`, `/projects`, and the project page at **1440×900** and **390×844**, English/Italian, light/dark. Inspect actual cover crops, comparison layout, word counts, section order, controls, overflow, and responsive requests.
+- [x] Capture network evidence before activation, after activation, and across language changes. Test blocked engine/model responses, HTTP-200 HTML model responses, timeout/retry, unavailable WebGL, navigation during loading, keyboard/touch controls, and reduced motion.
+- [x] Inspect no-JavaScript output and root/subpath asset responses. Check MIME types plus file signatures/hashes; verify downloads match canonical bytes. Record Quick Look device smoke if available, otherwise mark device behavior unverified.
+- [x] Recheck external-input and unrelated-image hashes. Ensure no stale cover files or temporary public assets remain.
 - [ ] Run `personal-workflows:code-review` once in integrated mode: specification review first, quality review second. Address findings and rerun affected checks. Record exact commands, outcomes, limitations, and review evidence; commit the verified result and workflow bookkeeping.
 
 ## 4. Acceptance traceability

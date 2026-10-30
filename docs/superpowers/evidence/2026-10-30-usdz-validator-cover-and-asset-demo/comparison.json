@@ -1,0 +1,211 @@
+{
+  "status": "pass",
+  "meshCount": 14,
+  "triangleCount": 35694,
+  "positionToleranceMeters": 1e-6,
+  "materialTolerance": 1e-6,
+  "meshes": [
+    {
+      "name": "RoundedCubeFrame",
+      "triangles": 21504,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "Blue",
+        "color": [0.02500000037252903, 0.1599999964237213, 0.7200000286102295],
+        "opacity": 1,
+        "roughness": 0.2199999988079071,
+        "metallic": 0.18000000715255737,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "BackGlass",
+      "triangles": 1456,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "Glass",
+        "color": [0.1599999964237213, 0.4300000071525574, 0.8799999952316284],
+        "opacity": 0.10000000149011612,
+        "roughness": 0.11999999731779099,
+        "metallic": 0.0,
+        "alphaMode": "BLEND",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "FrontGlass",
+      "triangles": 1456,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "Glass",
+        "color": [0.1599999964237213, 0.4300000071525574, 0.8799999952316284],
+        "opacity": 0.10000000149011612,
+        "roughness": 0.11999999731779099,
+        "metallic": 0.0,
+        "alphaMode": "BLEND",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "LeftGlass",
+      "triangles": 1456,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "Glass",
+        "color": [0.1599999964237213, 0.4300000071525574, 0.8799999952316284],
+        "opacity": 0.10000000149011612,
+        "roughness": 0.11999999731779099,
+        "metallic": 0.0,
+        "alphaMode": "BLEND",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "RightGlass",
+      "triangles": 1456,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "Glass",
+        "color": [0.1599999964237213, 0.4300000071525574, 0.8799999952316284],
+        "opacity": 0.10000000149011612,
+        "roughness": 0.11999999731779099,
+        "metallic": 0.0,
+        "alphaMode": "BLEND",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "BluePyramid",
+      "triangles": 1926,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "PyramidBlue",
+        "color": [0.03999999910593033, 0.2800000011920929, 0.8799999952316284],
+        "opacity": 1,
+        "roughness": 0.25,
+        "metallic": 0.07999999821186066,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "TealShelf",
+      "triangles": 1456,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "Teal",
+        "color": [0.014999999664723873, 0.5299999713897705, 0.5699999928474426],
+        "opacity": 1,
+        "roughness": 0.23999999463558197,
+        "metallic": 0.11999999731779099,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "GridX0",
+      "triangles": 588,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "GridCyan",
+        "color": [0.23000000417232513, 0.8799999952316284, 0.8600000143051147],
+        "opacity": 1,
+        "roughness": 0.30000001192092896,
+        "metallic": 0.019999999552965164,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "GridZ0",
+      "triangles": 588,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "GridCyan",
+        "color": [0.23000000417232513, 0.8799999952316284, 0.8600000143051147],
+        "opacity": 1,
+        "roughness": 0.30000001192092896,
+        "metallic": 0.019999999552965164,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "GridX1",
+      "triangles": 588,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "GridCyan",
+        "color": [0.23000000417232513, 0.8799999952316284, 0.8600000143051147],
+        "opacity": 1,
+        "roughness": 0.30000001192092896,
+        "metallic": 0.019999999552965164,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "GridZ1",
+      "triangles": 588,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "GridCyan",
+        "color": [0.23000000417232513, 0.8799999952316284, 0.8600000143051147],
+        "opacity": 1,
+        "roughness": 0.30000001192092896,
+        "metallic": 0.019999999552965164,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "GridX2",
+      "triangles": 588,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "GridCyan",
+        "color": [0.23000000417232513, 0.8799999952316284, 0.8600000143051147],
+        "opacity": 1,
+        "roughness": 0.30000001192092896,
+        "metallic": 0.019999999552965164,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "GridZ2",
+      "triangles": 588,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "GridCyan",
+        "color": [0.23000000417232513, 0.8799999952316284, 0.8600000143051147],
+        "opacity": 1,
+        "roughness": 0.30000001192092896,
+        "metallic": 0.019999999552965164,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    },
+    {
+      "name": "PaleBlueShelf",
+      "triangles": 1456,
+      "maxPositionErrorMeters": 0.0,
+      "material": {
+        "name": "PaleBlue",
+        "color": [0.3499999940395355, 0.6200000047683716, 0.9200000166893005],
+        "opacity": 1,
+        "roughness": 0.2800000011920929,
+        "metallic": 0.05999999865889549,
+        "alphaMode": "OPAQUE",
+        "doubleSided": false
+      }
+    }
+  ],
+  "appearanceDifferences": ["USD IOR is not exported by usd2gltf."],
+  "boundary": "External geometry/material comparison; not USDZ Validation Kit output.",
+  "sha256": {
+    "source": "89ee36e574d27275387367e67199a24ab7b4d356325f2b5f1fdfa60f1f2297a3",
+    "glb": "285dad3b84a224d1bcd50cec335be80ef258654d93b2d3f08ae3bd9776a46d73"
+  }
+}

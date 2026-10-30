@@ -1,0 +1,292 @@
+{
+  "engine": "599.90a062a01d537fed.js",
+  "engineFiles": [
+    "599.90a062a01d537fed.js",
+    "b536a0f1.772dd5579051f534.js",
+    "bd904a5c.f2deaf371b402482.js"
+  ],
+  "matrix": [
+    {
+      "name": "1440-en-light-detail",
+      "headings": [
+        "Overview",
+        "Motivation",
+        "From project illustration to validated 3D asset",
+        "System Architecture",
+        "Key Features",
+        "Verification",
+        "Current Limits"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-800w.webp",
+          "width": 720,
+          "height": 720
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-800w.webp",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth light"
+    },
+    {
+      "name": "1440-en-dark-detail",
+      "headings": [
+        "Overview",
+        "Motivation",
+        "From project illustration to validated 3D asset",
+        "System Architecture",
+        "Key Features",
+        "Verification",
+        "Current Limits"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-800w.webp",
+          "width": 720,
+          "height": 720
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-800w.webp",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth dark"
+    },
+    {
+      "name": "1440-it-light-detail",
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Dall’illustrazione del progetto a un asset 3D validato",
+        "Architettura del sistema",
+        "Funzionalità principali",
+        "Verifica",
+        "Limiti attuali"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-800w.webp",
+          "width": 720,
+          "height": 720
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-800w.webp",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth light"
+    },
+    {
+      "name": "1440-it-dark-detail",
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Dall’illustrazione del progetto a un asset 3D validato",
+        "Architettura del sistema",
+        "Funzionalità principali",
+        "Verifica",
+        "Limiti attuali"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-800w.webp",
+          "width": 720,
+          "height": 720
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-800w.webp",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth dark"
+    },
+    {
+      "name": "390-en-light-detail",
+      "headings": [
+        "Overview",
+        "Motivation",
+        "From project illustration to validated 3D asset",
+        "System Architecture",
+        "Key Features",
+        "Verification",
+        "Current Limits"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-640w.webp",
+          "width": 390,
+          "height": 390
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-640w.webp",
+          "width": 390,
+          "height": 390
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth light"
+    },
+    {
+      "name": "390-en-dark-detail",
+      "headings": [
+        "Overview",
+        "Motivation",
+        "From project illustration to validated 3D asset",
+        "System Architecture",
+        "Key Features",
+        "Verification",
+        "Current Limits"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-640w.webp",
+          "width": 390,
+          "height": 390
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-640w.webp",
+          "width": 390,
+          "height": 390
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth dark"
+    },
+    {
+      "name": "390-it-light-detail",
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Dall’illustrazione del progetto a un asset 3D validato",
+        "Architettura del sistema",
+        "Funzionalità principali",
+        "Verifica",
+        "Limiti attuali"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-640w.webp",
+          "width": 390,
+          "height": 390
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-640w.webp",
+          "width": 390,
+          "height": 390
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth light"
+    },
+    {
+      "name": "390-it-dark-detail",
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Dall’illustrazione del progetto a un asset 3D validato",
+        "Architettura del sistema",
+        "Funzionalità principali",
+        "Verifica",
+        "Limiti attuali"
+      ],
+      "images": [
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-640w.webp",
+          "width": 390,
+          "height": 390
+        },
+        {
+          "src": "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-640w.webp",
+          "width": 390,
+          "height": 390
+        }
+      ],
+      "theme": "__variable_c9b1fc __variable_8a1482 scroll-smooth dark"
+    }
+  ],
+  "checks": [
+    "24 route/viewport/language/theme views; no overflow; correct sections; responsive images; no engine/model requests",
+    "real Italian palette actions updated after locale switch",
+    "prefetch/scroll/locale activation boundary; self-hosted activation; loaded locale/camera identity; mouse/keyboard rotation and zoom; reset",
+    "engine passed",
+    "blocked-model passed",
+    "html-model passed",
+    "no-webgl passed",
+    "timeout passed",
+    "navigation passed",
+    "loading-language passed",
+    "reduced-motion passed",
+    "touch passed",
+    "root/subpath hydrated asset prefixes, bytes/signatures/MIME; no-JavaScript poster/details/downloads"
+  ],
+  "errors": [],
+  "network": {
+    "before": [
+      "http://127.0.0.1:4175/projects/usdz-validator",
+      "http://127.0.0.1:4175/_next/static/media/26d4368bf94c0ec4-s.p.woff2",
+      "http://127.0.0.1:4175/_next/static/media/98e207f02528a563-s.p.woff2",
+      "http://127.0.0.1:4175/_next/static/media/d3ebbfd689654d3a-s.p.woff2",
+      "http://127.0.0.1:4175/_next/static/media/f36144f235cd456e-s.p.woff2",
+      "http://127.0.0.1:4175/static/images/projects/usdz-validator.png",
+      "http://127.0.0.1:4175/_next/static/css/729a31fa58f7e5c0.css",
+      "http://127.0.0.1:4175/_next/static/css/4502ef17ea0206ed.css",
+      "http://127.0.0.1:4175/_next/static/css/21a242eaba62da51.css",
+      "https://analytics.umami.is/script.js",
+      "http://127.0.0.1:4175/static/images/projects/responsive/usdz-validator-1000w.webp",
+      "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-144w.webp",
+      "http://127.0.0.1:4175/_next/static/chunks/webpack-116fb68cf7d0c436.js",
+      "http://127.0.0.1:4175/_next/static/chunks/4bd1b696-409494caf8c83275.js",
+      "http://127.0.0.1:4175/_next/static/chunks/255-6ea7eafe4d165d26.js",
+      "http://127.0.0.1:4175/_next/static/chunks/main-app-21be83f3a100af06.js",
+      "http://127.0.0.1:4175/_next/static/chunks/619-9dc70a871c2e88d8.js",
+      "http://127.0.0.1:4175/_next/static/chunks/138-505ac2c165b05d54.js",
+      "http://127.0.0.1:4175/_next/static/chunks/912-3bf2afb03796a1b5.js",
+      "http://127.0.0.1:4175/_next/static/chunks/412-e968f527ecd405e6.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/layout-2f15fedf723bad00.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/error-395a3f367ae1d514.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/not-found-dc8710a9e90e4004.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/projects/error-2b82d2122e168aea.js",
+      "http://127.0.0.1:4175/_next/static/chunks/373-14b1aedc7c172747.js",
+      "http://127.0.0.1:4175/_next/static/chunks/662-d3ffde68fdf8c05c.js",
+      "http://127.0.0.1:4175/_next/static/chunks/554-02013b022e0dd067.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/projects/%5Bslug%5D/page-d95523d64cebda98.js",
+      "http://127.0.0.1:4175/_next/static/media/26d4368bf94c0ec4-s.p.woff2",
+      "http://127.0.0.1:4175/search.json",
+      "http://127.0.0.1:4175/_next/static/chunks/532-fef04353f56f09f6.js",
+      "http://127.0.0.1:4175/_next/static/chunks/100.aaf9ded874254424.js",
+      "http://127.0.0.1:4175/static/favicons/favicon-32x32.png",
+      "http://127.0.0.1:4175/index.txt?_rsc=1k562",
+      "http://127.0.0.1:4175/projects.txt?_rsc=1k562",
+      "http://127.0.0.1:4175/blog.txt?_rsc=1k562",
+      "http://127.0.0.1:4175/about.txt?_rsc=1k562",
+      "http://127.0.0.1:4175/contact.txt?_rsc=1k562",
+      "http://127.0.0.1:4175/_next/static/chunks/c15bf2b0-2ece6baba74be594.js",
+      "http://127.0.0.1:4175/_next/static/chunks/536-7e57b808781d6ff7.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/page-eac9e9fe2df59cbe.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/projects/page-915f02af257ba31c.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/blog/%5B...slug%5D/page-16ec06d162932f8d.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/blog/error-6ff4070810a00c96.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/blog/page-0651426f52f8a766.js",
+      "http://127.0.0.1:4175/_next/static/chunks/164-2e1713fcf4c5b91f.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/about/page-37298fedc60f5e1b.js",
+      "http://127.0.0.1:4175/_next/static/chunks/app/contact/page-d2e901a70b35cf38.js"
+    ],
+    "activated": [
+      "http://127.0.0.1:4175/_next/static/chunks/b536a0f1.772dd5579051f534.js",
+      "http://127.0.0.1:4175/_next/static/chunks/bd904a5c.f2deaf371b402482.js",
+      "http://127.0.0.1:4175/_next/static/chunks/599.90a062a01d537fed.js",
+      "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/illustration-800w.webp",
+      "http://127.0.0.1:4175/static/images/projects/usdz-validator-demo/responsive/poster-800w.webp",
+      "http://127.0.0.1:4175/static/models/usdz-validator/layered-cube/model.glb"
+    ],
+    "models": 1
+  },
+  "touch": {
+    "rotated": true,
+    "scrollBefore": 3660,
+    "scrollAfter": 7638
+  }
+}

@@ -11,6 +11,7 @@ describe('MDXComponents', () => {
     expect(components).toHaveProperty('Image')
     expect(components).toHaveProperty('TOCInline')
     expect(components).toHaveProperty('Lang')
+    expect(components).toHaveProperty('USDZAssetDemo')
   })
 
   it('overrides the html tags that need custom rendering', () => {
@@ -28,7 +29,7 @@ describe('MDXComponents', () => {
 
   it('declares exactly the expected set of mappings', () => {
     expect(Object.keys(components).sort()).toEqual(
-      ['Image', 'Lang', 'TOCInline', 'a', 'pre', 'table'].sort()
+      ['Image', 'Lang', 'TOCInline', 'USDZAssetDemo', 'a', 'pre', 'table'].sort()
     )
   })
 })

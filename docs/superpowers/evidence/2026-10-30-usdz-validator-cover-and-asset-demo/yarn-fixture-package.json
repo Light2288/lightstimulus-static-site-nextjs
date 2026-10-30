@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "dependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "kbar": "0.1.0-beta.48",
+    "pliny": "file:./pliny"
+  },
+  "overrides": {
+    "pliny": {
+      "kbar": "$kbar"
+    }
+  },
+  "resolutions": {
+    "**/kbar": "0.1.0-beta.48"
+  }
+}

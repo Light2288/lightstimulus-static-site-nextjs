@@ -18,6 +18,7 @@
     "generate-favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
+    "@google/model-viewer": "4.4.0",
     "@headlessui/react": "2.2.0",
     "@heroicons/react": "^2.2.0",
     "@icons-pack/react-simple-icons": "^13.8.0",
@@ -57,7 +58,9 @@
     "remark-github-blockquote-alert": "^1.2.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.0.5",
-    "unist-util-visit": "^5.0.0"
+    "three": "0.183.0",
+    "unist-util-visit": "^5.0.0",
+    "kbar": "0.1.0-beta.48"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -96,5 +99,13 @@
     "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "pliny": {
+      "kbar": "$kbar"
+    }
+  },
+  "resolutions": {
+    "**/kbar": "0.1.0-beta.48"
   }
 }

@@ -1,0 +1,6 @@
+{
+  rootVersion: '0.1.0-beta.48',
+  plinyVersion: '0.1.0-beta.48',
+  sameContext: true
+}
+PASS: actual Pliny modal renders under the shared KBar provider

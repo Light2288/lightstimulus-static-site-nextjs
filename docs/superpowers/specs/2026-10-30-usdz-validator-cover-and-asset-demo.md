@@ -10,7 +10,9 @@
 
 **Updated:** 2026-10-30
 
-**Stage:** 4 — Specification and separate plan explicitly approved; native implementation authorized.
+**Stage:** 4 — Implementation complete; verified and sequentially reviewed. Important finding fixed; one Minor deferred.
+
+**Completion evidence:** [Verification and limitations](../evidence/2026-10-30-usdz-validator-cover-and-asset-demo/verification.md).
 
 **Provenance:** User request in `/Users/davide/.codex/attachments/e4ad895a-4148-4fd0-8af7-2928e0ff33c5/Pasted text.txt`; repository inspection; native clarification selecting “Model-viewer (Recommended)”; scope/design proposal subsequently approved by the user's “confirmed” message on 2026-10-30. That confirmation authorizes this DRAFT only. The earlier `docs/superpowers/specs/2026-10-22-add-usdz-validator-project-design.md` and `docs/superpowers/specs/2026-10-26-update-usdz-validator-v0-2.md` describe previous increments and remain unchanged.
 

@@ -19,6 +19,8 @@
 **Execution method:** Native, selected through the interactive control.
 
 **Artifact:** Saved after leaving Plan mode, before product changes.
+
+**Implementation:** Complete; [verification, review and limitations](../evidence/2026-10-30-usdz-validator-cover-and-asset-demo/verification.md).
 **Provenance:** The separate plan presented in chat and reproduced by the user with “PLEASE IMPLEMENT THIS PLAN” on 2026-10-30. This message explicitly approves this plan. The specification received its separate earlier “approved” message. Both approvals authorize Stage 4. The approval/status and saved-artifact fields are lifecycle updates to the approved text.
 
 ## 1. Constraints and repository evidence
@@ -141,7 +143,7 @@
 - [x] Capture network evidence before activation, after activation, and across language changes. Test blocked engine/model responses, HTTP-200 HTML model responses, timeout/retry, unavailable WebGL, navigation during loading, keyboard/touch controls, and reduced motion.
 - [x] Inspect no-JavaScript output and root/subpath asset responses. Check MIME types plus file signatures/hashes; verify downloads match canonical bytes. Record Quick Look device smoke if available, otherwise mark device behavior unverified.
 - [x] Recheck external-input and unrelated-image hashes. Ensure no stale cover files or temporary public assets remain.
-- [ ] Run `personal-workflows:code-review` once in integrated mode: specification review first, quality review second. Address findings and rerun affected checks. Record exact commands, outcomes, limitations, and review evidence; commit the verified result and workflow bookkeeping.
+- [x] Run `personal-workflows:code-review` once in integrated mode: specification review first, quality review second. Address findings and rerun affected checks. Record exact commands, outcomes, limitations, and review evidence; commit the verified result and workflow bookkeeping.
 
 ## 4. Acceptance traceability
 

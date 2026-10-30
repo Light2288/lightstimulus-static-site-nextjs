@@ -3,7 +3,7 @@
 **Created:** 2026-10-30  
 **Updated:** 2026-10-30  
 **Slug:** `usdz-validator-cover-and-asset-demo`  
-**Status:** Verification passed; final sequential review pending
+**Status:** Complete; Important review finding fixed, one Minor deferred
 
 Specification: [approved increment](../../specs/2026-10-30-usdz-validator-cover-and-asset-demo.md). Plan: [approved implementation](../../plans/2026-10-30-usdz-validator-cover-and-asset-demo.md).
 
@@ -70,4 +70,6 @@ A real no-JavaScript check reproduced Next 15.5.12 exporting the complete projec
 
 3. Complete only this page’s resolved React stream boundaries at build time to satisfy no-JavaScript access. Cost if wrong: a Next/React stream-format change can stop the build; explicit rejection is preferable to publishing an invisible demonstration.
 
-Final sequential specification/quality review is pending.
+The [sequential final review record](reviews.md) contains the specification PASS, quality findings and exact package identities. The single Important finding (Yarn KBar context) was independently reproduced and fixed RED→GREEN with a fresh dependency fixture; the full suite passed 86 / 1,406 afterward. npm dry-run also passed. Root/subpath export and browser evidence above cover the final product code; the subsequent fix adds only Yarn resolution metadata and does not alter the npm dependency tree or emitted viewer code.
+
+**Deferred Minor:** running postbuild alone twice against the same completed export can fail. Use the normal `npm run build`, which creates a fresh export before postbuild. This limitation was not folded into the permitted Important-finding fix pass.

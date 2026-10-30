@@ -1,0 +1,284 @@
+---
+title:
+  en: Building a USDZ validator that admits what it cannot check
+  it: Costruire un validator USDZ che dichiara i propri limiti
+summary:
+  en: >
+    I built a Swift USDZ validator and had to decide what success means
+    when part of an asset remains uninspected. Five real models helped
+    separate defects, coverage gaps, and CI policy.
+  it: >
+    Ho costruito un validator USDZ in Swift e ho dovuto definire cosa significhi
+    superare i controlli quando una parte resta inesplorata. Cinque modelli reali
+    mi hanno aiutato a separare difetti, coverage e policy di CI.
+date: 2026-10-23
+lastmod: 2026-10-23
+topic_key: building-a-usdz-validator-that-admits-what-it-cannot-check
+tags:
+  - id: swift
+    label:
+      en: Swift
+      it: Swift
+  - id: usdz
+    label:
+      en: USDZ
+      it: USDZ
+  - id: validation
+    label:
+      en: Validation
+      it: Validazione
+  - id: cli
+    label:
+      en: CLI
+      it: CLI
+draft: false
+images: []
+---
+
+<Lang value="en">
+
+I built a USDZ validator that can inspect an asset, find no errors, and still return a nonzero exit code.
+
+This is intentional. Explaining it took rather more work than I expected (a recurring feature of projects I initially describe as “a small command-line tool”).
+
+The project is [USDZ Validation Kit](https://github.com/Light2288/usdz-validator), a local Swift library and CLI for checking USDZ packaging, package-local references, and delivery budgets. The interesting part of building it was deciding what a successful check actually means when some of the asset remains beyond the inspector’s reach.
+
+A package can have a sound container, sensible sizes, and readable texture headers while its binary scene layer contains dependencies I have not inspected. Returning an unconditional success would collapse two different observations: I found no blocking defects, and I completed the relevant checks.
+
+I needed the report to preserve both.
+
+## Starting with the bytes I could actually inspect
+
+For this first version, I kept native inspection inside a deliberately narrow boundary. It reads one stable regular file. It does not extract the archive, decompress entries, decode image pixels, load a USD stage, resolve references against the host filesystem, or call the network.
+
+USD describes scenes, including their geometry, materials, and references to other assets. A USDZ package collects a scene and its resources into an archive; its layers can be text USDA or binary USDC.
+
+That leaves plenty of useful work at the package level.
+
+USDZ packaging gives the validator concrete things to inspect: ZIP records, stored payloads, entry names, offsets, checksums, and alignment. My supported container layout is classic single-disk ZIP with stored regular files and optional empty directories. Payloads must meet the 64-byte alignment requirement.
+
+I check that the central and local records agree, that ranges and sizes are consistent, and that the stored bytes match their CRC-32 checksums. I also build an in-memory package namespace so duplicate names, unsafe paths, and file/directory conflicts have somewhere to be noticed.
+
+The namespace follows exact, case-sensitive UTF-8 names. It does not helpfully search the disk for a missing texture or decide that two differently normalized names probably mean the same thing. That sort of helpfulness would make the result depend on the machine running the check, which is an impressive way to make CI confusing before breakfast.
+
+These checks establish facts about the package. They do not establish that the scene inside it makes sense.
+
+A correct checksum says the stored bytes match the recorded checksum. It says nothing about whether those bytes describe a valid material, a usable mesh, or even a valid embedded file. Similarly, recognizing a `PXR-USDC` header identifies a binary layer; it does not mean I have parsed that layer.
+
+Keeping those claims separate became the central design constraint.
+
+Text layers allowed a little more inspection. The validator lexically scans recognized USDA layers for supported asset-reference forms, ignoring apparent references inside comments and ordinary strings. Supported relative references can then be checked against the package namespace.
+
+But this is still lexical inspection, not a USD grammar parser or composition engine. It scans recognized layers even when they might be inactive or unreferenced in a composed scene. When it encounters an expression or resolver form outside its supported model, the result is partial coverage. Inventing a missing-file error would turn “I cannot resolve this” into “this target does not exist.”
+
+I was trying to build a validator, so manufacturing evidence seemed like an unfortunate place to economize.
+
+## Three answers instead of one green light
+
+I ended up treating findings, coverage, and the acceptance decision as separate parts of the result.
+
+Findings record what the validator observed: a malformed archive record, an unsafe path, a budget warning, or a limitation. Coverage records which inspection work was complete and where gaps remain. The gate decides whether that result is acceptable under the selected policy.
+
+That distinction matters most for binary USDC layers. Native reference inspection is incomplete for every such layer in this version. A package can pass the native container and budget checks while retaining that gap.
+
+By default, an otherwise acceptable package with incomplete native coverage exits with code `2`. That does not mean the model is broken. It means the default gate did not accept the uninspected portion.
+
+There is an explicit `--allow-incomplete` option for workflows willing to accept native gaps. With it, the same otherwise acceptable asset can exit with code `0`, while the report still says inspection is incomplete.
+
+For example, these fields can coexist in the JSON report (this is a shortened projection, not a complete report):
+
+```json
+{
+  "validationStatus": "incomplete",
+  "gateDecision": "pass",
+  "acceptedIncomplete": true
+}
+```
+
+The option changes the acceptance policy. The missing inspection remains missing, and the report keeps that fact available to the next consumer. An unavailable or unsuccessful requested checker also remains blocking; the flag only accepts native gaps.
+
+I wanted a CI job to be able to accept a known limitation without forcing every downstream reader to rediscover it from a footnote. Someone might accept that gap for a packaging check and require a different inspection step before delivery. The machine-readable result needs enough information for both decisions.
+
+There is a similar distinction in the budget checks. Configurable warnings express delivery preferences, such as encoded texture sizes or dimensions. Fixed safety limits bound what the inspector itself will attempt.
+
+Disabling a warning threshold does not disable those safety limits. And counting encoded texture bytes does not produce an estimate of decoded GPU memory. The dimension checks read supported image headers; they do not decode the pixels.
+
+I kept having to resist the temptation to let a useful measurement acquire a more impressive job title.
+
+The report also carries these distinctions into JSON and SARIF. Optional external findings remain separate from native findings and coverage. Default output omits absolute local paths and raw tool diagnostics, so a report can be shared without automatically including a small guided tour of my filesystem.
+
+## Five real assets and one useful disagreement
+
+The documented local verification on October 21 made the coverage model much less abstract.
+
+I tested five files supplied as Apple gallery downloads. Their exact download URLs and redistribution terms were not verified, so the assets and raw local diagnostics stayed out of the repository. The [verification record](https://github.com/Light2288/usdz-validator/blob/main/docs/verification/apple-assets.md) describes the observations and their limits.
+
+All five originals had no detected native errors or budget warnings. Container structure, entry safety, byte budgets, and texture dimensions were complete. Each still carried the binary-reference limitation.
+
+The native default exit was `2` for all five. With `--allow-incomplete`, all five exited with `0`.
+
+That was the expected behavior, but it also exposed an obvious question: what happens if I ask a separate USD checker to examine the asset?
+
+The optional adapter invokes the installed `/usr/bin/usdchecker`, pinned to the supported Apple USD Tools version, which reported `0.25.11` during those tests. It requires an explicit request. There is no PATH search, automatic download, or caller-selected executable.
+
+This is a different inspection boundary. The external tool is not filesystem- or network-sandboxed by the adapter, so I restrict that path to trusted inputs. The native package-local constraints cannot be silently advertised as constraints on another program.
+
+On four of the five assets, the checker reported no failure. Native coverage still remained incomplete.
+
+On the Fender model, the checker reported a material-subset failure. A follow-up read-only diagnostic found 149,979 mesh faces, with 149,002 uniquely covered by the relevant material subsets. That left 977 uncovered faces in a family authored as a partition, which requires complete, nonoverlapping coverage.
+
+There were no duplicate or out-of-range subset indices in that count. The uncovered faces supported the checker’s complaint.
+
+This established an authored material-subset defect. It did not establish its visual impact, or whether a particular renderer would display the model acceptably. I had evidence for a specific structural problem, and no reason to promote it into a review of the rendered guitar.
+
+The native validator had not detected that composition-level issue. It had reported its own limited inspection correctly. The external checker contributed a separate finding with its own provenance.
+
+For the four assets without a checker-reported failure, requesting the checker still produced exit `2` under the default policy: native coverage remained incomplete. Adding `--allow-incomplete` permitted exit `0`.
+
+For the Fender asset, the checker failure produced exit `1` under both policies.
+
+That last behavior was essential. An option accepting native coverage gaps must not become a general-purpose “please make the pipeline green” switch (I can already achieve that by removing the pipeline, at considerably lower maintenance cost).
+
+The same verification used three deliberately damaged copies of another asset: one with the ZIP end record removed, one with a corrupted texture byte and unchanged checksum, and one with an unsafe entry path. All three remained blocking errors with or without `--allow-incomplete`. The originals stayed unchanged.
+
+Those tests gave the flag a concrete boundary: accept a known gap, preserve actual failures.
+
+## Leaving the unfinished part visible
+
+The optional checker was useful, but its success could not honestly complete my native USDC reference inspection. It ran a different implementation under a different boundary. Even a successful invocation could only contribute its own result.
+
+That is why the reports retain native coverage and external provenance separately. A checker that reports no failure, a native inspector that cannot examine binary dependencies, and a gate that accepts the combination can all describe the same run without contradicting each other.
+
+It also shaped the next work. Binary USDC dependency inspection remains outside this version; investigating it is not the same as having shipped it. I would rather add a real capability later than broaden the current claim because the roadmap looks promising.
+
+The verification claims need the same restraint. The project records passing required checks on the verified current host, while the broader platform matrix remains unverified. Repeated runs and relocation checks establish determinism in that tested environment. They do not establish identical output on every machine I have not used.
+
+For the current CLI, the practical contract is straightforward: exit `0` means the configured gate accepted the result. The report explains the findings, the remaining gaps, and any external contribution behind that decision.
+
+I can put that into CI and choose a policy deliberately. If I accept incomplete native reference inspection today, it will still be written in the report tomorrow, when I have forgotten why I added that flag.
+
+</Lang>
+
+<Lang value="it">
+
+Ho costruito un validator USDZ capace di analizzare un asset, non trovare errori e restituire comunque un exit code diverso da zero.
+
+È voluto. Spiegarlo ha richiesto più lavoro del previsto (succede con una regolarità mostruosa ai progetti che all'inizio definisco “una piccola utility da riga di comando”).
+
+Il progetto si chiama [USDZ Validation Kit](https://github.com/Light2288/usdz-validator): una libreria Swift e una CLI locali per controllare il packaging USDZ, i riferimenti interni al package e i budget per la distribuzione degli asset. La parte interessante è stata decidere cosa significhi davvero superare un controllo quando una parte dell'asset resta fuori dalla portata del validator.
+
+Un package può avere un container integro, dimensioni ragionevoli e header delle texture leggibili, mentre il layer binario della scena contiene dipendenze che non ho analizzato. Dichiarare il successo senza riserve confonderebbe due osservazioni diverse: non ho trovato difetti bloccanti e ho completato i controlli pertinenti.
+
+Nel report dovevano rimanere entrambe.
+
+## Partire dai byte che potevo davvero controllare
+
+Per questa prima versione ho tenuto l'analisi nativa entro confini precisi. Legge un singolo file regolare e stabile. Non estrae l'archivio, non decomprime le entry, non decodifica i pixel delle immagini, non carica uno stage USD, non risolve riferimenti sul filesystem della macchina e non accede alla rete.
+
+USD descrive scene, comprese geometrie, materiali e riferimenti ad altri asset. Un package USDZ raccoglie una scena e le sue risorse in un archivio; i layer possono essere testuali, in formato USDA, oppure binari, in formato USDC.
+
+Già a livello di package resta parecchio lavoro utile.
+
+Il packaging USDZ offre elementi concreti da controllare: record ZIP, payload memorizzati, nomi delle entry, offset, checksum e allineamento. Il layout supportato è quello ZIP classico su disco singolo, con file regolari memorizzati senza compressione ed eventuali directory vuote. I payload devono rispettare l'allineamento a 64 byte.
+
+Controllo che i record centrali e locali concordino, che intervalli e dimensioni siano coerenti e che i byte memorizzati corrispondano ai rispettivi checksum CRC-32. Costruisco anche un namespace del package in memoria, dove posso individuare nomi duplicati, percorsi non sicuri e conflitti tra file e directory.
+
+Il namespace usa i nomi UTF-8 esatti e distingue maiuscole e minuscole. Non va premurosamente a cercare sul disco una texture mancante, né decide che due nomi normalizzati diversamente probabilmente indichino la stessa cosa. Una premura del genere farebbe dipendere il risultato dalla macchina su cui gira il controllo, un modo spettacolare di rendere incomprensibile la CI prima ancora del caffè.
+
+Questi controlli stabiliscono fatti sul package. Non stabiliscono se la scena al suo interno abbia senso.
+
+Un checksum corretto dice che i byte memorizzati corrispondono al checksum registrato. Non dice se quei byte descrivano un materiale valido, una mesh utilizzabile o anche solo un file incorporato valido. Allo stesso modo, riconoscere un header `PXR-USDC` identifica un layer binario; non significa averne fatto il parsing.
+
+Tenere separate queste affermazioni è diventato il vincolo centrale del progetto.
+
+Con i layer testuali potevo spingermi un po' oltre. Il validator esegue una scansione lessicale dei layer USDA riconosciuti, cercando le forme supportate di riferimenti ad asset e ignorando quelli che sembrano riferimenti dentro commenti e normali stringhe. I riferimenti relativi supportati possono poi essere verificati nel namespace del package.
+
+Resta però un'analisi lessicale, senza un parser della grammatica USD o un motore di composizione. La scansione include i layer riconosciuti anche quando potrebbero essere inattivi o non referenziati nella scena composta. Se incontra un'espressione o una forma di resolver fuori dal modello supportato, la coverage risulta parziale. Inventarsi un errore di file mancante trasformerebbe “non riesco a risolvere questo riferimento” in “la destinazione non esiste”.
+
+Stavo cercando di costruire un validator. Risparmiare lavoro fabbricando prove mi sembrava una scelta quantomeno discutibile.
+
+## Tre risposte invece di una spunta verde
+
+Alla fine ho separato tre aspetti del risultato: i finding, la coverage e la decisione di accettazione.
+
+I finding registrano ciò che il validator ha osservato: un record dell'archivio malformato, un percorso non sicuro, un warning sui budget o una limitazione. La coverage indica quali controlli sono stati completati e dove restano lacune. Il gate decide se quel risultato sia accettabile secondo la policy scelta.
+
+La distinzione conta soprattutto per i layer binari USDC. In questa versione, l'analisi nativa dei riferimenti è incompleta per ognuno di questi layer. Un package può superare i controlli nativi sul container e sui budget mantenendo quella lacuna.
+
+Per impostazione predefinita, un package altrimenti accettabile ma con coverage nativa incompleta termina con exit code `2`. Non significa che il modello sia rotto. Significa che il gate predefinito non ha accettato la parte rimasta senza controllo.
+
+Per i workflow disposti ad accettare queste lacune c'è l'opzione esplicita `--allow-incomplete`. Con quel flag, lo stesso asset altrimenti accettabile può terminare con exit code `0`, mentre il report continua a dichiarare che l'analisi è incompleta.
+
+Per esempio, questi campi possono coesistere nel report JSON (è un estratto ridotto, non un report completo):
+
+```json
+{
+  "validationStatus": "incomplete",
+  "gateDecision": "pass",
+  "acceptedIncomplete": true
+}
+```
+
+L'opzione cambia la policy di accettazione. Il controllo mancante resta mancante e il report conserva questa informazione per chi lo userà dopo. Anche un checker richiesto ma non disponibile, o che non conclude con successo, resta bloccante: il flag accetta soltanto le lacune native.
+
+Volevo che un job di CI potesse accettare un limite noto senza costringere chi legge il risultato a riscoprirlo in una nota a piè di pagina. Una lacuna può essere accettabile per un controllo sul packaging e richiedere un'analisi diversa prima della consegna. Il risultato leggibile dal software deve contenere abbastanza informazioni per entrambe le decisioni.
+
+Una distinzione simile vale per i controlli sui budget. I warning configurabili esprimono preferenze per gli asset da distribuire, per esempio sulle dimensioni delle texture codificate o sulla loro risoluzione. I limiti di sicurezza fissi stabiliscono invece fin dove può spingersi il validator.
+
+Disabilitare una soglia di warning non disabilita quei limiti di sicurezza. E contare i byte delle texture codificate non produce una stima della memoria GPU occupata dopo la decodifica. I controlli sulle dimensioni leggono gli header dei formati supportati; non decodificano i pixel.
+
+Ho dovuto resistere più volte alla tentazione di promuovere una misura utile a una carica per cui non aveva le competenze (con tanto di targhetta sulla porta e tre persone in attesa di un numero inventato).
+
+Queste distinzioni restano anche nei report JSON e SARIF. Gli eventuali finding esterni sono separati dai finding e dalla coverage nativi. L'output predefinito omette i percorsi locali assoluti e la diagnostica grezza dei tool, così posso condividere un report senza allegare una visita guidata al mio filesystem.
+
+## Cinque asset reali e un disaccordo utile
+
+La verifica locale documentata del 21 ottobre ha reso il modello di coverage molto meno astratto.
+
+Ho provato cinque file ricevuti come download dalla galleria Apple. Gli URL esatti di download e le condizioni di redistribuzione non erano stati verificati, quindi asset e diagnostica locale grezza sono rimasti fuori dal repository. Il [resoconto della verifica](https://github.com/Light2288/usdz-validator/blob/main/docs/verification/apple-assets.md) descrive le osservazioni e i relativi limiti.
+
+Su tutti e cinque gli originali, i controlli nativi non hanno rilevato errori o warning sui budget. I controlli su struttura del container, sicurezza delle entry, budget in byte e dimensioni delle texture erano completi. Restava, per ciascuno, la limitazione sui riferimenti binari.
+
+L'exit code nativo predefinito era `2` per tutti e cinque. Con `--allow-incomplete`, tutti e cinque terminavano con `0`.
+
+Era il comportamento previsto, ma portava a una domanda abbastanza ovvia: cosa succede se chiedo a un checker USD separato di esaminare l'asset?
+
+L'adapter opzionale invoca `/usr/bin/usdchecker` già installato, vincolandolo alla versione supportata di Apple USD Tools, che durante quelle prove riportava `0.25.11`. Serve una richiesta esplicita. Non cerca eseguibili nel PATH, non scarica nulla e non permette di scegliere un eseguibile arbitrario.
+
+Qui i confini dell'analisi cambiano. L'adapter non isola il tool esterno dal filesystem o dalla rete tramite sandbox, quindi riservo questa modalità a input fidati. I vincoli nativi che limitano l'analisi al package non possono diventare, per tacito accordo, garanzie sul comportamento di un altro programma.
+
+Su quattro asset su cinque, il checker non ha segnalato failure. La coverage nativa è rimasta comunque incompleta.
+
+Sul modello Fender, il checker ha segnalato un errore nei subset dei materiali. Un controllo diagnostico successivo, in sola lettura, ha contato 149.979 facce della mesh, di cui 149.002 coperte univocamente dai subset interessati. Restavano 977 facce scoperte in una famiglia dichiarata come partizione, che richiede una copertura completa e senza sovrapposizioni.
+
+Il conteggio non ha trovato indici duplicati o fuori intervallo nei subset. Le facce scoperte confermavano la segnalazione del checker.
+
+Questo dimostrava un difetto nella definizione dei subset dei materiali. Non dimostrava quale fosse l'impatto visivo, né se un certo renderer mostrasse il modello in modo accettabile. Avevo prove di un problema strutturale preciso, senza motivo di trasformarle in una recensione della chitarra renderizzata.
+
+Il validator nativo non aveva individuato quel problema a livello di composizione. Aveva descritto correttamente la propria analisi limitata. Il checker esterno aveva aggiunto un finding distinto, con la propria provenienza.
+
+Per i quattro asset senza failure segnalate dal checker, richiederne l'esecuzione produceva ancora exit code `2` con la policy predefinita: la coverage nativa restava incompleta. Aggiungendo `--allow-incomplete` si otteneva exit code `0`.
+
+Per l'asset Fender, la failure del checker produceva exit code `1` con entrambe le policy.
+
+Quest'ultimo comportamento era essenziale. Un'opzione che accetta lacune nella coverage nativa non deve diventare un interruttore universale “fammi diventare verde la pipeline” (per quello posso già cancellare la pipeline, con costi di manutenzione sensibilmente inferiori).
+
+Nella stessa verifica ho usato tre copie deliberatamente danneggiate di un altro asset: una senza il record finale ZIP, una con un byte di una texture corrotto e checksum invariato, una con un percorso non sicuro per un'entry. Tutte e tre continuavano a produrre errori bloccanti, con o senza `--allow-incomplete`. Gli originali sono rimasti intatti.
+
+Quelle prove hanno dato al flag un confine concreto: accettare una lacuna nota, mantenendo bloccanti gli errori effettivi.
+
+## Lasciare visibile la parte incompleta
+
+Il checker opzionale è stato utile, ma il suo successo non poteva completare un'analisi nativa dei riferimenti USDC che non avevo implementato. Eseguiva un'implementazione diversa, entro confini diversi. Anche un'esecuzione conclusa con successo poteva aggiungere soltanto il proprio risultato.
+
+Per questo i report conservano separatamente la coverage nativa e la provenienza dei risultati esterni. Un checker che non segnala failure, un validator nativo che non sa analizzare le dipendenze binarie e un gate che accetta questa combinazione possono descrivere la stessa esecuzione senza contraddirsi.
+
+La distinzione ha orientato anche il lavoro successivo. L'analisi delle dipendenze binarie USDC resta fuori da questa versione; studiarla non equivale ad averla già consegnata. Preferisco aggiungere una capacità reale più avanti, anziché allargare le promesse attuali perché la roadmap sembra incoraggiante.
+
+Serve la stessa misura nel descrivere le verifiche. Il progetto documenta il superamento dei controlli richiesti sulla macchina verificata, mentre la matrice di piattaforme più ampia resta da verificare. Esecuzioni ripetute e prove con il file spostato in un altro percorso dimostrano il determinismo nell'ambiente testato. Non dimostrano output identici su tutte le macchine che non ho usato.
+
+Per la CLI attuale, il contratto pratico è semplice: exit code `0` significa che il gate configurato ha accettato il risultato. Il report spiega i finding, le lacune rimaste e gli eventuali contributi esterni che hanno portato a quella decisione.
+
+Posso inserirlo in CI e scegliere una policy consapevolmente. Se oggi accetto un'analisi nativa incompleta dei riferimenti, domani sarà ancora scritto nel report, quando io avrò già dimenticato perché avevo aggiunto quel flag.
+
+</Lang>

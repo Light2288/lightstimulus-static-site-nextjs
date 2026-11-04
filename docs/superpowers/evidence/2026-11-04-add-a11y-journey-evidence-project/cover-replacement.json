@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-05",
+  "source": "/Users/davide/Downloads/Firefly.png",
+  "sourceWidth": 2323,
+  "sourceHeight": 820,
+  "sourceSha256": "ee573f3a2b85a879150a77cb5c40b6ba57fa3d401b0ad848496ab4404f50e734",
+  "proportionPreserved": true,
+  "cropApplied": false,
+  "sourceAndBackupsUnchanged": true,
+  "oldCoverAndDerivativesRemovedBeforeRegeneration": true,
+  "allElevenAssetsRegenerated": true,
+  "unchangedBaselineIdentities": 95,
+  "assets": [
+    {
+      "path": "public/static/images/projects/a11y-journey-evidence.png",
+      "width": 1000,
+      "height": 353,
+      "format": "png",
+      "bytes": 90745,
+      "sha256": "d28b198fe5169f95f59980797d736e3d1e11c0f3c5c4c7a84fba2eabe7ba4030"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-1000w.png",
+      "width": 1000,
+      "height": 353,
+      "format": "png",
+      "bytes": 90745,
+      "sha256": "d28b198fe5169f95f59980797d736e3d1e11c0f3c5c4c7a84fba2eabe7ba4030"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-1000w.webp",
+      "width": 1000,
+      "height": 353,
+      "format": "webp",
+      "bytes": 14256,
+      "sha256": "ac61676acc28c1ea3fe7c54bbde455bbc9c6c5e4998e0e0c92250ac796b64e1d"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-144w.png",
+      "width": 144,
+      "height": 51,
+      "format": "png",
+      "bytes": 4973,
+      "sha256": "05554cc313c3f6f5ae2e4d40989122b8bc66f7d42b69977761a01fef8f992438"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-144w.webp",
+      "width": 144,
+      "height": 51,
+      "format": "webp",
+      "bytes": 1382,
+      "sha256": "f54bc52c64a4f202b4e4814227279417c0f494dc3e8d215def22db0f9271d087"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-200w.png",
+      "width": 200,
+      "height": 71,
+      "format": "png",
+      "bytes": 7425,
+      "sha256": "7c8fa95b65d620cb820f7f0210509f8fd764c8e705315661b8d00fa9cd56fb10"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-200w.webp",
+      "width": 200,
+      "height": 71,
+      "format": "webp",
+      "bytes": 2008,
+      "sha256": "07ee9876bb07db597e6017115628c8bd9f25af37a1be77fb619e34aae2ce12cc"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-640w.png",
+      "width": 640,
+      "height": 226,
+      "format": "png",
+      "bytes": 42149,
+      "sha256": "ec45b75291d1a3e7e0d57bc3301f94c0153e5d7657ade457329bc533b02bec1a"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-640w.webp",
+      "width": 640,
+      "height": 226,
+      "format": "webp",
+      "bytes": 8820,
+      "sha256": "137cffeb3d4e5c600d688d40015e6f870bee747ccfa1971c3faa831507d7eed7"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-800w.png",
+      "width": 800,
+      "height": 282,
+      "format": "png",
+      "bytes": 62904,
+      "sha256": "c9da54c5c5889bb7e8905de488409fd033d9843033fda65d2b67e30afe18d822"
+    },
+    {
+      "path": "public/static/images/projects/responsive/a11y-journey-evidence-800w.webp",
+      "width": 800,
+      "height": 282,
+      "format": "webp",
+      "bytes": 13568,
+      "sha256": "a5f46ea821f1c70f957c6bfbcf16036d045a634bf32d6755db2db4e2bdb428c9"
+    }
+  ],
+  "allExportedAssetsMatch": true,
+  "browserViewsVerified": 24,
+  "browserPageErrors": 0,
+  "browserFailedImageResponses": 0,
+  "visualInspection": ["desktop homepage", "mobile listing", "Italian dark mobile detail"]
+}

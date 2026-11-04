@@ -18,11 +18,11 @@ Authoritative documentation, released README, GitHub release and npm registry we
 
 ## Artwork
 
-The user supplied `/Users/davide/Downloads/Glossy Keyboard Workflow Dashboard.png`, a 1918 × 820 PNG with SHA-256 `6679c4400ad4ef6a8eabe1392219d9fc95228ec17413ef263307838fa3689822`.
+On 2026-11-05, the user replaced the initially supplied illustration with `/Users/davide/Downloads/Firefly.png` and explicitly instructed that its proportions and extra side margins be preserved so the central subject remains visible in the project cards. This is a replacement execution input within the already approved artwork scope; the shared-metadata scope amendment remains unapproved.
 
-Its wide composition already matched the existing treatment, so no replacement generation or destructive composition change was needed. The untouched original is retained in the ignored source backup, separately from the compression backup. The primary cover is 1000 × 428 pixels, 116,988 bytes. All ten PNG/WebP derivatives decode successfully at widths 144, 200, 640, 800 and 1000. The source Downloads file is unchanged.
+The new source is 2323 × 820 pixels, SHA-256 `ee573f3a2b85a879150a77cb5c40b6ba57fa3d401b0ad848496ab4404f50e734`. No crop, padding or proportion change was applied. The main cover is proportionally resized to 1000 × 353 pixels, 90,745 bytes, with ordinary integer-pixel rounding. All ten PNG/WebP derivatives decode successfully at widths 144, 200, 640, 800 and 1000 and the corresponding proportional heights. The Downloads source and both current ignored backups have the source's exact hash.
 
-The compressor processed one new image and skipped eight already-backed-up images. All 95 baseline project-source/artwork file hashes remain unchanged. Desktop and mobile inspection shows the keyboard/focus sequence remains recognizable in the existing crops. The homepage's narrower desktop card crops the edges of the illustrative panels while retaining the keys and focus sequence.
+The previous cover, ten previous derivatives and two previous active backups were removed before copying the new source and regenerating the same filenames. The compressor processed one image and skipped eight other already-backed-up images. All eleven replacement asset hashes differ from their predecessors, and the exported copies exactly match the new assets. All 95 baseline project-source/artwork identities remain unchanged. [Replacement evidence](cover-replacement.json) records the source, dimensions, identities and preservation checks. Desktop and mobile screenshots below are refreshed for this artwork.
 
 ## Commands and observations
 
@@ -38,6 +38,8 @@ The compressor processed one new image and skipped eight already-backed-up image
 | Export browser verification                                                                                                                                                                                                                                                                                                                         | 0    | 24 views, both-language navigation flows, no page errors or failed image responses               |
 
 Full command logs and temporary QA scripts/runtime remain in this plan's ignored execution workspace. The browser runtime was isolated Playwright 1.64.1 with installed Chrome; repository dependency files were unchanged.
+
+The image replacement reran compression, the same focused command (17 suites / 304 tests), the full suite (86 suites / 1,406 tests), production build, actual-output inspection and the complete 24-view export browser matrix with both-language navigation flows. Tests, build and browser checks passed. Production inspection still records only the previously identified `CreativeWork.url` failure; all eleven exported replacement assets match their source files. Refreshed desktop homepage, mobile listing and Italian dark mobile detail screenshots were visually inspected: the keyboard/focus sequence remains visible through the existing component crops, with the full-width supplied margins retained in every underlying asset. No component presentation was changed.
 
 The build retains existing warnings about obsolete Next configuration, custom headers with static export, deprecated `punycode`, seven undeclared blog `topic_key` fields, and optional `@emotion/is-prop-valid` resolution. These did not prevent the configured build from passing. No unrelated remediation was performed.
 

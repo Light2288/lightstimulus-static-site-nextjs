@@ -1,0 +1,195 @@
+{
+  "origin": "http://127.0.0.1:3002",
+  "theme": "light",
+  "views": [
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "status": 200,
+      "summaryMatches": true,
+      "pendingSentencesAbsent": true,
+      "coverLoaded": true,
+      "horizontalOverflow": false
+    }
+  ],
+  "flows": [
+    {
+      "width": 1440,
+      "startingLanguage": "en",
+      "languageSwitch": true,
+      "backLink": true,
+      "projectLink": true
+    },
+    {
+      "width": 1440,
+      "startingLanguage": "it",
+      "languageSwitch": true,
+      "backLink": true,
+      "projectLink": true
+    },
+    {
+      "width": 390,
+      "startingLanguage": "en",
+      "languageSwitch": true,
+      "backLink": true,
+      "projectLink": true
+    },
+    {
+      "width": 390,
+      "startingLanguage": "it",
+      "languageSwitch": true,
+      "backLink": true,
+      "projectLink": true
+    }
+  ],
+  "pageErrors": [],
+  "failedImages": [],
+  "status": "passed"
+}

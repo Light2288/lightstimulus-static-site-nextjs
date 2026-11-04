@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "removedSentences": 6,
+  "summary": {
+    "en": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles.",
+    "it": "Strumento sperimentale v0.1.0 per raccogliere evidenze consultabili su tastiera e focus nei percorsi di test nativi di Playwright Test, con osservazioni entro limiti espliciti, acquisizioni in caso di errore e report Markdown portabili."
+  },
+  "headings": {
+    "en": 7,
+    "it": 7
+  },
+  "unchangedBaselineFiles": 848,
+  "exactDeletionOnly": true
+}

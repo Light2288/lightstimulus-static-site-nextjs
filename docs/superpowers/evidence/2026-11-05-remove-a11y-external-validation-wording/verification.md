@@ -29,7 +29,7 @@ The complete source equals its baseline with exactly the six approved sentence r
 | Actual production-output inspection                                                                                                                                                                                                    | 0           | Updated descriptions and two localized search entries; removed variants absent; 848 baseline identities unchanged; all eleven exported cover files byte-identical to their preserved source assets |
 | Export browser checks                                                                                                                                                                                                                  | 0           | Twelve views and four language/navigation flows passed; zero page errors or failed image responses                                                                                                 |
 
-The installed Prettier CLI checks the changed MDX, approved artifacts and this document; Git whitespace checks and existing pre-commit hooks remain required before each relevant commit. Their results are recorded in the final review record when delivery closes.
+The exact Step 7 command, `npx prettier --check data/projects/a11y-journey-evidence.mdx docs/superpowers/specs/2026-11-05-remove-a11y-external-validation-wording.md docs/superpowers/plans/2026-11-05-remove-a11y-external-validation-wording.md docs/superpowers/evidence/2026-11-05-remove-a11y-external-validation-wording/verification.md`, exited 0 and reported “All matched files use Prettier code style!” `git diff --check` also exited 0. Both checks ran before implementation commit `aea701b`. Its existing pre-commit hook completed lint-staged and Prettier for all six applicable staged text files successfully; no JavaScript/TypeScript files required ESLint. Artifact commit `6e51d1d` also passed its hooks. These formatting, whitespace and hook results were observed during execution, rather than inferred from the existence of the commits.
 
 ## Source and generated-output evidence
 
@@ -57,14 +57,14 @@ The successful build retains warnings about obsolete Next configuration, static-
 
 ## Acceptance evidence
 
-| Criterion | Evidence                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------------ |
-| AC-01     | Source inspection: six exact removals, including opening bold wrappers                           |
-| AC-02     | Exact summaries and real generated search/body/description metadata inspection                   |
-| AC-03     | Complete-source comparison and unchanged seven headings/remaining copy; browser checks           |
-| AC-04     | 848 preservation identities, eleven unchanged exported cover assets, route and navigation checks |
-| AC-05     | Focused/full tests and build passed; formatting/hooks recorded at commit and review closure      |
-| AC-06     | Twelve export-browser views, four language/navigation flows and screenshots                      |
-| AC-07     | Separate approval record, artifact-first local commit; sequential final review pending           |
+| Criterion | Evidence                                                                                                     |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| AC-01     | Source inspection: six exact removals, including opening bold wrappers                                       |
+| AC-02     | Exact summaries and real generated search/body/description metadata inspection                               |
+| AC-03     | Complete-source comparison and unchanged seven headings/remaining copy; browser checks                       |
+| AC-04     | 848 preservation identities, eleven unchanged exported cover assets, route and navigation checks             |
+| AC-05     | Focused/full tests, build, exact Step 7 formatting, Git whitespace checks and applicable commit hooks passed |
+| AC-06     | Twelve export-browser views, four language/navigation flows and screenshots                                  |
+| AC-07     | Separate approval record, artifact-first local commit; sequential final review pending                       |
 
 **Endpoint:** Product edit and required content/build/browser checks are verified. Complete the local implementation commit and sequential final review before reporting delivery complete; publication remains user-controlled.

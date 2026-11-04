@@ -1,0 +1,427 @@
+{
+  "origin": "http://127.0.0.1:3001",
+  "hasCover": true,
+  "matrix": [
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Overview",
+        "Motivation",
+        "Approach",
+        "Key Features",
+        "Dialog and Form Examples",
+        "Comparison with Stock Playwright",
+        "Current Limits and Validation"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "en",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Overview",
+        "Motivation",
+        "Approach",
+        "Key Features",
+        "Dialog and Form Examples",
+        "Comparison with Stock Playwright",
+        "Current Limits and Validation"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Approccio",
+        "Funzionalità principali",
+        "Esempi con dialoghi e moduli",
+        "Confronto con Playwright standard",
+        "Limiti attuali e validazione"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "lang": "it",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Approccio",
+        "Funzionalità principali",
+        "Esempi con dialoghi e moduli",
+        "Confronto con Playwright standard",
+        "Limiti attuali e validazione"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Overview",
+        "Motivation",
+        "Approach",
+        "Key Features",
+        "Dialog and Form Examples",
+        "Comparison with Stock Playwright",
+        "Current Limits and Validation"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "en",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Overview",
+        "Motivation",
+        "Approach",
+        "Key Features",
+        "Dialog and Form Examples",
+        "Comparison with Stock Playwright",
+        "Current Limits and Validation"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "theme": "light",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Approccio",
+        "Funzionalità principali",
+        "Esempi con dialoghi e moduli",
+        "Confronto con Playwright standard",
+        "Limiti attuali e validazione"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [],
+      "coverVerified": true,
+      "coverPending": false
+    },
+    {
+      "route": "/projects/a11y-journey-evidence",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lang": "it",
+      "theme": "dark",
+      "status": 200,
+      "horizontalOverflow": false,
+      "headings": [
+        "Panoramica",
+        "Motivazione",
+        "Approccio",
+        "Funzionalità principali",
+        "Esempi con dialoghi e moduli",
+        "Confronto con Playwright standard",
+        "Limiti attuali e validazione"
+      ],
+      "coverVerified": true,
+      "coverPending": false
+    }
+  ],
+  "flows": [
+    {
+      "lang": "en",
+      "keyboardLanguageSwitch": true,
+      "keyboardBack": true,
+      "tagFilters": 5,
+      "localizedSearchNavigation": true,
+      "displacedProjectAvailable": true
+    },
+    {
+      "lang": "it",
+      "keyboardLanguageSwitch": true,
+      "keyboardBack": true,
+      "tagFilters": 5,
+      "localizedSearchNavigation": true,
+      "displacedProjectAvailable": true
+    }
+  ],
+  "errors": [],
+  "failedImages": [],
+  "status": "passed"
+}

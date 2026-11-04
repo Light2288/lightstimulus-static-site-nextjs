@@ -1,0 +1,107 @@
+{
+  "status": "pending-shared-metadata-fix",
+  "route": "/projects/a11y-journey-evidence",
+  "words": {
+    "en": 1103,
+    "it": 1302
+  },
+  "sections": {
+    "en": 7,
+    "it": 7
+  },
+  "oldFilesChecked": 95,
+  "checks": [
+    "exact frontmatter and bilingual summaries",
+    "seven sections per language",
+    "word target",
+    "two real search entries",
+    "tag increments",
+    "sitemap",
+    "English SEO",
+    "Open Graph URL and cover",
+    "Twitter cover",
+    "CreativeWork cover",
+    "breadcrumbs",
+    "seven project routes",
+    "all existing source/artwork hashes unchanged",
+    "all eleven cover assets exported"
+  ],
+  "failures": [
+    {
+      "criterion": "AC-09",
+      "field": "CreativeWork.url",
+      "actual": "https://lightstimulus.dev/projects/undefined",
+      "expected": "https://lightstimulus.dev/projects/a11y-journey-evidence",
+      "preExistingSharedGeneratorIssue": true
+    }
+  ],
+  "searchEntries": [
+    {
+      "id": "/projects/a11y-journey-evidence#en",
+      "title": "A11y Journey Evidence",
+      "summary": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles. External validation is pending.",
+      "type": "Project",
+      "url": "/projects/a11y-journey-evidence",
+      "lang": "en"
+    },
+    {
+      "id": "/projects/a11y-journey-evidence#it",
+      "title": "A11y Journey Evidence",
+      "summary": "Strumento sperimentale v0.1.0 per raccogliere evidenze consultabili su tastiera e focus nei percorsi di test nativi di Playwright Test, con osservazioni entro limiti espliciti, acquisizioni in caso di errore e report Markdown portabili. La validazione esterna è ancora in attesa.",
+      "type": "Project",
+      "url": "/projects/a11y-journey-evidence",
+      "lang": "it"
+    }
+  ],
+  "tagCounts": {
+    "playwright": 1,
+    "accessibility": 1,
+    "testing": 1,
+    "developer-tools": 2,
+    "typescript": 3
+  },
+  "socialCover": "https://lightstimulus.dev/static/images/projects/a11y-journey-evidence.png",
+  "projectCount": 7,
+  "artwork": [
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-144w.png",
+      "width": 144
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-144w.webp",
+      "width": 144
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-200w.png",
+      "width": 200
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-200w.webp",
+      "width": 200
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-640w.png",
+      "width": 640
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-640w.webp",
+      "width": 640
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-800w.png",
+      "width": 800
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-800w.webp",
+      "width": 800
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-1000w.png",
+      "width": 1000
+    },
+    {
+      "file": "out/static/images/projects/responsive/a11y-journey-evidence-1000w.webp",
+      "width": 1000
+    }
+  ]
+}

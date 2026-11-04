@@ -1,0 +1,163 @@
+---
+title:
+  en: A11y Journey Evidence
+  it: A11y Journey Evidence
+
+summary:
+  en: Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles. External validation is pending.
+  it: Strumento sperimentale v0.1.0 per raccogliere evidenze consultabili su tastiera e focus nei percorsi di test nativi di Playwright Test, con osservazioni entro limiti espliciti, acquisizioni in caso di errore e report Markdown portabili. La validazione esterna è ancora in attesa.
+
+date: 2026-11-04
+
+projectType: experiment
+status: in-progress
+coverImage: /static/images/projects/a11y-journey-evidence.png
+
+tags:
+  - id: playwright
+    label:
+      en: Playwright
+      it: Playwright
+  - id: accessibility
+    label:
+      en: Accessibility
+      it: Accessibilità
+  - id: testing
+    label:
+      en: Testing
+      it: Test
+  - id: developer-tools
+    label:
+      en: Developer Tools
+      it: Strumenti per sviluppatori
+  - id: typescript
+    label:
+      en: TypeScript
+      it: TypeScript
+
+stack:
+  - TypeScript
+  - Node.js
+  - Playwright Test
+
+links:
+  docs: https://light2288.github.io/a11y-journey-evidence/
+  github: https://github.com/Light2288/a11y-journey-evidence
+  npm: https://www.npmjs.com/package/a11y-journey-evidence
+---
+
+<Lang value="en">
+
+### Overview
+
+**A11y Journey Evidence** adds reviewable keyboard and focus evidence to native Playwright Test journeys. Published on npm as `a11y-journey-evidence`, [experimental v0.1.0](https://github.com/Light2288/a11y-journey-evidence/releases/tag/v0.1.0) combines an opt-in fixture and reporter with runnable synthetic examples. **External validation is pending.**
+
+It is intended for developers and test authors who already use Playwright and want to review what happened during an explicitly tested keyboard interaction. Developers continue to choose their actions, assertions and expected behavior. The package records observations around those tests and presents them alongside native diagnostics; it does not decide the correct focus policy or establish accessibility conformance.
+
+### Motivation
+
+A failed focus assertion identifies an unmet expectation, but reviewing the path to that failure can require moving between the test, attachments and trace. For a dialog, that path might include opening it, moving between controls, reaching a containment boundary and returning focus after dismissal. A form adds error associations, invalid-submit focus and correction.
+
+Playwright already provides keyboard actions, focus assertions, reporters, screenshots and traces. The question behind this project is how an explicit observed focus sequence and a portable text report can support review alongside those facilities. Keeping the original test vocabulary matters: the evidence should remain connected to the behavior the developer actually checked, with limitations visible when recording or capture is incomplete.
+
+### Approach
+
+The TypeScript and Node.js implementation integrates through a test fixture and a reporter. Existing fixtures compose with Playwright's native `mergeTests`; the evidence reporter sits beside native reporters. After page setup, a selected test calls `journey.start({ root })` once with a native Locator declaring the ARIA snapshot scope.
+
+The journey then uses ordinary `page.keyboard` actions, locators, `test.step` and `expect`. There is no replacement action language to learn or separate assertion policy inferred from the observations. Tests that do not request the fixture keep their native reporting without journey observations. A requested fixture that never starts is disclosed as not started.
+
+The declared snapshot root may mount later, but an ambiguous locator is never silently reduced to its first match. A missing root does not broaden capture to the whole document. This keeps capture scope explicit, while unavailable captures remain reportable outcomes.
+
+The [integration guide](https://light2288.github.io/a11y-journey-evidence/guide/integration.html) explains composition and reporter configuration. The published npm distribution provides the compiled package; GitHub's automatic source archives are repository snapshots rather than that distribution.
+
+### Key Features
+
+- **Bounded observations:** Records selected keyboard events and focus descriptors in observed browser order. Limits and clipping are disclosed. Descriptors use local references and bounded attributes, not a continuously synchronized model of accessible names or DOM state.
+- **Native test context:** Retains executed named steps and assertions, actual and expected status, and distinct attempts, retries and repeats. A later passing retry does not erase an earlier failed attempt. Browser observations and native step starts have separate sequences; they do not establish a shared clock, total order or causation.
+- **Failure captures:** Independently configurable screenshots and scoped ARIA snapshots are attempted at fixture teardown when available. They are not guaranteed snapshots of the instant an assertion failed. An already hidden dialog can produce an empty snapshot; missing roots, closed pages and capture failures remain explicit.
+- **Portable Markdown bundles:** A `report.md` entry point links relative assets and existing native traces when available. The package does not start another trace session. Share the whole run directory, including `assets`, so those links remain usable.
+- **Visible completeness:** A passing test can have incomplete evidence. Unavailable artifacts, truncated observations and recording issues stay separate from native test outcomes. Handoff, artifact-copy and report-write failures are surfaced rather than silently producing an apparently successful evidence run.
+
+The [bundle-reading guide](https://light2288.github.io/a11y-journey-evidence/evidence/reading.html) explains these distinctions before readers interpret a report.
+
+### Dialog and Form Examples
+
+The [dialog recipe](https://light2288.github.io/a11y-journey-evidence/recipes/dialog.html) declares a concrete policy: keyboard activation opens Preferences, initial focus reaches Continue, Tab and Shift+Tab wrap at both boundaries, Escape dismisses the dialog, and focus returns to the opener. Its correct case exercises that policy. Two intentional regressions independently omit containment or restoration, exposing focus escaping beyond the dialog or failing to return after dismissal.
+
+The [form recipe](https://light2288.github.io/a11y-journey-evidence/recipes/form.html) uses a synthetic Team request form with submit-only validation. Keyboard submission reveals inline errors, marks invalid fields, associates each error through `aria-describedby` and focuses the first invalid field. Correction and resubmission clear stale states and references, then expose success. Broken variants omit an error association or the focus movement. Native accessible-description assertions inspect the chosen DOM association; they do not establish that a screen reader announces the error.
+
+The regressions use Playwright's expected-failure mechanism. Their demonstration commands can exit successfully while the intended assertions actually fail; an unexpected pass fails the run. A hard assertion failure stops subsequent checks, so earlier passing checks do not supply results for the unexecuted remainder. These are explicit example policies, not general certification of dialogs or forms.
+
+### Comparison with Stock Playwright
+
+The [author's comparison](https://light2288.github.io/a11y-journey-evidence/comparison.html) runs equivalent synthetic variants with the same native actions, locators, named steps and assertions. The stock baseline uses Playwright's reporters and traces plus an application-owned failure hook attaching current focus, a screenshot, scoped ARIA and timing. It can already answer the review questions demonstrated by those examples.
+
+The package contributes a bounded observed focus sequence and a portable Markdown entry point alongside native diagnostics. It also adds a dependency, exact-version integration, maintenance and data-handling obligations. Stock retains ownership of a small capture helper and its configuration; native HTML reports and traces may suit some investigations better. Long text reports and repeated diagnostics also have review costs. This is an author assessment: no independent preference, endorsement or measured time saving has been established.
+
+### Current Limits and Validation
+
+The verified package scope is **Chromium, one page/main document, ordinary light DOM and the explicit journey under test**. Frames, additional pages, shadow traversal, navigation or document replacement, nested dialogs, other patterns and other browsers are outside that scope. Identifiable unsupported boundaries are disclosed; exhaustive detection is not promised. Custom matcher internals are not interpreted.
+
+The documented local baseline uses Node 24.21.0, npm 11.19.0, TypeScript 7.0.2, Playwright Test 1.64.1, Chromium 156.0.8078.4 and macOS 27.0.1 arm64. Node and the Playwright peer are declared at those exact versions. Other hosts, runtimes, browsers and package CI compatibility remain unverified. These are published project records, not package checks rerun for this portfolio page; documentation-site checks do not broaden package compatibility.
+
+Printable-input filtering is not general sanitization. Attributes, diagnostics, screenshots, ARIA snapshots and traces can contain application data. Use synthetic data and inspect the whole bundle before sharing. The [full limitations](https://light2288.github.io/a11y-journey-evidence/limitations.html) also explain why DOM focus, ARIA structure and captures do not establish screen-reader announcements, focus-indicator quality, inclusive usability, complete keyboard coverage or accessibility conformance. External validation remains pending.
+
+</Lang>
+
+<Lang value="it">
+
+### Panoramica
+
+**A11y Journey Evidence** aggiunge evidenze consultabili su tastiera e focus ai percorsi di test nativi di Playwright Test. Pubblicata su npm come `a11y-journey-evidence`, la [versione sperimentale v0.1.0](https://github.com/Light2288/a11y-journey-evidence/releases/tag/v0.1.0) combina una fixture e un reporter attivabili nei test selezionati con esempi sintetici eseguibili. **La validazione esterna è ancora in attesa.**
+
+Si rivolge a sviluppatori e autori di test che usano già Playwright e vogliono esaminare cosa è accaduto durante un'interazione da tastiera verificata esplicitamente. Azioni, asserzioni e comportamento atteso restano scelte dello sviluppatore. Il pacchetto registra osservazioni intorno a quei test e le presenta insieme alla diagnostica nativa; non decide quale sia la politica di focus corretta e non attesta la conformità ai requisiti di accessibilità.
+
+### Motivazione
+
+Un'asserzione sul focus fallita identifica un'aspettativa non soddisfatta, ma ricostruire il percorso che ha portato al problema può richiedere di passare tra test, allegati e traccia. Per un dialogo, quel percorso può comprendere apertura, spostamento tra controlli, raggiungimento di un limite di contenimento e ripristino del focus dopo la chiusura. Un modulo aggiunge associazioni degli errori, focus dopo un invio non valido e correzione.
+
+Playwright offre già azioni da tastiera, asserzioni sul focus, reporter, screenshot e tracce. Il progetto esplora come una sequenza esplicita del focus osservato e un report testuale portabile possano affiancare questi strumenti nella revisione. Mantenere il vocabolario del test originale è essenziale: le evidenze devono restare collegate al comportamento effettivamente verificato, rendendo visibili i limiti quando registrazione o acquisizione sono incomplete.
+
+### Approccio
+
+L'implementazione in TypeScript e Node.js si integra attraverso una fixture di test e un reporter. Le fixture esistenti si compongono con il `mergeTests` nativo di Playwright; il reporter delle evidenze affianca quelli nativi. Dopo la preparazione della pagina, un test selezionato chiama una sola volta `journey.start({ root })`, passando un Locator nativo che dichiara l'ambito dello snapshot ARIA.
+
+Il percorso usa quindi le normali azioni `page.keyboard`, i locator, `test.step` ed `expect`. Non introduce un linguaggio alternativo per le azioni né deduce dalle osservazioni una politica separata di asserzioni. I test che non richiedono la fixture mantengono i report nativi senza osservazioni del percorso. Una fixture richiesta ma mai avviata viene segnalata come non avviata.
+
+La radice dichiarata per lo snapshot può essere montata successivamente, ma un locator ambiguo non viene mai ridotto silenziosamente alla prima corrispondenza. Una radice mancante non estende l'acquisizione all'intero documento. L'ambito resta così esplicito e le acquisizioni non disponibili rimangono esiti dichiarati nel report.
+
+La [guida all'integrazione](https://light2288.github.io/a11y-journey-evidence/guide/integration.html) descrive composizione e configurazione del reporter. La distribuzione pubblicata su npm fornisce il pacchetto compilato; gli archivi sorgente automatici di GitHub sono snapshot della repository, non quella distribuzione.
+
+### Funzionalità principali
+
+- **Osservazioni entro limiti espliciti:** Registra eventi da tastiera selezionati e descrittori del focus nell'ordine osservato nel browser. Limiti e troncamenti sono dichiarati. I descrittori usano riferimenti locali e attributi limitati, non un modello continuamente sincronizzato dei nomi accessibili o dello stato del DOM.
+- **Contesto nativo del test:** Conserva i passi con nome e le asserzioni eseguite, gli stati effettivi e attesi e i singoli tentativi, comprese ripetizioni e nuovi tentativi. Un tentativo successivo riuscito non cancella quello precedente fallito. Osservazioni del browser e avvio dei passi nativi hanno sequenze separate: non stabiliscono un orologio comune, un ordine totale o un rapporto di causa.
+- **Acquisizioni in caso di errore:** Screenshot e snapshot ARIA con ambito dichiarato, configurabili indipendentemente, vengono tentati durante la chiusura della fixture quando disponibili. Non garantiscono di rappresentare l'istante dell'asserzione fallita. Un dialogo già nascosto può produrre uno snapshot vuoto; radici mancanti, pagine chiuse ed errori di acquisizione restano espliciti.
+- **Report Markdown portabili:** Il punto di ingresso `report.md` collega asset relativi e tracce native esistenti, quando disponibili. Il pacchetto non avvia un'altra sessione di tracciamento. Per condividere le evidenze occorre copiare l'intera cartella dell'esecuzione, inclusa `assets`, mantenendo funzionanti i collegamenti.
+- **Completezza visibile:** Un test riuscito può avere evidenze incomplete. Artefatti non disponibili, osservazioni troncate e problemi di registrazione restano separati dagli esiti nativi dei test. Gli errori nel passaggio dei dati, nella copia degli artefatti e nella scrittura del report vengono segnalati, anziché produrre silenziosamente un'esecuzione delle evidenze apparentemente riuscita.
+
+La [guida alla lettura dei report](https://light2288.github.io/a11y-journey-evidence/evidence/reading.html) chiarisce queste distinzioni prima di interpretarne i risultati.
+
+### Esempi con dialoghi e moduli
+
+La [ricetta del dialogo](https://light2288.github.io/a11y-journey-evidence/recipes/dialog.html) dichiara una politica concreta: l'attivazione da tastiera apre Preferences, il focus iniziale raggiunge Continue, Tab e Shift+Tab ritornano all'interno del dialogo a entrambi i limiti, Escape lo chiude e il focus torna al controllo di apertura. Il caso corretto esercita questa politica. Due regressioni intenzionali omettono separatamente contenimento o ripristino, mostrando il focus che esce dal dialogo oppure non ritorna dopo la chiusura.
+
+La [ricetta del modulo](https://light2288.github.io/a11y-journey-evidence/recipes/form.html) usa un modulo sintetico Team request con validazione solo all'invio. L'invio da tastiera mostra gli errori accanto ai campi, contrassegna quelli non validi, associa ciascun errore tramite `aria-describedby` e sposta il focus sul primo campo non valido. Correzione e nuovo invio eliminano stati e riferimenti non più necessari e mostrano il successo. Le varianti difettose omettono un'associazione dell'errore oppure lo spostamento del focus. Le asserzioni native sulla descrizione accessibile ispezionano l'associazione DOM scelta; non dimostrano che un lettore di schermo annunci l'errore.
+
+Le regressioni usano il meccanismo di fallimento atteso di Playwright. I comandi dimostrativi possono terminare con successo mentre le asserzioni previste falliscono effettivamente; un successo inatteso fa fallire l'esecuzione. Il fallimento di un'asserzione bloccante interrompe le verifiche successive: quelle precedenti riuscite non forniscono risultati per la parte mai eseguita. Sono politiche esplicite degli esempi, non una certificazione generale di dialoghi o moduli.
+
+### Confronto con Playwright standard
+
+Il [confronto dell'autore](https://light2288.github.io/a11y-journey-evidence/comparison.html) esegue varianti sintetiche equivalenti con le stesse azioni native, locator, passi con nome e asserzioni. La versione standard usa reporter e tracce di Playwright, insieme a una funzione di acquisizione in caso di errore gestita dall'applicazione, che allega focus corrente, screenshot, ARIA con ambito dichiarato e tempi. Può già rispondere alle domande di revisione dimostrate da quegli esempi.
+
+Il pacchetto aggiunge una sequenza del focus osservato entro limiti espliciti e un punto di ingresso Markdown portabile accanto alla diagnostica nativa. Introduce anche una dipendenza, un'integrazione con versioni esatte, manutenzione e obblighi di gestione dei dati. La soluzione standard mantiene nell'applicazione una piccola funzione di acquisizione e la sua configurazione; report HTML e tracce native possono essere più adatti ad alcune indagini. Anche report testuali lunghi e diagnostica ripetuta hanno un costo di revisione. È una valutazione dell'autore: non sono state dimostrate preferenze indipendenti, approvazioni esterne o riduzioni misurate dei tempi.
+
+### Limiti attuali e validazione
+
+L'ambito verificato del pacchetto comprende **Chromium, una sola pagina con il documento principale, DOM ordinario senza attraversamento dello shadow DOM e il percorso esplicitamente sottoposto a test**. Frame, pagine aggiuntive, attraversamento dello shadow DOM, navigazione o sostituzione del documento, dialoghi annidati, altri pattern e altri browser sono esclusi. I confini non supportati riconoscibili vengono segnalati, senza promettere un rilevamento esaustivo. Il funzionamento interno dei matcher personalizzati non viene interpretato.
+
+La configurazione locale documentata usa Node 24.21.0, npm 11.19.0, TypeScript 7.0.2, Playwright Test 1.64.1, Chromium 156.0.8078.4 e macOS 27.0.1 arm64. Node e la dipendenza peer Playwright sono dichiarati a quelle versioni esatte. Altri sistemi, runtime, browser e la compatibilità del pacchetto in CI restano non verificati. Si tratta di risultati pubblicati dal progetto, non di verifiche del pacchetto rieseguite per questa pagina; i controlli sul sito della documentazione non ampliano la compatibilità del pacchetto.
+
+Il filtraggio dell'input digitabile non è una sanitizzazione generale. Attributi, diagnostica, screenshot, snapshot ARIA e tracce possono contenere dati dell'applicazione. Usare dati sintetici e ispezionare l'intero report con i suoi asset prima di condividerlo. I [limiti completi](https://light2288.github.io/a11y-journey-evidence/limitations.html) spiegano inoltre perché focus nel DOM, struttura ARIA e acquisizioni non dimostrano annunci dei lettori di schermo, qualità degli indicatori di focus, usabilità inclusiva, copertura completa della tastiera o conformità ai requisiti di accessibilità. La validazione esterna resta in attesa.
+
+</Lang>

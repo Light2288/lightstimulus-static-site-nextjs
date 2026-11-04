@@ -1,0 +1,24 @@
+{
+  "cause": "Project structuredData resolver reads sibling computed doc.slug before it is available; blog structuredData already derives URL from _raw.flattenedPath.",
+  "sharedSourceChanged": false,
+  "findings": [
+    {
+      "slug": "a11y-journey-evidence",
+      "rawPath": "projects/a11y-journey-evidence",
+      "actual": "https://lightstimulus.dev/projects/undefined",
+      "expected": "https://lightstimulus.dev/projects/a11y-journey-evidence"
+    },
+    {
+      "slug": "usdz-validator",
+      "rawPath": "projects/usdz-validator",
+      "actual": "https://lightstimulus.dev/projects/undefined",
+      "expected": "https://lightstimulus.dev/projects/usdz-validator"
+    },
+    {
+      "slug": "certflow",
+      "rawPath": "projects/certflow",
+      "actual": "https://lightstimulus.dev/projects/undefined",
+      "expected": "https://lightstimulus.dev/projects/certflow"
+    }
+  ]
+}

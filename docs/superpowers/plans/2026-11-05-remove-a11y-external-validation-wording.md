@@ -12,6 +12,7 @@
 
 **Slug:** `remove-a11y-external-validation-wording`
 **Status:** APPROVED
+**Execution status:** Complete; verification and sequential specification/quality review passed. Local delivery only.
 **Created:** 2026-11-05
 **Updated:** 2026-11-05
 **Execution tier:** lite
@@ -75,7 +76,7 @@ The prior tracked evidence at `docs/superpowers/evidence/2026-11-04-add-a11y-jou
 
 - [x] **Step 7: Format, verify the scoped diff and commit.** Record command exits, actual results, browser evidence and any pre-existing limitations in this increment's `verification.md`. Run `npx prettier --check data/projects/a11y-journey-evidence.mdx docs/superpowers/specs/2026-11-05-remove-a11y-external-validation-wording.md docs/superpowers/plans/2026-11-05-remove-a11y-external-validation-wording.md docs/superpowers/evidence/2026-11-05-remove-a11y-external-validation-wording/verification.md` and `git diff --check`; expected exit 0. Fix formatting only in this increment's files and repeat affected checks if semantics change. Stage only the changed MDX, this artifact pair and new increment evidence/screenshots; commit with `git commit -m "chore: remove pending validation wording from A11y project"`. Expected: existing hooks pass, no generated files/dependencies or unrelated edits are committed, and all unchanged-source/asset identities still match.
 
-- [ ] **Step 8: Complete the sequential final review and report.** Through `personal-workflows:spec-implement`, invoke `personal-workflows:code-review` exactly once as the integrated final whole-branch seat: specification review, then quality review, with the approved pair, branch diff, actual output/browser evidence and all five Review Focus items. Handle findings under the enclosing execution workflow; retain separate approval gates for material scope/plan changes. Save review results in this increment's `reviews.md`, check its formatting with `npx prettier --check docs/superpowers/evidence/2026-11-05-remove-a11y-external-validation-wording/reviews.md`, commit reviewed evidence/corrections and verify final Git status. Expected: all seven criteria have evidence and no required cleanup check/review remains unresolved. Report the local commit(s), six removals, checks and existing limitations; stop without push, merge, deployment or another increment.
+- [x] **Step 8: Complete the sequential final review and report.** Through `personal-workflows:spec-implement`, invoke `personal-workflows:code-review` exactly once as the integrated final whole-branch seat: specification review, then quality review, with the approved pair, branch diff, actual output/browser evidence and all five Review Focus items. Handle findings under the enclosing execution workflow; retain separate approval gates for material scope/plan changes. Save review results in this increment's `reviews.md`, check its formatting with `npx prettier --check docs/superpowers/evidence/2026-11-05-remove-a11y-external-validation-wording/reviews.md`, commit reviewed evidence/corrections and verify final Git status. Expected: all seven criteria have evidence and no required cleanup check/review remains unresolved. Report the local commit(s), six removals, checks and existing limitations; stop without push, merge, deployment or another increment.
 
 ## Acceptance-Criterion Traceability
 

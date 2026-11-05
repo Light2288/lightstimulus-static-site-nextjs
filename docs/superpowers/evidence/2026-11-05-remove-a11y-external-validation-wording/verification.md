@@ -2,7 +2,7 @@
 
 **Created:** 2026-11-05
 **Updated:** 2026-11-05
-**Status:** Implementation verified; sequential final review pending.
+**Status:** Complete; implementation, verification and sequential final review passed.
 **Spec:** `docs/superpowers/specs/2026-11-05-remove-a11y-external-validation-wording.md`
 **Plan:** `docs/superpowers/plans/2026-11-05-remove-a11y-external-validation-wording.md`
 **Branch:** `chore/remove-a11y-external-validation-wording`
@@ -57,14 +57,14 @@ The successful build retains warnings about obsolete Next configuration, static-
 
 ## Acceptance evidence
 
-| Criterion | Evidence                                                                                                     |
-| --------- | ------------------------------------------------------------------------------------------------------------ |
-| AC-01     | Source inspection: six exact removals, including opening bold wrappers                                       |
-| AC-02     | Exact summaries and real generated search/body/description metadata inspection                               |
-| AC-03     | Complete-source comparison and unchanged seven headings/remaining copy; browser checks                       |
-| AC-04     | 848 preservation identities, eleven unchanged exported cover assets, route and navigation checks             |
-| AC-05     | Focused/full tests, build, exact Step 7 formatting, Git whitespace checks and applicable commit hooks passed |
-| AC-06     | Twelve export-browser views, four language/navigation flows and screenshots                                  |
-| AC-07     | Separate approval record, artifact-first local commit; sequential final review pending                       |
+| Criterion | Evidence                                                                                                          |
+| --------- | ----------------------------------------------------------------------------------------------------------------- |
+| AC-01     | Source inspection: six exact removals, including opening bold wrappers                                            |
+| AC-02     | Exact summaries and real generated search/body/description metadata inspection                                    |
+| AC-03     | Complete-source comparison and unchanged seven headings/remaining copy; browser checks                            |
+| AC-04     | 848 preservation identities, eleven unchanged exported cover assets, route and navigation checks                  |
+| AC-05     | Focused/full tests, build, exact Step 7 formatting, Git whitespace checks and applicable commit hooks passed      |
+| AC-06     | Twelve export-browser views, four language/navigation flows and screenshots                                       |
+| AC-07     | Separate approvals, artifact-first local commits and sequential specification/quality review PASS; see reviews.md |
 
-**Endpoint:** Product edit and required content/build/browser checks are verified. Complete the local implementation commit and sequential final review before reporting delivery complete; publication remains user-controlled.
+**Endpoint:** The six-sentence removal is locally committed and its required content, build, browser, formatting and hook checks have passed. Sequential specification and quality review passed with no remaining findings; [review evidence](reviews.md) records the gate and its documentation-only correction. No product edit followed the successful test/build/browser runs or reviewed product state. Publication remains user-controlled; stop before push, merge, deployment or further work.

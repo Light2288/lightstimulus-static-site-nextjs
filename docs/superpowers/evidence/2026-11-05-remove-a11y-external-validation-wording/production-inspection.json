@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "route": "/projects/a11y-journey-evidence",
+  "summaries": {
+    "en": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles.",
+    "it": "Strumento sperimentale v0.1.0 per raccogliere evidenze consultabili su tastiera e focus nei percorsi di test nativi di Playwright Test, con osservazioni entro limiti espliciti, acquisizioni in caso di errore e report Markdown portabili."
+  },
+  "searchEntries": [
+    {
+      "id": "/projects/a11y-journey-evidence#en",
+      "title": "A11y Journey Evidence",
+      "summary": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles.",
+      "type": "Project",
+      "url": "/projects/a11y-journey-evidence",
+      "lang": "en"
+    },
+    {
+      "id": "/projects/a11y-journey-evidence#it",
+      "title": "A11y Journey Evidence",
+      "summary": "Strumento sperimentale v0.1.0 per raccogliere evidenze consultabili su tastiera e focus nei percorsi di test nativi di Playwright Test, con osservazioni entro limiti espliciti, acquisizioni in caso di errore e report Markdown portabili.",
+      "type": "Project",
+      "url": "/projects/a11y-journey-evidence",
+      "lang": "it"
+    }
+  ],
+  "metadata": {
+    "description": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles.",
+    "openGraphDescription": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles.",
+    "creativeWorkDescription": "Experimental v0.1.0 tooling for reviewable keyboard and focus evidence in native Playwright Test journeys, with bounded observations, failure captures, and portable Markdown bundles.",
+    "creativeWorkUrl": "https://lightstimulus.dev/projects/undefined"
+  },
+  "removedVariantsAbsent": true,
+  "preservedBaselineFiles": 848,
+  "exportedCoverFilesUnchanged": 11,
+  "existingLimitations": [
+    "Pre-existing Project CreativeWork.url ends in /undefined; resolver unchanged; description removal passes."
+  ]
+}

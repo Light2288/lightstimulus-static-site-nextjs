@@ -86,7 +86,7 @@
 
 - [x] **Step 6: Format and review the completed change.** Run `npx prettier --check data/authors/default.mdx docs/superpowers/specs/2026-11-09-aws-data-engineer-associate-certification.md docs/superpowers/plans/2026-11-09-aws-data-engineer-associate-certification.md` and `git diff --check`; expected exit 0, correcting formatting only in scoped files. Check `git diff -- data/authors/default.mdx` and `git status --short`: expect one added entry, six new published assets, and this artifact pair only. Prepare the scratch review package and invoke `personal-workflows:code-review` exactly once as the integrated final whole-branch gate: specification review, then quality review of the same package. Supply the approved pair, complete change set, asset evidence, actual verification results, and all five Review Focus items. Resolve findings through the execution workflow; material scope or plan changes retain their approval gates. Expected: both review stages pass, or remaining findings are handled under the enclosing workflow before finishing.
 
-- [ ] **Step 7: Commit and report.** Record verification/review results and complete the plan checklist. Stage only the author entry, the six new assets, and this artifact pair; commit with `git commit -m "feat(about): add AWS Data Engineer Associate certification"`. Verify the commit's file list and final `git status --short`. Expected: local commits contain the approved scope, required checks/review are complete, and the result report includes observed evidence and limitations. Stop without push, merge, publication, or another increment.
+- [x] **Step 7: Commit and report.** Record verification/review results and complete the plan checklist. Stage only the author entry, the six new assets, and this artifact pair; commit with `git commit -m "feat(about): add AWS Data Engineer Associate certification"`. Verify the commit's file list and final `git status --short`. Expected: local commits contain the approved scope, required checks/review are complete, and the result report includes observed evidence and limitations. Stop without push, merge, publication, or another increment.
 
 ## Self-Review and Execution Endpoint
 
@@ -123,3 +123,12 @@ The user separately approved this plan with `plan approved` before implementatio
 - Only after that PASS, `review-quality` on the configured full role reviewed the identical package: **QUALITY REVIEW: PASS; Findings: NONE**. The reviewer verified the package identities and all nine reviewed file hashes.
 - The coordinator rechecked the frozen package and file hashes before recording these outcomes. No fixes, deferred findings, or scope rulings resulted.
 - Scoped `npx prettier --check` and `git diff --check`: exit 0. Final product commit and final Git status are completed after this pre-commit gate.
+
+## Completion
+
+- Implementation committed locally as `312f893` (`feat(about): add AWS Data Engineer Associate certification`). The approved artifact commit is `74bc49a`.
+- Native task completion ran the exact focused command after the product commit: exit 0, 16 files / 254 tests passed. All seven product files still match the reviewed SHA-256 manifest after commit hooks.
+- The working tree was clean after the implementation commit and final focused run; this completion record is retained in a final documentation commit.
+- Full suite result remains 86 files / 1,406 tests passed; production export and both review stages passed. No product changes followed those checks.
+- No review findings, deferred minors, or scope rulings remain. Browser interaction was not observed, and the recorded unrelated build warnings remain.
+- Keep the branch locally in the existing checkout. Nothing was pushed, merged, or published. The selected delivery endpoint is reached; no subsequent increment is started.
